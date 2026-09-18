@@ -4,8 +4,8 @@
   "description": "Fake movie theater for school",
   "private": true,
   "scripts": {
-    "build:css": "tailwindcss -i ./assets/main.css -o ./public/assets/dist.css --minify",
-    "watch:css": "tailwindcss -i ./assets/main.css -o ./public/assets/dist.css --watch"
+    "build:css": "tailwindcss -i ./public/assets/main.css -o ./public/assets/dist.css --minify",
+    "watch:css": "tailwindcss -i ./public/assets/main.css -o ./public/assets/dist.css --watch"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

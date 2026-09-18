@@ -1,3 +1,4 @@
+# `docker compose up` starts every service below at once, no separate commands needed
 services:
   web:
     image: php:8.3-apache
@@ -9,10 +10,11 @@ services:
     command: >
       bash -c "sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
       && apache2-foreground"
-
+    # runs alongside `web`, only job is rebuilding dist.css on file changes
+  
   tailwind:
     image: node:20-alpine
     working_dir: /app
     volumes:
       - .:/app
-    command: sh -c "npx @tailwindcss/cli -i ./assets/main.css -o ./public/assets/dist.css --watch"
+    command: sh -c "npx @tailwindcss/cli -i ./public/assets/main.css -o ./public/assets/dist.css --watch"
