@@ -1,0 +1,18 @@
+services:
+  web:
+    image: php:8.3-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    # Serve from public/ instead of the project root
+    command: >
+      bash -c "sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
+      && apache2-foreground"
+
+  tailwind:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npx @tailwindcss/cli -i ./assets/main.css -o ./public/assets/dist.css --watch"
