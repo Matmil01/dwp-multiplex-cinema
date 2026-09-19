@@ -25,7 +25,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-amber-500 text-amber-300 mb-2">35mm Print</span>
                                 <h3 class="font-semibold text-lg mb-1"><a href="movie-details.php?id=3" class="hover:underline">Movie placeholder C</a></h3>
-                                <p class="text-gray-400 text-base">Comedy &middot; 95 min &middot; PG</p>
+                                <p class="text-gray-400 text-base">Comedy &middot; 95 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 8:00 PM &middot; 35mm Screen</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -37,7 +37,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-amber-400 text-amber-200 mb-2">70mm Roadshow</span>
                                 <h3 class="font-semibold text-lg mb-1"><a href="movie-details.php?id=4" class="hover:underline">Movie placeholder D</a></h3>
-                                <p class="text-gray-400 text-base">Sci-Fi, Adventure &middot; 128 min &middot; PG-13</p>
+                                <p class="text-gray-400 text-base">Sci-Fi, Adventure &middot; 128 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 6:15 PM &middot; 70mm Screen</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -55,7 +55,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-gray-600 text-gray-300 mb-2">Digital</span>
                                 <h3 class="font-semibold mb-2"><a href="movie-details.php?id=1" class="hover:underline">Movie placeholder A</a></h3>
-                                <p class="text-gray-400 text-base">Drama, Mystery &middot; 118 min &middot; PG-13</p>
+                                <p class="text-gray-400 text-base">Drama, Mystery &middot; 118 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 7:15 PM &middot; Standard Digital</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -67,7 +67,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-blue-500 text-blue-300 mb-2">IMAX</span>
                                 <h3 class="font-semibold mb-2"><a href="movie-details.php?id=2" class="hover:underline">Movie placeholder B</a></h3>
-                                <p class="text-gray-400 text-base">Action, Thriller &middot; 102 min &middot; R</p>
+                                <p class="text-gray-400 text-base">Action, Thriller &middot; 102 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 9:30 PM &middot; IMAX</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -79,7 +79,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-gray-600 text-gray-300 mb-2">Digital</span>
                                 <h3 class="font-semibold mb-2"><a href="movie-details.php?id=5" class="hover:underline">Movie placeholder E</a></h3>
-                                <p class="text-gray-400 text-base">Horror &middot; 99 min &middot; R</p>
+                                <p class="text-gray-400 text-base">Horror &middot; 99 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 9:30 PM &middot; Standard Digital</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -91,7 +91,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-gray-600 text-gray-300 mb-2">Digital</span>
                                 <h3 class="font-semibold mb-2"><a href="movie-details.php?id=6" class="hover:underline">Movie placeholder F</a></h3>
-                                <p class="text-gray-400 text-base">Animation, Family &middot; 90 min &middot; PG</p>
+                                <p class="text-gray-400 text-base">Animation, Family &middot; 90 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 5:30 PM &middot; Standard Digital</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -103,7 +103,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-gray-600 text-gray-300 mb-2">Digital</span>
                                 <h3 class="font-semibold mb-2"><a href="movie-details.php?id=7" class="hover:underline">Movie placeholder G</a></h3>
-                                <p class="text-gray-400 text-base">Documentary &middot; 84 min &middot; PG</p>
+                                <p class="text-gray-400 text-base">Documentary &middot; 84 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 4:00 PM &middot; Standard Digital</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>
@@ -115,7 +115,7 @@
                             <div class="flex-1">
                                 <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border border-blue-500 text-blue-300 mb-2">IMAX</span>
                                 <h3 class="font-semibold mb-2"><a href="movie-details.php?id=8" class="hover:underline">Movie placeholder H</a></h3>
-                                <p class="text-gray-400 text-base">Romance, Drama &middot; 112 min &middot; PG-13</p>
+                                <p class="text-gray-400 text-base">Romance, Drama &middot; 112 min</p>
                                 <p class="text-gray-500 text-sm mt-1">Today, 8:45 PM &middot; IMAX</p>
                                 <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
                             </div>

@@ -26,17 +26,17 @@
                 <a href="movie-details.php?id=1" class="block bg-gray-900 rounded-lg p-4">
                     <div class="w-full h-40 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Poster</div>
                     <h3 class="font-semibold">Movie placeholder A</h3>
-                    <p class="text-gray-400 text-sm">Drama, Mystery &middot; 118 min &middot; PG-13</p>
+                    <p class="text-gray-400 text-sm">Drama, Mystery &middot; 118 min</p>
                 </a>
                 <a href="movie-details.php?id=2" class="block bg-gray-900 rounded-lg p-4">
                     <div class="w-full h-40 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Poster</div>
                     <h3 class="font-semibold">Movie placeholder B</h3>
-                    <p class="text-gray-400 text-sm">Action, Thriller &middot; 102 min &middot; R</p>
+                    <p class="text-gray-400 text-sm">Action, Thriller &middot; 102 min</p>
                 </a>
                 <a href="movie-details.php?id=3" class="block bg-gray-900 rounded-lg p-4">
                     <div class="w-full h-40 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Poster</div>
                     <h3 class="font-semibold">Movie placeholder C</h3>
-                    <p class="text-gray-400 text-sm">Comedy &middot; 95 min &middot; PG</p>
+                    <p class="text-gray-400 text-sm">Comedy &middot; 95 min</p>
                 </a>
             </div>
         </section>

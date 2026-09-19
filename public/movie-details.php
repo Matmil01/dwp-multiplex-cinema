@@ -17,7 +17,7 @@
             <div class="w-full sm:w-48 h-64 shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-sm">Poster</div>
             <div>
                 <h2 class="text-xl font-semibold mb-1">Movie placeholder A</h2>
-                <p class="text-gray-500 text-sm mb-3">1975 &middot; Drama, Mystery &middot; 118 min &middot; PG-13</p>
+                <p class="text-gray-500 text-sm mb-3">1975 &middot; Drama, Mystery &middot; 118 min</p>
                 <p class="text-gray-400 mb-4">
                     Full movie description placeholder text goes here. This is where the
                     real synopsis will render once it's pulled from the database (or the
