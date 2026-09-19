@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DWP Multiplex Cinema</title>
+    <link rel="stylesheet" href="assets/dist.css">
+</head>
+<body class="bg-gray-950 text-white">
+    <header class="p-6 border-b border-gray-800">
+        <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
+        <?php require __DIR__ . '/../src/components/navbar.php'; ?>
+    </header>
+
+    <main class="p-6 space-y-8">
+        <section>
+            <h2 class="text-xl font-semibold mb-4">Today's Showings</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="flex gap-4 items-center">
+                        <img src="assets/images/movie.jpg" alt="Movie placeholder A poster" class="w-1/2 aspect-2/3 object-cover rounded-lg shrink-0">
+                        <div class="flex-1">
+                            <h3 class="font-semibold mb-2"><a href="movie-details.php?id=1" class="hover:underline">Movie placeholder A</a></h3>
+                            <p class="text-gray-400 text-base">Drama, Mystery &middot; 118 min &middot; PG-13</p>
+                            <p class="text-gray-500 text-sm mt-1">Today, 7:00 PM &middot; Standard Digital 1</p>
+                            <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="flex gap-4 items-center">
+                        <img src="assets/images/movie.jpg" alt="Movie placeholder B poster" class="w-1/2 aspect-2/3 object-cover rounded-lg shrink-0">
+                        <div class="flex-1">
+                            <h3 class="font-semibold mb-2"><a href="movie-details.php?id=2" class="hover:underline">Movie placeholder B</a></h3>
+                            <p class="text-gray-400 text-base">Action, Thriller &middot; 102 min &middot; R</p>
+                            <p class="text-gray-500 text-sm mt-1">Today, 9:30 PM &middot; IMAX</p>
+                            <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="flex gap-4 items-center">
+                        <img src="assets/images/movie.jpg" alt="Movie placeholder C poster" class="w-1/2 aspect-2/3 object-cover rounded-lg shrink-0">
+                        <div class="flex-1">
+                            <h3 class="font-semibold mb-2"><a href="movie-details.php?id=3" class="hover:underline">Movie placeholder C</a></h3>
+                            <p class="text-gray-400 text-base">Comedy &middot; 95 min &middot; PG</p>
+                            <p class="text-gray-500 text-sm mt-1">Today, 8:00 PM &middot; 35mm</p>
+                            <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="flex gap-4 items-center">
+                        <img src="assets/images/movie.jpg" alt="Movie placeholder D poster" class="w-1/2 aspect-2/3 object-cover rounded-lg shrink-0">
+                        <div class="flex-1">
+                            <h3 class="font-semibold mb-2"><a href="movie-details.php?id=4" class="hover:underline">Movie placeholder D</a></h3>
+                            <p class="text-gray-400 text-base">Sci-Fi, Adventure &middot; 128 min &middot; PG-13</p>
+                            <p class="text-gray-500 text-sm mt-1">Today, 6:15 PM &middot; 70mm</p>
+                            <a href="#" class="inline-block mt-3 bg-blue-900 rounded-lg px-4 py-2 text-sm">Tickets</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-semibold mb-4">About DWP Multiplex Cinema</h2>
+            <p class="text-gray-400">Don't come. We hate people.</p>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-semibold mb-4">News</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
+                    <p class="text-gray-500 text-xs mb-1">September 15, 2026</p>
+                    <h3 class="font-semibold mb-1">Headline placeholder A</h3>
+                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=1" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
+                    <p class="text-gray-500 text-xs mb-1">September 10, 2026</p>
+                    <h3 class="font-semibold mb-1">Headline placeholder B</h3>
+                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=2" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4">
+                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
+                    <p class="text-gray-500 text-xs mb-1">September 4, 2026</p>
+                    <h3 class="font-semibold mb-1">Headline placeholder C</h3>
+                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=3" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                </div>
+            </div>
+            <a href="news.php" class="text-blue-400 text-sm hover:underline">See all news &rarr;</a>
+        </section>
+    </main>
+
+    <?php require __DIR__ . '/../src/components/footer.php'; ?>
+</body>
+</html>

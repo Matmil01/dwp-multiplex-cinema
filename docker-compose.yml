@@ -7,8 +7,9 @@ services:
     volumes:
       - .:/var/www/html
     # Serve from public/ instead of the project root
+    # -E with an optional (/public)? group keeps this rewrite idempotent if the container restarts without being recreated
     command: >
-      bash -c "sed -i 's#/var/www/html#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
+      bash -c "sed -i -E 's#/var/www/html(/public)?#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
       && apache2-foreground"
     # runs alongside `web`, only job is rebuilding dist.css on file changes
   
@@ -17,4 +18,6 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-    command: sh -c "npx @tailwindcss/cli -i ./public/assets/main.css -o ./public/assets/dist.css --watch"
+      # anonymous volume shadows the host's node_modules so the container gets its own Linux native bindings instead of the host's macOS ones
+      - /app/node_modules
+    command: sh -c "npm install && npx @tailwindcss/cli -i ./public/assets/main.css -o ./public/assets/dist.css --watch"
