@@ -2,7 +2,8 @@
     <div class="flex gap-6">
         <a href="index.php" class="hover:text-gray-300">Dashboard</a>
         <a href="bookings.php" class="hover:text-gray-300">Bookings</a>
-        <a href="movies.php" class="hover:text-gray-300">Movies &amp; Showings</a>
+        <a href="movies.php" class="hover:text-gray-300">Movies</a>
+        <a href="schedule.php" class="hover:text-gray-300">Schedule</a>
         <a href="news.php" class="hover:text-gray-300">News</a>
         <a href="settings.php" class="hover:text-gray-300">Settings</a>
     </div>

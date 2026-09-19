@@ -30,7 +30,7 @@
                     <tr>
                         <td class="py-2">Quentin Tarantino</td>
                         <td class="py-2">Movie placeholder A</td>
-                        <td class="py-2">Standard Digital 1</td>
+                        <td class="py-2">Standard Digital</td>
                         <td class="py-2">Today, 7:00 PM</td>
                         <td class="py-2">Paid</td>
                         <td class="py-2"><a href="#" class="text-blue-400 hover:underline">Invoice</a></td>

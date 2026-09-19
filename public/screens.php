@@ -17,19 +17,7 @@
             <h2 class="text-xl font-semibold mb-4">Standard Digital</h2>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div class="bg-gray-900 rounded-lg p-4">
-                    <p class="font-semibold">Standard Digital 1</p>
-                    <p class="text-gray-400 text-sm">Movie placeholder</p>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <p class="font-semibold">Standard Digital 2</p>
-                    <p class="text-gray-400 text-sm">Movie placeholder</p>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <p class="font-semibold">Standard Digital 3</p>
-                    <p class="text-gray-400 text-sm">Movie placeholder</p>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <p class="font-semibold">Standard Digital 4</p>
+                    <p class="font-semibold">Standard Digital</p>
                     <p class="text-gray-400 text-sm">Movie placeholder</p>
                 </div>
             </div>

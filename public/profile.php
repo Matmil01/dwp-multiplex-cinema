@@ -24,7 +24,7 @@
                 <div class="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                     <div>
                         <p class="font-semibold">Movie placeholder A</p>
-                        <p class="text-gray-400 text-sm">Sept 12, 2026 &middot; Standard Digital 1 &middot; 2 seats</p>
+                        <p class="text-gray-400 text-sm">Sept 12, 2026 &middot; Standard Digital &middot; 2 seats</p>
                     </div>
                     <span class="text-gray-400 text-sm">Paid</span>
                 </div>
