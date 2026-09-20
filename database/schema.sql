@@ -5,8 +5,7 @@ CREATE TABLE movies (
     description TEXT,
     duration_minutes INT,
     poster_url VARCHAR(500),
-    release_date DATE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    release_year SMALLINT
 );
 
 CREATE TABLE genres (
@@ -43,8 +42,7 @@ CREATE TABLE movie_credits (
 CREATE TABLE screens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    type VARCHAR(50) NOT NULL,
-    capacity INT
+    type VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE showings (
@@ -52,8 +50,6 @@ CREATE TABLE showings (
     movie_id INT NOT NULL,
     screen_id INT NOT NULL,
     show_datetime DATETIME NOT NULL,
-    price DECIMAL(6, 2),
-    is_daily_premiere BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     FOREIGN KEY (screen_id) REFERENCES screens(id) ON DELETE CASCADE
 );
@@ -61,10 +57,63 @@ CREATE TABLE showings (
 CREATE INDEX idx_showings_show_datetime ON showings (show_datetime);
 CREATE INDEX idx_movies_title ON movies (title);
 
-INSERT INTO screens (name, type, capacity) VALUES
-    ('Standard Digital', 'digital', 120),
-    ('35mm Screen', '35mm', 80),
-    ('16mm Screen', '16mm', 40),
-    ('70mm Screen', '70mm', 100),
-    ('IMAX Screen', 'imax', 150),
-    ('Drive-In Screen', 'drive-in', 60);
+-- Blocks two showings from overlapping on the same screen (based on movie runtime); this trigger is
+-- the actual guardrail, the admin form just displays whatever error it raises.
+DELIMITER $$
+
+CREATE TRIGGER trg_showings_no_overlap_insert
+BEFORE INSERT ON showings
+FOR EACH ROW
+BEGIN
+    DECLARE new_duration INT;
+    DECLARE new_end DATETIME;
+    DECLARE conflict_count INT;
+
+    SELECT duration_minutes INTO new_duration FROM movies WHERE id = NEW.movie_id;
+    SET new_end = DATE_ADD(NEW.show_datetime, INTERVAL COALESCE(new_duration, 0) MINUTE);
+
+    SELECT COUNT(*) INTO conflict_count
+    FROM showings s
+    JOIN movies m ON m.id = s.movie_id
+    WHERE s.screen_id = NEW.screen_id
+      AND NEW.show_datetime < DATE_ADD(s.show_datetime, INTERVAL COALESCE(m.duration_minutes, 0) MINUTE)
+      AND new_end > s.show_datetime;
+
+    IF conflict_count > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'This screen is already booked for an overlapping time.';
+    END IF;
+END$$
+
+CREATE TRIGGER trg_showings_no_overlap_update
+BEFORE UPDATE ON showings
+FOR EACH ROW
+BEGIN
+    DECLARE new_duration INT;
+    DECLARE new_end DATETIME;
+    DECLARE conflict_count INT;
+
+    SELECT duration_minutes INTO new_duration FROM movies WHERE id = NEW.movie_id;
+    SET new_end = DATE_ADD(NEW.show_datetime, INTERVAL COALESCE(new_duration, 0) MINUTE);
+
+    SELECT COUNT(*) INTO conflict_count
+    FROM showings s
+    JOIN movies m ON m.id = s.movie_id
+    WHERE s.screen_id = NEW.screen_id
+      AND s.id != NEW.id
+      AND NEW.show_datetime < DATE_ADD(s.show_datetime, INTERVAL COALESCE(m.duration_minutes, 0) MINUTE)
+      AND new_end > s.show_datetime;
+
+    IF conflict_count > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'This screen is already booked for an overlapping time.';
+    END IF;
+END$$
+
+DELIMITER ;
+
+INSERT INTO screens (name, type) VALUES
+    ('Standard Digital', 'digital'),
+    ('35mm Screen', '35mm'),
+    ('16mm Screen', '16mm'),
+    ('70mm Screen', '70mm'),
+    ('IMAX Screen', 'imax'),
+    ('Drive-In Screen', 'drive-in');

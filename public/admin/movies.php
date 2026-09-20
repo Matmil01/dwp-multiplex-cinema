@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
             'description' => trim($_POST['description'] ?? ''),
             'duration_minutes' => $_POST['duration_minutes'] !== '' ? (int) $_POST['duration_minutes'] : null,
             'poster_url' => trim($_POST['poster_url'] ?? ''),
-            'release_date' => $_POST['release_date'] !== '' ? $_POST['release_date'] : null,
+            'release_year' => $_POST['release_year'] !== '' ? (int) $_POST['release_year'] : null,
             'genres' => $_POST['genres'] ?? '',
             'director' => $_POST['director'] ?? '',
             'writers' => $_POST['writers'] ?? '',
@@ -46,7 +46,7 @@ if (isset($_GET['tmdb_id'])) {
             'description' => $details['description'],
             'duration_minutes' => $details['duration_minutes'],
             'poster_url' => $details['poster_url'],
-            'release_date' => $details['release_date'],
+            'release_year' => $details['release_year'],
             'genres' => implode(', ', $details['genres']),
             'director' => $details['director']['name'] ?? '',
             'writers' => implode(', ', array_column($details['writers'], 'name')),
@@ -65,7 +65,7 @@ if (isset($_GET['tmdb_id'])) {
             'description' => $movie['description'],
             'duration_minutes' => $movie['duration_minutes'],
             'poster_url' => $movie['poster_url'],
-            'release_date' => $movie['release_date'],
+            'release_year' => $movie['release_year'],
             'genres' => implode(', ', $movie['genres']),
             'director' => $movie['director'] ?? '',
             'writers' => implode(', ', $movie['writers']),
@@ -157,8 +157,8 @@ $catalog = Movie::all();
                             </div>
                             <div class="flex gap-3">
                                 <div class="flex-1">
-                                    <label class="text-gray-400 text-sm block mb-1">Release Date</label>
-                                    <input type="date" name="release_date" value="<?= htmlspecialchars($editor['release_date'] ?? '', ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                                    <label class="text-gray-400 text-sm block mb-1">Release Year</label>
+                                    <input type="number" name="release_year" min="1888" max="2100" value="<?= htmlspecialchars((string) ($editor['release_year'] ?? ''), ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
                                 </div>
                                 <div class="flex-1">
                                     <label class="text-gray-400 text-sm block mb-1">Runtime (min)</label>

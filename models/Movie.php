@@ -2,12 +2,15 @@
 
 require_once __DIR__ . '/../classes/Db.php';
 
+// All reads/writes for the movies table and its genres/credits.
 class Movie
 {
+    // Plain catalog list, no schedule info attached — used by the admin catalog and the schedule
+    // page's movie picker. See allWithStatus() for the version the public site uses.
     public static function all(): array
     {
         $stmt = Db::connection()->query(
-            'SELECT id, title, duration_minutes, release_date, poster_url FROM movies ORDER BY title'
+            'SELECT id, title, duration_minutes, release_year, poster_url FROM movies ORDER BY title'
         );
         $movies = $stmt->fetchAll();
 
@@ -18,6 +21,32 @@ class Movie
         return $movies;
     }
 
+    // Status is derived from showings, not stored: has an upcoming showing (now_showing), has only
+    // past showings (previously_shown), or has none at all (not_scheduled).
+    public static function allWithStatus(): array
+    {
+        $stmt = Db::connection()->query(
+            'SELECT m.id, m.title, m.duration_minutes, m.release_year, m.poster_url,
+                    MAX(CASE WHEN s.show_datetime >= NOW() THEN 1 ELSE 0 END) AS has_upcoming,
+                    MAX(CASE WHEN s.show_datetime < NOW() THEN 1 ELSE 0 END) AS has_past
+             FROM movies m
+             LEFT JOIN showings s ON s.movie_id = m.id
+             GROUP BY m.id
+             ORDER BY m.title'
+        );
+        $movies = $stmt->fetchAll();
+
+        foreach ($movies as &$movie) {
+            $movie['genres'] = self::genresFor((int) $movie['id']);
+            $movie['status'] = $movie['has_upcoming']
+                ? 'now_showing'
+                : ($movie['has_past'] ? 'previously_shown' : 'not_scheduled');
+        }
+
+        return $movies;
+    }
+
+    // Stops the same TMDB movie from being imported twice if it's searched and saved again.
     public static function existsByTmdbId(int $tmdbId): ?int
     {
         $stmt = Db::connection()->prepare('SELECT id FROM movies WHERE tmdb_id = ?');
@@ -57,7 +86,7 @@ class Movie
 
         if ($movieId === null) {
             $stmt = $db->prepare(
-                'INSERT INTO movies (tmdb_id, title, description, duration_minutes, poster_url, release_date)
+                'INSERT INTO movies (tmdb_id, title, description, duration_minutes, poster_url, release_year)
                  VALUES (?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
@@ -66,26 +95,26 @@ class Movie
                 $input['description'],
                 $input['duration_minutes'] ?: null,
                 $input['poster_url'] ?: null,
-                $input['release_date'] ?: null,
+                $input['release_year'] ?: null,
             ]);
             $movieId = (int) $db->lastInsertId();
         } else {
             $stmt = $db->prepare(
-                'UPDATE movies SET title = ?, description = ?, duration_minutes = ?, poster_url = ?, release_date = ? WHERE id = ?'
+                'UPDATE movies SET title = ?, description = ?, duration_minutes = ?, poster_url = ?, release_year = ? WHERE id = ?'
             );
             $stmt->execute([
                 $input['title'],
                 $input['description'],
                 $input['duration_minutes'] ?: null,
                 $input['poster_url'] ?: null,
-                $input['release_date'] ?: null,
+                $input['release_year'] ?: null,
                 $movieId,
             ]);
         }
 
         $db->prepare('DELETE FROM movie_genres WHERE movie_id = ?')->execute([$movieId]);
         foreach (self::splitList($input['genres'] ?? '') as $genreName) {
-            $genreId = self::findOrCreateGenre($genreName);
+            $genreId = self::findOrCreateByName('genres', $genreName);
             $db->prepare('INSERT IGNORE INTO movie_genres (movie_id, genre_id) VALUES (?, ?)')
                 ->execute([$movieId, $genreId]);
         }
@@ -151,11 +180,12 @@ class Movie
         return ['director' => $director, 'writers' => $writers, 'cast' => $cast];
     }
 
-    private static function findOrCreateGenre(string $name): int
+    // Looks up a row by name in a lookup table (genres, people), creating it if it doesn't exist yet.
+    private static function findOrCreateByName(string $table, string $name): int
     {
         $db = Db::connection();
 
-        $stmt = $db->prepare('SELECT id FROM genres WHERE name = ?');
+        $stmt = $db->prepare("SELECT id FROM {$table} WHERE name = ?");
         $stmt->execute([$name]);
         $id = $stmt->fetchColumn();
 
@@ -163,32 +193,15 @@ class Movie
             return (int) $id;
         }
 
-        $db->prepare('INSERT INTO genres (name) VALUES (?)')->execute([$name]);
-
-        return (int) $db->lastInsertId();
-    }
-
-    // Editor fields are plain text, so people are matched/deduped by name here (not TMDB person id).
-    private static function findOrCreatePersonByName(string $name): int
-    {
-        $db = Db::connection();
-
-        $stmt = $db->prepare('SELECT id FROM people WHERE name = ?');
-        $stmt->execute([$name]);
-        $id = $stmt->fetchColumn();
-
-        if ($id !== false) {
-            return (int) $id;
-        }
-
-        $db->prepare('INSERT INTO people (name) VALUES (?)')->execute([$name]);
+        $db->prepare("INSERT INTO {$table} (name) VALUES (?)")->execute([$name]);
 
         return (int) $db->lastInsertId();
     }
 
     private static function attachCreditByName(int $movieId, string $name, string $role, ?int $billingOrder): void
     {
-        $personId = self::findOrCreatePersonByName($name);
+        // Editor fields are plain text, so people are matched/deduped by name here (not TMDB person id).
+        $personId = self::findOrCreateByName('people', $name);
 
         Db::connection()->prepare(
             'INSERT INTO movie_credits (movie_id, person_id, role, billing_order) VALUES (?, ?, ?, ?)'

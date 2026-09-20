@@ -14,6 +14,7 @@ class TmdbAdapter
         $this->readToken = $readToken ?? $config['tmdb']['read_token'];
     }
 
+    // Search results shown to the admin so they can pick the right match before importing it.
     public function searchMovies(string $query): array
     {
         $data = $this->request('/search/movie', ['query' => $query, 'include_adult' => 'false']);
@@ -29,6 +30,7 @@ class TmdbAdapter
         }, $data['results'] ?? []);
     }
 
+    // Full movie info for one TMDB id, reshaped into the fields our own movies table expects.
     public function getMovieDetails(int $tmdbId): array
     {
         $data = $this->request("/movie/{$tmdbId}", ['append_to_response' => 'credits']);
@@ -65,7 +67,7 @@ class TmdbAdapter
             'title' => $data['title'] ?? '',
             'description' => $data['overview'] ?? '',
             'duration_minutes' => $data['runtime'] ?? null,
-            'release_date' => $data['release_date'] ?: null,
+            'release_year' => $data['release_date'] ? (int) substr($data['release_date'], 0, 4) : null,
             'poster_url' => $data['poster_path'] ? self::IMAGE_BASE_URL . $data['poster_path'] : null,
             'genres' => array_map(fn(array $g) => $g['name'], $data['genres'] ?? []),
             'director' => $director,
@@ -74,6 +76,7 @@ class TmdbAdapter
         ];
     }
 
+    // Shared HTTP call for every TMDB endpoint: adds the auth header, checks the response, decodes JSON.
     private function request(string $path, array $query): array
     {
         if ($this->readToken === '') {
