@@ -56,7 +56,7 @@
         <section>
             <h2 class="text-xl font-semibold mb-4">IMAX</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-blue-900 rounded-lg p-4">
+                <div class="bg-gray-900 rounded-lg p-4">
                     <p class="font-semibold">IMAX Screen</p>
                     <p class="text-gray-400 text-sm">Movie placeholder</p>
                 </div>

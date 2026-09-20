@@ -10,6 +10,55 @@ class Showing
         return Db::connection()->query('SELECT id, name FROM screens ORDER BY id')->fetchAll();
     }
 
+    // Today's showings (one row per showing, not grouped) for the front page's "Today's Program" —
+    // grouping by movie for display happens in PHP, same as schedule.php groups by screen.
+    public static function today(): array
+    {
+        return Db::connection()->query(
+            "SELECT s.id, s.show_datetime, m.id AS movie_id, m.title, m.duration_minutes, m.poster_url,
+                    sc.name AS screen_name, sc.type AS screen_type,
+                    GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') AS genres
+             FROM showings s
+             JOIN movies m ON m.id = s.movie_id
+             JOIN screens sc ON sc.id = s.screen_id
+             LEFT JOIN movie_genres mg ON mg.movie_id = m.id
+             LEFT JOIN genres g ON g.id = mg.genre_id
+             WHERE DATE(s.show_datetime) = CURDATE()
+             GROUP BY s.id, m.id, m.title, m.duration_minutes, m.poster_url, sc.name, sc.type
+             ORDER BY s.show_datetime"
+        )->fetchAll();
+    }
+
+    // One row per movie's earliest showing after today, for the front page's smaller "Later This
+    // Week" teaser. The subquery pins the join to that specific earliest showing, so screen_type
+    // reflects the showing actually being displayed (a movie could play on more than one screen).
+    public static function laterThisWeekPreview(int $limit): array
+    {
+        $stmt = Db::connection()->prepare(
+            "SELECT m.id AS movie_id, m.title, m.duration_minutes, m.poster_url,
+                    sc.name AS screen_name, sc.type AS screen_type,
+                    s.show_datetime AS next_show_datetime,
+                    GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') AS genres
+             FROM showings s
+             JOIN movies m ON m.id = s.movie_id
+             JOIN screens sc ON sc.id = s.screen_id
+             LEFT JOIN movie_genres mg ON mg.movie_id = m.id
+             LEFT JOIN genres g ON g.id = mg.genre_id
+             WHERE s.show_datetime >= CURDATE() + INTERVAL 1 DAY
+               AND s.show_datetime = (
+                   SELECT MIN(s2.show_datetime) FROM showings s2
+                   WHERE s2.movie_id = m.id AND s2.show_datetime >= CURDATE() + INTERVAL 1 DAY
+               )
+             GROUP BY m.id, m.title, m.duration_minutes, m.poster_url, sc.name, sc.type, s.show_datetime
+             ORDER BY s.show_datetime
+             LIMIT ?"
+        );
+        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     // One day's showings, joined with the movie title/duration for the admin schedule grid.
     public static function forDate(string $date): array
     {

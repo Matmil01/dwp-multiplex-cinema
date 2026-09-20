@@ -2,6 +2,9 @@
 
 require __DIR__ . '/../../models/Showing.php';
 require __DIR__ . '/../../models/Movie.php';
+require __DIR__ . '/../../demo/AutoSchedule.php';
+
+AutoSchedule::ensureBuffer();
 
 $date = $_GET['date'] ?? date('Y-m-d');
 $saveError = null;
