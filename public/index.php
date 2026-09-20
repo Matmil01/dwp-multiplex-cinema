@@ -36,95 +36,95 @@ function showingDayLabel(string $showDatetime): string
     <title>DWP Multiplex Cinema</title>
     <link rel="stylesheet" href="assets/dist.css">
 </head>
-<body class="bg-gray-950 text-white">
-    <header class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
+<body class="site-body">
+    <header class="site-header">
+        <h1 class="site-title">DWP Multiplex Cinema</h1>
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
-    <main class="p-6 space-y-8">
-        <section class="py-8 min-h-screen">
-            <h2 class="text-xl font-semibold mb-6">Tonight's Program</h2>
+    <main class="site-main">
+        <section class="home-section">
+            <h2 class="section-title">Tonight's Program</h2>
 
-            <div class="mb-10">
-                <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Today's Program</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="program-group">
+                <h3 class="section-label">Today's Program</h3>
+                <div class="movie-grid movie-grid--today">
                     <?php if (empty($todayMovies)): ?>
-                        <p class="text-gray-500 text-sm">No showings scheduled for today yet.</p>
+                        <p class="empty-message">No showings scheduled for today yet.</p>
                     <?php endif; ?>
                     <?php foreach ($todayMovies as $movie): ?>
                         <?php require __DIR__ . '/../components/movie-card.php'; ?>
                     <?php endforeach; ?>
                 </div>
-                <a href="screens.php" class="inline-block text-blue-400 text-sm hover:underline mt-4">See the full schedule &rarr;</a>
+                <a href="screens.php" class="text-link">See the full schedule &rarr;</a>
             </div>
 
-            <div>
-                <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Later This Week</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="program-group">
+                <h3 class="section-label">Later This Week</h3>
+                <div class="movie-grid movie-grid--week">
                     <?php if (empty($laterThisWeek)): ?>
-                        <p class="text-gray-500 text-sm">Nothing else scheduled yet.</p>
+                        <p class="empty-message">Nothing else scheduled yet.</p>
                     <?php endif; ?>
                     <?php foreach ($laterThisWeek as $movie): ?>
                         <?php require __DIR__ . '/../components/movie-card.php'; ?>
                     <?php endforeach; ?>
                 </div>
-                <a href="screens.php" class="inline-block text-blue-400 text-sm hover:underline mt-4">See the full schedule &rarr;</a>
+                <a href="screens.php" class="text-link">See the full schedule &rarr;</a>
             </div>
         </section>
 
-        <section class="py-8 min-h-screen">
-            <h2 class="text-xl font-semibold mb-4">About DWP Multiplex Cinema</h2>
-            <p class="text-gray-400">Don't come. We hate people.</p>
+        <section class="home-section">
+            <h2 class="section-title">About DWP Multiplex Cinema</h2>
+            <p class="muted-text">Don't come. We hate people.</p>
         </section>
 
-        <section class="py-8 min-h-screen">
-            <h2 class="text-xl font-semibold mb-4">News</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
-                    <p class="text-gray-500 text-xs mb-1">September 15, 2026</p>
-                    <h3 class="font-semibold mb-1">Headline placeholder A</h3>
-                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=1" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
-                    <p class="text-gray-500 text-xs mb-1">September 10, 2026</p>
-                    <h3 class="font-semibold mb-1">Headline placeholder B</h3>
-                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=2" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
-                    <p class="text-gray-500 text-xs mb-1">September 4, 2026</p>
-                    <h3 class="font-semibold mb-1">Headline placeholder C</h3>
-                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=3" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
-                    <p class="text-gray-500 text-xs mb-1">August 28, 2026</p>
-                    <h3 class="font-semibold mb-1">Headline placeholder D</h3>
-                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=4" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
-                    <p class="text-gray-500 text-xs mb-1">August 21, 2026</p>
-                    <h3 class="font-semibold mb-1">Headline placeholder E</h3>
-                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=5" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
-                </div>
-                <div class="bg-gray-900 rounded-lg p-4">
-                    <div class="w-full h-20 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Thumbnail</div>
-                    <p class="text-gray-500 text-xs mb-1">August 14, 2026</p>
-                    <h3 class="font-semibold mb-1">Headline placeholder F</h3>
-                    <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=6" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
-                </div>
+        <section class="home-section">
+            <h2 class="section-title">News</h2>
+            <div class="news-grid">
+                <article class="news-card">
+                    <div class="news-card__thumbnail">Thumbnail</div>
+                    <p class="news-card__date">September 15, 2026</p>
+                    <h3 class="news-card__title">Headline placeholder A</h3>
+                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=1" class="text-link">Read more &rarr;</a>
+                </article>
+                <article class="news-card">
+                    <div class="news-card__thumbnail">Thumbnail</div>
+                    <p class="news-card__date">September 10, 2026</p>
+                    <h3 class="news-card__title">Headline placeholder B</h3>
+                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=2" class="text-link">Read more &rarr;</a>
+                </article>
+                <article class="news-card">
+                    <div class="news-card__thumbnail">Thumbnail</div>
+                    <p class="news-card__date">September 4, 2026</p>
+                    <h3 class="news-card__title">Headline placeholder C</h3>
+                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=3" class="text-link">Read more &rarr;</a>
+                </article>
+                <article class="news-card">
+                    <div class="news-card__thumbnail">Thumbnail</div>
+                    <p class="news-card__date">August 28, 2026</p>
+                    <h3 class="news-card__title">Headline placeholder D</h3>
+                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=4" class="text-link">Read more &rarr;</a>
+                </article>
+                <article class="news-card">
+                    <div class="news-card__thumbnail">Thumbnail</div>
+                    <p class="news-card__date">August 21, 2026</p>
+                    <h3 class="news-card__title">Headline placeholder E</h3>
+                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=5" class="text-link">Read more &rarr;</a>
+                </article>
+                <article class="news-card">
+                    <div class="news-card__thumbnail">Thumbnail</div>
+                    <p class="news-card__date">August 14, 2026</p>
+                    <h3 class="news-card__title">Headline placeholder F</h3>
+                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                    <a href="news-article.php?id=6" class="text-link">Read more &rarr;</a>
+                </article>
             </div>
-            <a href="news.php" class="text-blue-400 text-sm hover:underline">See all news &rarr;</a>
+            <a href="news.php" class="text-link">See all news &rarr;</a>
         </section>
     </main>
 
