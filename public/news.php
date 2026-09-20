@@ -6,51 +6,51 @@
     <title>News - DWP Multiplex Cinema</title>
     <link rel="stylesheet" href="assets/dist.css">
 </head>
-<body class="bg-gray-950 text-white">
-    <header class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
+<body class="site-body">
+    <header class="site-header">
+        <h1 class="site-title">DWP Multiplex Cinema</h1>
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
-    <main class="p-6 space-y-8">
+    <main class="site-main">
         <section>
-            <h2 class="text-xl font-semibold mb-4">News</h2>
+            <h2 class="section-title">News</h2>
 
-            <div class="space-y-4">
-                <article class="bg-gray-900 rounded-lg p-4 flex gap-4">
-                    <div class="w-32 h-20 shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs">Thumbnail</div>
+            <div class="news-list">
+                <article class="news-list-item">
+                    <div class="news-list-item__thumbnail">Thumbnail</div>
                     <div>
-                        <p class="text-gray-500 text-xs mb-1">September 15, 2026</p>
-                        <h3 class="font-semibold mb-1">Headline placeholder A</h3>
-                        <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=1" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                        <p class="news-card__date">September 15, 2026</p>
+                        <h3 class="news-card__title">Headline placeholder A</h3>
+                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                        <a href="news-article.php?id=1" class="text-link">Read more &rarr;</a>
                     </div>
                 </article>
-                <article class="bg-gray-900 rounded-lg p-4 flex gap-4">
-                    <div class="w-32 h-20 shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs">Thumbnail</div>
+                <article class="news-list-item">
+                    <div class="news-list-item__thumbnail">Thumbnail</div>
                     <div>
-                        <p class="text-gray-500 text-xs mb-1">September 10, 2026</p>
-                        <h3 class="font-semibold mb-1">Headline placeholder B</h3>
-                        <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=2" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                        <p class="news-card__date">September 10, 2026</p>
+                        <h3 class="news-card__title">Headline placeholder B</h3>
+                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                        <a href="news-article.php?id=2" class="text-link">Read more &rarr;</a>
                     </div>
                 </article>
-                <article class="bg-gray-900 rounded-lg p-4 flex gap-4">
-                    <div class="w-32 h-20 shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs">Thumbnail</div>
+                <article class="news-list-item">
+                    <div class="news-list-item__thumbnail">Thumbnail</div>
                     <div>
-                        <p class="text-gray-500 text-xs mb-1">September 4, 2026</p>
-                        <h3 class="font-semibold mb-1">Headline placeholder C</h3>
-                        <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=3" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                        <p class="news-card__date">September 4, 2026</p>
+                        <h3 class="news-card__title">Headline placeholder C</h3>
+                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                        <a href="news-article.php?id=3" class="text-link">Read more &rarr;</a>
                     </div>
                 </article>
-                <article class="bg-gray-900 rounded-lg p-4 flex gap-4">
-                    <div class="w-32 h-20 shrink-0 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs">Thumbnail</div>
+                <article class="news-list-item">
+                    <div class="news-list-item__thumbnail">Thumbnail</div>
                     <div>
-                        <p class="text-gray-500 text-xs mb-1">August 28, 2026</p>
-                        <h3 class="font-semibold mb-1">Headline placeholder D</h3>
-                        <p class="text-gray-400 text-sm mb-2">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=4" class="text-blue-400 text-sm hover:underline">Read more &rarr;</a>
+                        <p class="news-card__date">August 28, 2026</p>
+                        <h3 class="news-card__title">Headline placeholder D</h3>
+                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
+                        <a href="news-article.php?id=4" class="text-link">Read more &rarr;</a>
                     </div>
                 </article>
             </div>

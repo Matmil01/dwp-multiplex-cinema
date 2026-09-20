@@ -40,39 +40,39 @@ function screenShowingDayLabel(string $showDatetime): string
     <title>Screens - DWP Multiplex Cinema</title>
     <link rel="stylesheet" href="assets/dist.css">
 </head>
-<body class="bg-gray-950 text-white">
-    <header class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
+<body class="site-body">
+    <header class="site-header">
+        <h1 class="site-title">DWP Multiplex Cinema</h1>
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
-    <main class="p-6 space-y-8">
+    <main class="site-main">
         <?php foreach ($screensSchedule as $screen): ?>
-            <section class="bg-gray-900 rounded-lg overflow-hidden">
-                <div class="p-6 border-b border-gray-800">
-                    <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border <?= htmlspecialchars(formatBadgeClasses($screen['type']), ENT_QUOTES) ?> mb-2"><?= htmlspecialchars($screen['type'], ENT_QUOTES) ?></span>
-                    <h2 class="text-xl font-semibold mb-1"><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></h2>
-                    <p class="text-gray-400 text-sm"><?= htmlspecialchars(formatBlurb($screen['type']), ENT_QUOTES) ?></p>
+            <section class="screen-schedule">
+                <div class="screen-schedule__header">
+                    <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($screen['type']), ENT_QUOTES) ?>"><?= htmlspecialchars($screen['type'], ENT_QUOTES) ?></span>
+                    <h2 class="screen-schedule__title"><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></h2>
+                    <p class="screen-schedule__blurb"><?= htmlspecialchars(formatBlurb($screen['type']), ENT_QUOTES) ?></p>
                 </div>
-                <table class="w-full text-sm table-fixed">
+                <table class="schedule-table">
                     <thead>
-                        <tr class="text-gray-500 text-xs uppercase tracking-widest text-left">
-                            <th class="px-6 py-3 font-normal w-1/2">Movie</th>
-                            <th class="px-6 py-3 font-normal w-1/4">Date</th>
-                            <th class="px-6 py-3 font-normal w-1/4">Time</th>
+                        <tr>
+                            <th>Movie</th>
+                            <th>Date</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-800">
+                    <tbody>
                         <?php if (empty($screen['showings'])): ?>
                             <tr>
-                                <td class="px-6 py-4 text-gray-500 text-center" colspan="3">Nothing currently scheduled.</td>
+                                <td class="schedule-table__empty" colspan="3">Nothing currently scheduled.</td>
                             </tr>
                         <?php endif; ?>
                         <?php foreach ($screen['showings'] as $showing): ?>
                             <tr>
-                                <td class="px-6 py-3"><a href="movie-details.php?id=<?= (int) $showing['movie_id'] ?>" class="hover:underline"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></a></td>
-                                <td class="px-6 py-3 text-gray-400"><?= htmlspecialchars(screenShowingDayLabel($showing['show_datetime']), ENT_QUOTES) ?></td>
-                                <td class="px-6 py-3"><a href="#" class="text-xs bg-gray-800 hover:bg-blue-900 rounded px-2 py-1"><?= htmlspecialchars(date('g:i A', strtotime($showing['show_datetime'])), ENT_QUOTES) ?></a></td>
+                                <td><a href="movie-details.php?id=<?= (int) $showing['movie_id'] ?>" class="schedule-table__movie-link"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></a></td>
+                                <td class="schedule-table__muted"><?= htmlspecialchars(screenShowingDayLabel($showing['show_datetime']), ENT_QUOTES) ?></td>
+                                <td><a href="#" class="showtime-button"><?= htmlspecialchars(date('g:i A', strtotime($showing['show_datetime'])), ENT_QUOTES) ?></a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
