@@ -95,7 +95,7 @@ $catalog = Movie::all();
 <body class="bg-gray-950 text-white">
     <header class="p-6 border-b border-gray-800">
         <h1 class="text-2xl font-bold">Admin</h1>
-        <?php require __DIR__ . '/../../src/components/admin-navbar.php'; ?>
+        <?php require __DIR__ . '/../../components/admin-navbar.php'; ?>
     </header>
 
     <main class="p-6 space-y-8">
@@ -243,6 +243,6 @@ $catalog = Movie::all();
         });
     </script>
 
-    <?php require __DIR__ . '/../../src/components/footer.php'; ?>
+    <?php require __DIR__ . '/../../components/footer.php'; ?>
 </body>
 </html>

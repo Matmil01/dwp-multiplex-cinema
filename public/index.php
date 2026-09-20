@@ -2,6 +2,7 @@
 
 require __DIR__ . '/../models/Showing.php';
 require __DIR__ . '/../demo/AutoSchedule.php';
+require __DIR__ . '/../components/format-badge.php';
 
 AutoSchedule::ensureBuffer();
 
@@ -17,17 +18,6 @@ foreach (Showing::today() as $row) {
 $todayMovies = array_values($todayByMovie);
 
 $laterThisWeek = Showing::laterThisWeekPreview(4);
-
-// Matching border/text color classes for the screen badge (amber for film prints, blue for IMAX).
-function screenTypeBadgeClasses(string $type): string
-{
-    return match ($type) {
-        '35mm' => 'border-amber-500 text-amber-300',
-        '70mm' => 'border-amber-400 text-amber-200',
-        'imax' => 'border-blue-500 text-blue-300',
-        default => 'border-gray-600 text-gray-300',
-    };
-}
 
 // "Tomorrow" instead of the raw date, otherwise the weekday name (same idea as movie-details.php).
 function showingDayLabel(string $showDatetime): string
@@ -49,7 +39,7 @@ function showingDayLabel(string $showDatetime): string
 <body class="bg-gray-950 text-white">
     <header class="p-6 border-b border-gray-800">
         <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
-        <?php require __DIR__ . '/../src/components/public-navbar.php'; ?>
+        <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
     <main class="p-6 space-y-8">
@@ -63,21 +53,7 @@ function showingDayLabel(string $showDatetime): string
                         <p class="text-gray-500 text-sm">No showings scheduled for today yet.</p>
                     <?php endif; ?>
                     <?php foreach ($todayMovies as $movie): ?>
-                        <div class="bg-gray-900 rounded-lg p-4">
-                            <div class="flex gap-4 items-center">
-                                <img src="<?= htmlspecialchars($movie['poster_url'] ?: 'assets/images/movie.jpg', ENT_QUOTES) ?>" alt="<?= htmlspecialchars($movie['title'], ENT_QUOTES) ?> poster" class="w-1/2 aspect-2/3 object-cover rounded-lg shrink-0">
-                                <div class="flex-1">
-                                    <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border <?= htmlspecialchars(screenTypeBadgeClasses($movie['screen_type']), ENT_QUOTES) ?> mb-2"><?= htmlspecialchars($movie['screen_name'], ENT_QUOTES) ?></span>
-                                    <h3 class="font-semibold mb-2"><a href="movie-details.php?id=<?= (int) $movie['movie_id'] ?>" class="hover:underline"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></a></h3>
-                                    <p class="text-gray-400 text-base"><?= htmlspecialchars(implode(' · ', array_filter([$movie['genres'], $movie['duration_minutes'] ? $movie['duration_minutes'] . ' min' : null])), ENT_QUOTES) ?></p>
-                                    <div class="flex flex-wrap gap-2 mt-3">
-                                        <?php foreach ($movie['times'] as $time): ?>
-                                            <a href="#" class="text-xs bg-gray-800 hover:bg-blue-900 rounded px-2 py-1"><?= htmlspecialchars($time, ENT_QUOTES) ?></a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php require __DIR__ . '/../components/movie-card.php'; ?>
                     <?php endforeach; ?>
                 </div>
                 <a href="screens.php" class="inline-block text-blue-400 text-sm hover:underline mt-4">See the full schedule &rarr;</a>
@@ -90,17 +66,7 @@ function showingDayLabel(string $showDatetime): string
                         <p class="text-gray-500 text-sm">Nothing else scheduled yet.</p>
                     <?php endif; ?>
                     <?php foreach ($laterThisWeek as $movie): ?>
-                        <div class="bg-gray-900 rounded-lg p-4">
-                            <div class="flex gap-4 items-center">
-                                <img src="<?= htmlspecialchars($movie['poster_url'] ?: 'assets/images/movie.jpg', ENT_QUOTES) ?>" alt="<?= htmlspecialchars($movie['title'], ENT_QUOTES) ?> poster" class="w-1/2 aspect-2/3 object-cover rounded-lg shrink-0">
-                                <div class="flex-1">
-                                    <span class="inline-block uppercase text-xs tracking-widest px-2 py-0.5 rounded border <?= htmlspecialchars(screenTypeBadgeClasses($movie['screen_type']), ENT_QUOTES) ?> mb-2"><?= htmlspecialchars($movie['screen_name'], ENT_QUOTES) ?></span>
-                                    <h3 class="font-semibold mb-2"><a href="movie-details.php?id=<?= (int) $movie['movie_id'] ?>" class="hover:underline"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></a></h3>
-                                    <p class="text-gray-400 text-base"><?= htmlspecialchars(implode(' · ', array_filter([$movie['genres'], $movie['duration_minutes'] ? $movie['duration_minutes'] . ' min' : null])), ENT_QUOTES) ?></p>
-                                    <p class="text-gray-500 text-sm mt-1">Next: <?= htmlspecialchars(showingDayLabel($movie['next_show_datetime']), ENT_QUOTES) ?>, <?= htmlspecialchars(date('g:i A', strtotime($movie['next_show_datetime'])), ENT_QUOTES) ?></p>
-                                </div>
-                            </div>
-                        </div>
+                        <?php require __DIR__ . '/../components/movie-card.php'; ?>
                     <?php endforeach; ?>
                 </div>
                 <a href="screens.php" class="inline-block text-blue-400 text-sm hover:underline mt-4">See the full schedule &rarr;</a>
@@ -162,6 +128,6 @@ function showingDayLabel(string $showDatetime): string
         </section>
     </main>
 
-    <?php require __DIR__ . '/../src/components/footer.php'; ?>
+    <?php require __DIR__ . '/../components/footer.php'; ?>
 </body>
 </html>

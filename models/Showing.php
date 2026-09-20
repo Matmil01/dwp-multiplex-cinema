@@ -7,7 +7,23 @@ class Showing
 {
     public static function screens(): array
     {
-        return Db::connection()->query('SELECT id, name FROM screens ORDER BY id')->fetchAll();
+        return Db::connection()->query(
+            "SELECT id, name FROM screens ORDER BY FIELD(type, '35mm', '70mm', 'digital', '4k', 'imax', 'drive-in')"
+        )->fetchAll();
+    }
+
+    // Every screen (even ones with nothing scheduled) plus its upcoming showings, for the public
+    // Screens page's full schedule — LEFT JOIN keeps empty screens in the result.
+    public static function upcomingByScreen(): array
+    {
+        return Db::connection()->query(
+            "SELECT sc.id AS screen_id, sc.name AS screen_name, sc.type AS screen_type,
+                    s.id AS showing_id, s.show_datetime, m.id AS movie_id, m.title AS movie_title
+             FROM screens sc
+             LEFT JOIN showings s ON s.screen_id = sc.id AND s.show_datetime >= NOW()
+             LEFT JOIN movies m ON m.id = s.movie_id
+             ORDER BY FIELD(sc.type, '35mm', '70mm', 'digital', '4k', 'imax', 'drive-in'), s.show_datetime"
+        )->fetchAll();
     }
 
     // Today's showings (one row per showing, not grouped) for the front page's "Today's Program" —

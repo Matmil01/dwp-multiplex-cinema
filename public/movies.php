@@ -21,7 +21,7 @@ if ($status !== 'all') {
 <body class="bg-gray-950 text-white">
     <header class="p-6 border-b border-gray-800">
         <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
-        <?php require __DIR__ . '/../src/components/public-navbar.php'; ?>
+        <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
     <main class="p-6 space-y-8">
@@ -62,6 +62,6 @@ if ($status !== 'all') {
         </section>
     </main>
 
-    <?php require __DIR__ . '/../src/components/footer.php'; ?>
+    <?php require __DIR__ . '/../components/footer.php'; ?>
 </body>
 </html>
