@@ -16,38 +16,38 @@ if ($status !== 'all') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies - DWP Multiplex Cinema</title>
-    <link rel="stylesheet" href="assets/dist.css">
+    <link rel="stylesheet" href="assets/main.css">
 </head>
-<body class="bg-gray-950 text-white">
-    <header class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">DWP Multiplex Cinema</h1>
+<body class="site-body">
+    <header class="site-header">
+        <h1 class="site-title">DWP Multiplex Cinema</h1>
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
-    <main class="p-6 space-y-8">
+    <main class="site-main">
         <section>
-            <h2 class="text-xl font-semibold mb-4">Movies</h2>
+            <h2 class="section-title">Movies</h2>
 
-            <div class="flex gap-3 mb-6">
-                <a href="?status=all" class="rounded-lg px-4 py-2 text-sm <?= $status === 'all' ? 'bg-gray-800' : 'bg-gray-900 text-gray-400' ?>">All Movies</a>
-                <a href="?status=now_showing" class="rounded-lg px-4 py-2 text-sm <?= $status === 'now_showing' ? 'bg-gray-800' : 'bg-gray-900 text-gray-400' ?>">Now Showing</a>
-                <a href="?status=not_scheduled" class="rounded-lg px-4 py-2 text-sm <?= $status === 'not_scheduled' ? 'bg-gray-800' : 'bg-gray-900 text-gray-400' ?>">Not Yet Scheduled</a>
-                <a href="?status=previously_shown" class="rounded-lg px-4 py-2 text-sm <?= $status === 'previously_shown' ? 'bg-gray-800' : 'bg-gray-900 text-gray-400' ?>">Previously Shown</a>
+            <div class="filter-tabs">
+                <a href="?status=all" class="filter-tab <?= $status === 'all' ? 'filter-tab--active' : '' ?>">All Movies</a>
+                <a href="?status=now_showing" class="filter-tab <?= $status === 'now_showing' ? 'filter-tab--active' : '' ?>">Now Showing</a>
+                <a href="?status=not_scheduled" class="filter-tab <?= $status === 'not_scheduled' ? 'filter-tab--active' : '' ?>">Not Yet Scheduled</a>
+                <a href="?status=previously_shown" class="filter-tab <?= $status === 'previously_shown' ? 'filter-tab--active' : '' ?>">Previously Shown</a>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="movie-poster-grid">
                 <?php if (empty($movies)): ?>
-                    <p class="text-gray-500 text-sm">No movies in this category.</p>
+                    <p class="empty-message">No movies in this category.</p>
                 <?php endif; ?>
                 <?php foreach ($movies as $movie): ?>
-                    <a href="movie-details.php?id=<?= (int) $movie['id'] ?>" class="block bg-gray-900 rounded-lg p-4">
+                    <a href="movie-details.php?id=<?= (int) $movie['id'] ?>" class="movie-poster-card">
                         <?php if ($movie['poster_url']): ?>
-                            <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="" class="w-full aspect-2/3 object-cover rounded-lg mb-2">
+                            <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-poster-card__image">
                         <?php else: ?>
-                            <div class="w-full aspect-2/3 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500 text-xs mb-2">Poster</div>
+                            <div class="movie-poster-card__placeholder">Poster</div>
                         <?php endif; ?>
-                        <h3 class="font-semibold"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></h3>
-                        <p class="text-gray-400 text-sm">
+                        <h3 class="movie-poster-card__title"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></h3>
+                        <p class="movie-poster-card__metadata">
                             <?php
                             $meta = array_filter([
                                 implode(', ', $movie['genres']),

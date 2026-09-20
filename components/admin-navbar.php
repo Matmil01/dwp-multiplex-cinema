@@ -1,14 +1,14 @@
-<nav class="mt-4 flex flex-wrap items-center justify-between gap-4">
-    <div class="flex gap-6">
-        <a href="index.php" class="hover:text-gray-300">Dashboard</a>
-        <a href="bookings.php" class="hover:text-gray-300">Bookings</a>
-        <a href="movies.php" class="hover:text-gray-300">Movies</a>
-        <a href="schedule.php" class="hover:text-gray-300">Schedule</a>
-        <a href="news.php" class="hover:text-gray-300">News</a>
-        <a href="settings.php" class="hover:text-gray-300">Settings</a>
+<nav class="admin-nav">
+    <div class="admin-nav__links">
+        <a href="index.php">Dashboard</a>
+        <a href="bookings.php">Bookings</a>
+        <a href="movies.php">Movies</a>
+        <a href="schedule.php">Schedule</a>
+        <a href="news.php">News</a>
+        <a href="settings.php">Settings</a>
     </div>
-    <div class="flex gap-4 text-sm text-gray-400">
-        <a href="../index.php" class="hover:text-white">Back to Site</a>
-        <a href="../index.php" class="hover:text-white">Logout</a>
+    <div class="admin-nav__links admin-nav__account-links">
+        <a href="../index.php">Back to Site</a>
+        <a href="../index.php">Logout</a>
     </div>
 </nav>

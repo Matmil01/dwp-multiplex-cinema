@@ -90,125 +90,125 @@ $catalog = Movie::all();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies - Admin - DWP Multiplex Cinema</title>
-    <link rel="stylesheet" href="../assets/dist.css">
+    <link rel="stylesheet" href="../assets/main.css">
 </head>
-<body class="bg-gray-950 text-white">
-    <header class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">Admin</h1>
+<body class="site-body">
+    <header class="site-header">
+        <h1 class="site-title">Admin</h1>
         <?php require __DIR__ . '/../../components/admin-navbar.php'; ?>
     </header>
 
-    <main class="p-6 space-y-8">
+    <main class="site-main">
         <section>
-            <h2 class="text-xl font-semibold mb-4">Movies</h2>
+            <h2 class="section-title">Movies</h2>
 
             <?php if (isset($_GET['saved'])): ?>
-                <p class="text-green-400 text-sm mb-4"><?= htmlspecialchars($_GET['saved'], ENT_QUOTES) ?> saved.</p>
+                <p class="notice notice--success"><?= htmlspecialchars($_GET['saved'], ENT_QUOTES) ?> saved.</p>
             <?php elseif (isset($_GET['deleted'])): ?>
-                <p class="text-green-400 text-sm mb-4">Movie deleted.</p>
+                <p class="notice notice--success">Movie deleted.</p>
             <?php endif; ?>
             <?php if ($saveError): ?>
-                <p class="text-red-400 text-sm mb-4">Save failed: <?= htmlspecialchars($saveError, ENT_QUOTES) ?></p>
+                <p class="notice notice--error">Save failed: <?= htmlspecialchars($saveError, ENT_QUOTES) ?></p>
             <?php endif; ?>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="movie-manager">
                 <div>
-                    <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">Add / Edit</h3>
+                    <h3 class="admin-subheading">Add / Edit</h3>
 
-                    <form method="get" class="flex gap-2 mb-4">
-                        <input type="text" name="q" value="<?= htmlspecialchars($searchQuery, ENT_QUOTES) ?>" placeholder="Search TMDB by title..." class="flex-1 bg-gray-900 border border-gray-800 rounded-lg px-3 py-2 text-sm">
-                        <button type="submit" class="bg-blue-900 rounded-lg px-4 py-2 text-sm">Search</button>
+                    <form method="get" class="search-form">
+                        <input type="text" name="q" value="<?= htmlspecialchars($searchQuery, ENT_QUOTES) ?>" placeholder="Search TMDB by title..." class="form-input">
+                        <button type="submit" class="button">Search</button>
                     </form>
 
                     <?php if ($searchError): ?>
-                        <p class="text-red-400 text-sm mb-4"><?= htmlspecialchars($searchError, ENT_QUOTES) ?></p>
+                        <p class="notice notice--error"><?= htmlspecialchars($searchError, ENT_QUOTES) ?></p>
                     <?php elseif ($searchQuery !== ''): ?>
-                        <div class="space-y-2 mb-6">
+                        <div class="search-results">
                             <?php if (empty($searchResults)): ?>
-                                <p class="text-gray-500 text-sm">No results for "<?= htmlspecialchars($searchQuery, ENT_QUOTES) ?>".</p>
+                                <p class="empty-message">No results for "<?= htmlspecialchars($searchQuery, ENT_QUOTES) ?>".</p>
                             <?php endif; ?>
                             <?php foreach ($searchResults as $result): ?>
-                                <a href="?tmdb_id=<?= (int) $result['id'] ?>" class="bg-gray-900 rounded-lg p-3 flex items-center gap-3 hover:bg-gray-800">
+                                <a href="?tmdb_id=<?= (int) $result['id'] ?>" class="movie-result">
                                     <?php if ($result['posterUrl']): ?>
-                                        <img src="<?= htmlspecialchars($result['posterUrl'], ENT_QUOTES) ?>" alt="" class="w-10 h-15 object-cover rounded shrink-0">
+                                        <img src="<?= htmlspecialchars($result['posterUrl'], ENT_QUOTES) ?>" alt="" class="movie-result__poster">
                                     <?php endif; ?>
-                                    <span class="text-sm"><?= htmlspecialchars($result['title'], ENT_QUOTES) ?> <span class="text-gray-500">(<?= htmlspecialchars($result['year'], ENT_QUOTES) ?>)</span></span>
+                                    <span class="movie-result__title"><?= htmlspecialchars($result['title'], ENT_QUOTES) ?> <span class="movie-result__year">(<?= htmlspecialchars($result['year'], ENT_QUOTES) ?>)</span></span>
                                 </a>
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
 
                     <?php if ($editor): ?>
-                        <form method="post" class="bg-gray-900 rounded-lg p-4 space-y-3">
+                        <form method="post" class="movie-editor">
                             <input type="hidden" name="action" value="save">
                             <input type="hidden" name="id" value="<?= htmlspecialchars((string) $editor['id'], ENT_QUOTES) ?>">
                             <input type="hidden" name="tmdb_id" value="<?= htmlspecialchars((string) $editor['tmdb_id'], ENT_QUOTES) ?>">
 
                             <?php if ($editor['poster_url']): ?>
-                                <img src="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>" alt="" class="w-20 rounded mb-2">
+                                <img src="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
                                 <input type="hidden" name="poster_url" value="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>">
                             <?php else: ?>
                                 <input type="hidden" name="poster_url" value="">
                             <?php endif; ?>
 
-                            <div>
-                                <label class="text-gray-400 text-sm block mb-1">Title</label>
-                                <input type="text" name="title" value="<?= htmlspecialchars($editor['title'], ENT_QUOTES) ?>" required class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                            <div class="form-field">
+                                <label class="form-label">Title</label>
+                                <input type="text" name="title" value="<?= htmlspecialchars($editor['title'], ENT_QUOTES) ?>" required class="form-input">
                             </div>
-                            <div class="flex gap-3">
-                                <div class="flex-1">
-                                    <label class="text-gray-400 text-sm block mb-1">Release Year</label>
-                                    <input type="number" name="release_year" min="1888" max="2100" value="<?= htmlspecialchars((string) ($editor['release_year'] ?? ''), ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                            <div class="form-field-row">
+                                <div class="form-field">
+                                    <label class="form-label">Release Year</label>
+                                    <input type="number" name="release_year" min="1888" max="2100" value="<?= htmlspecialchars((string) ($editor['release_year'] ?? ''), ENT_QUOTES) ?>" class="form-input">
                                 </div>
-                                <div class="flex-1">
-                                    <label class="text-gray-400 text-sm block mb-1">Runtime (min)</label>
-                                    <input type="number" name="duration_minutes" value="<?= htmlspecialchars((string) ($editor['duration_minutes'] ?? ''), ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                                <div class="form-field">
+                                    <label class="form-label">Runtime (min)</label>
+                                    <input type="number" name="duration_minutes" value="<?= htmlspecialchars((string) ($editor['duration_minutes'] ?? ''), ENT_QUOTES) ?>" class="form-input">
                                 </div>
                             </div>
-                            <div>
-                                <label class="text-gray-400 text-sm block mb-1">Genres (comma-separated)</label>
-                                <input type="text" name="genres" value="<?= htmlspecialchars($editor['genres'], ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                            <div class="form-field">
+                                <label class="form-label">Genres (comma-separated)</label>
+                                <input type="text" name="genres" value="<?= htmlspecialchars($editor['genres'], ENT_QUOTES) ?>" class="form-input">
                             </div>
-                            <div>
-                                <label class="text-gray-400 text-sm block mb-1">Synopsis</label>
-                                <textarea name="description" rows="3" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm"><?= htmlspecialchars($editor['description'], ENT_QUOTES) ?></textarea>
+                            <div class="form-field">
+                                <label class="form-label">Synopsis</label>
+                                <textarea name="description" rows="3" class="form-input"><?= htmlspecialchars($editor['description'], ENT_QUOTES) ?></textarea>
                             </div>
-                            <div>
-                                <label class="text-gray-400 text-sm block mb-1">Director</label>
-                                <input type="text" name="director" value="<?= htmlspecialchars($editor['director'], ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                            <div class="form-field">
+                                <label class="form-label">Director</label>
+                                <input type="text" name="director" value="<?= htmlspecialchars($editor['director'], ENT_QUOTES) ?>" class="form-input">
                             </div>
-                            <div>
-                                <label class="text-gray-400 text-sm block mb-1">Writers (comma-separated)</label>
-                                <input type="text" name="writers" value="<?= htmlspecialchars($editor['writers'], ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                            <div class="form-field">
+                                <label class="form-label">Writers (comma-separated)</label>
+                                <input type="text" name="writers" value="<?= htmlspecialchars($editor['writers'], ENT_QUOTES) ?>" class="form-input">
                             </div>
-                            <div>
-                                <label class="text-gray-400 text-sm block mb-1">Cast (comma-separated)</label>
-                                <input type="text" name="cast" value="<?= htmlspecialchars($editor['cast'], ENT_QUOTES) ?>" class="w-full bg-gray-800 rounded-lg px-3 py-2 text-sm">
+                            <div class="form-field">
+                                <label class="form-label">Cast (comma-separated)</label>
+                                <input type="text" name="cast" value="<?= htmlspecialchars($editor['cast'], ENT_QUOTES) ?>" class="form-input">
                             </div>
-                            <button type="submit" class="bg-blue-900 rounded-lg px-4 py-2 text-sm">Save Movie</button>
+                            <button type="submit" class="button">Save Movie</button>
                         </form>
                     <?php else: ?>
-                        <p class="text-gray-500 text-sm">Search TMDB above, or click Edit on a catalog entry, to fill out this form.</p>
+                        <p class="empty-message">Search TMDB above, or click Edit on a catalog entry, to fill out this form.</p>
                     <?php endif; ?>
                 </div>
 
                 <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400">Catalog</h3>
-                        <input type="text" id="catalogFilter" placeholder="Filter catalog..." class="bg-gray-900 border border-gray-800 rounded-lg px-3 py-1.5 text-sm">
+                    <div class="catalog-heading">
+                        <h3 class="admin-subheading">Catalog</h3>
+                        <input type="text" id="catalogFilter" placeholder="Filter catalog..." class="form-input catalog-heading__filter">
                     </div>
-                    <div id="catalogList" class="space-y-2">
+                    <div id="catalogList" class="catalog-list">
                         <?php if (empty($catalog)): ?>
-                            <p class="text-gray-500 text-sm">No movies yet &mdash; search TMDB to add one.</p>
+                            <p class="empty-message">No movies yet &mdash; search TMDB to add one.</p>
                         <?php endif; ?>
                         <?php foreach ($catalog as $movie): ?>
-                            <div data-title="<?= htmlspecialchars(strtolower($movie['title']), ENT_QUOTES) ?>" class="bg-gray-900 rounded-lg p-3 flex items-center gap-3">
+                            <div data-title="<?= htmlspecialchars(strtolower($movie['title']), ENT_QUOTES) ?>" class="catalog-item">
                                 <?php if ($movie['poster_url']): ?>
-                                    <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="" class="w-10 h-15 object-cover rounded shrink-0">
+                                    <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-result__poster">
                                 <?php endif; ?>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-sm"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></p>
-                                    <p class="text-gray-500 text-xs">
+                                <div class="catalog-item__details">
+                                    <p class="catalog-item__title"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></p>
+                                    <p class="catalog-item__metadata">
                                         <?php
                                         $meta = array_filter([
                                             implode(', ', $movie['genres']),
@@ -218,12 +218,12 @@ $catalog = Movie::all();
                                         ?>
                                     </p>
                                 </div>
-                                <div class="flex gap-3 text-sm shrink-0">
-                                    <a href="?edit_id=<?= (int) $movie['id'] ?>" class="text-blue-400 hover:underline">Edit</a>
+                                <div class="catalog-item__actions">
+                                    <a href="?edit_id=<?= (int) $movie['id'] ?>" class="inline-link">Edit</a>
                                     <form method="post" onsubmit="return confirm('Delete this movie?')">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $movie['id'] ?>">
-                                        <button type="submit" class="text-red-400 hover:underline">Delete</button>
+                                        <button type="submit" class="danger-button">Delete</button>
                                     </form>
                                 </div>
                             </div>

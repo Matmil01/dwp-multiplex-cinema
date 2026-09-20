@@ -3,10 +3,6 @@
 
 # Dependencies
 /vendor/
-/node_modules/
-
-# Tailwind build output
-/public/assets/dist.css
 
 # Environment
 .env
