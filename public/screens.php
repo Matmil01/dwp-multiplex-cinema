@@ -38,7 +38,7 @@ function screenShowingDayLabel(string $showDatetime): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Screens - DWP Multiplex Cinema</title>
-    <link rel="stylesheet" href="assets/dist.css">
+    <link rel="stylesheet" href="assets/main.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -50,7 +50,7 @@ function screenShowingDayLabel(string $showDatetime): string
         <?php foreach ($screensSchedule as $screen): ?>
             <section class="screen-schedule">
                 <div class="screen-schedule__header">
-                    <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($screen['type']), ENT_QUOTES) ?>"><?= htmlspecialchars($screen['type'], ENT_QUOTES) ?></span>
+                    <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($screen['type']), ENT_QUOTES) ?>"><?= htmlspecialchars(formatBadgeLabel($screen['type']), ENT_QUOTES) ?></span>
                     <h2 class="screen-schedule__title"><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></h2>
                     <p class="screen-schedule__blurb"><?= htmlspecialchars(formatBlurb($screen['type']), ENT_QUOTES) ?></p>
                 </div>
