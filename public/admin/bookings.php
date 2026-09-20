@@ -6,50 +6,50 @@
     <title>Bookings - Admin - DWP Multiplex Cinema</title>
     <link rel="stylesheet" href="../assets/dist.css">
 </head>
-<body class="bg-gray-950 text-white">
-    <header class="p-6 border-b border-gray-800">
-        <h1 class="text-2xl font-bold">Admin</h1>
+<body class="site-body">
+    <header class="site-header">
+        <h1 class="site-title">Admin</h1>
         <?php require __DIR__ . '/../../components/admin-navbar.php'; ?>
     </header>
 
-    <main class="p-6 space-y-8">
+    <main class="site-main">
         <section>
-            <h2 class="text-xl font-semibold mb-4">Bookings</h2>
-            <table class="w-full text-left text-sm">
-                <thead class="text-gray-400 border-b border-gray-800">
+            <h2 class="section-title">Bookings</h2>
+            <table class="admin-table">
+                <thead>
                     <tr>
-                        <th class="pb-2">Customer</th>
-                        <th class="pb-2">Movie</th>
-                        <th class="pb-2">Screen</th>
-                        <th class="pb-2">Date/Time</th>
-                        <th class="pb-2">Status</th>
-                        <th class="pb-2">Actions</th>
+                        <th>Customer</th>
+                        <th>Movie</th>
+                        <th>Screen</th>
+                        <th>Date/Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-800">
+                <tbody>
                     <tr>
-                        <td class="py-2">Quentin Tarantino</td>
-                        <td class="py-2">Movie placeholder A</td>
-                        <td class="py-2">Standard Digital</td>
-                        <td class="py-2">Today, 7:00 PM</td>
-                        <td class="py-2">Paid</td>
-                        <td class="py-2"><a href="#" class="text-blue-400 hover:underline">Invoice</a></td>
+                        <td>Quentin Tarantino</td>
+                        <td>Movie placeholder A</td>
+                        <td>Standard Digital</td>
+                        <td>Today, 7:00 PM</td>
+                        <td>Paid</td>
+                        <td><a href="#" class="inline-link">Invoice</a></td>
                     </tr>
                     <tr>
-                        <td class="py-2">Placeholder Customer</td>
-                        <td class="py-2">Movie placeholder B</td>
-                        <td class="py-2">IMAX</td>
-                        <td class="py-2">Today, 9:30 PM</td>
-                        <td class="py-2">Pending</td>
-                        <td class="py-2"><a href="#" class="text-blue-400 hover:underline">Invoice</a></td>
+                        <td>Placeholder Customer</td>
+                        <td>Movie placeholder B</td>
+                        <td>IMAX</td>
+                        <td>Today, 9:30 PM</td>
+                        <td>Pending</td>
+                        <td><a href="#" class="inline-link">Invoice</a></td>
                     </tr>
                     <tr>
-                        <td class="py-2">Guest (jane@example.com)</td>
-                        <td class="py-2">Movie placeholder C</td>
-                        <td class="py-2">35mm</td>
-                        <td class="py-2">Tomorrow, 8:00 PM</td>
-                        <td class="py-2">Cancelled</td>
-                        <td class="py-2"><a href="#" class="text-blue-400 hover:underline">Invoice</a></td>
+                        <td>Guest (jane@example.com)</td>
+                        <td>Movie placeholder C</td>
+                        <td>35mm</td>
+                        <td>Tomorrow, 8:00 PM</td>
+                        <td>Cancelled</td>
+                        <td><a href="#" class="inline-link">Invoice</a></td>
                     </tr>
                 </tbody>
             </table>
