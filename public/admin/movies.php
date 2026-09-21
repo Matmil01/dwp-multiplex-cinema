@@ -90,7 +90,10 @@ $catalog = Movie::all();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies - Admin - DWP Multiplex Cinema</title>
-    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/nav-footer.css">
+    <link rel="stylesheet" href="../assets/css/forms.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body class="site-body">
     <header class="site-header">

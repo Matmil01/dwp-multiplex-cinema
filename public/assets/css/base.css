@@ -1,0 +1,153 @@
+:root {
+	--color-page: #030712;
+	--color-surface: #111827;
+	--color-border: #1f2937;
+	--color-text: #ffffff;
+	--color-text-muted: #9ca3af;
+	--color-link: #60a5fa;
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-4: 1rem;
+	--space-6: 1.5rem;
+	--space-8: 2rem;
+}
+
+.site-body {
+	min-height: 100vh;
+	margin: 0;
+	background: var(--color-page);
+	color: var(--color-text);
+	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.site-header {
+	padding: var(--space-6);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.site-title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+}
+
+.site-main {
+	display: grid;
+	gap: var(--space-8);
+	padding: var(--space-6);
+}
+
+.home-section {
+	min-height: 100vh;
+	padding-block: var(--space-8);
+}
+
+.section-title {
+	margin: 0 0 var(--space-6);
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+.section-label {
+	margin: 0 0 var(--space-4);
+	color: var(--color-text-muted);
+	font-size: 0.875rem;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.program-group {
+	margin-bottom: 2.5rem;
+}
+
+.text-link {
+	display: inline-block;
+	margin-top: var(--space-4);
+	color: var(--color-link);
+	font-size: 0.875rem;
+	text-decoration: none;
+}
+
+.text-link:hover {
+	text-decoration: underline;
+}
+
+.empty-message,
+.muted-text {
+	margin: 0;
+	color: #6b7280;
+	font-size: 0.875rem;
+}
+
+.format-badge {
+	display: inline-block;
+	margin-bottom: var(--space-2);
+	padding: 0.125rem var(--space-2);
+	border: 1px solid currentColor;
+	border-radius: 0.25rem;
+	font-size: 0.75rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.format-badge--35mm {
+	color: #fcd34d;
+}
+
+.format-badge--70mm {
+	color: #fde68a;
+}
+
+.format-badge--digital {
+	color: #d1d5db;
+}
+
+.format-badge--4k {
+	color: #bfdbfe;
+}
+
+.format-badge--imax {
+	color: #93c5fd;
+}
+
+.showtime-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	margin-top: 0.75rem;
+}
+
+.showtime-button {
+	padding: var(--space-1) var(--space-2);
+	border-radius: 0.25rem;
+	background: #1f2937;
+	color: var(--color-text);
+	font-size: 0.75rem;
+	text-decoration: none;
+}
+
+.showtime-button:hover {
+	background: #1e3a8a;
+}
+
+.button {
+	padding: var(--space-2) var(--space-4);
+	border-radius: 0.5rem;
+	background: #1e3a8a;
+	color: var(--color-text);
+	font-size: 0.875rem;
+	text-decoration: none;
+}
+
+.button:hover {
+	background: #1e40af;
+}
+
+.inline-link {
+	color: var(--color-link);
+}
+
+.inline-link:hover {
+	text-decoration: underline;
+}

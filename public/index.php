@@ -34,7 +34,10 @@ function showingDayLabel(string $showDatetime): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DWP Multiplex Cinema</title>
-    <link rel="stylesheet" href="assets/main.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/nav-footer.css">
+    <link rel="stylesheet" href="assets/css/movies.css">
+    <link rel="stylesheet" href="assets/css/showings-news.css">
 </head>
 <body class="site-body">
     <header class="site-header">
