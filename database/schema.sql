@@ -2,16 +2,16 @@ CREATE TABLE movies (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tmdb_id INT UNIQUE,
     title VARCHAR(255) NOT NULL,
+    release_year SMALLINT NOT NULL,
     description TEXT,
     duration_minutes INT,
-    poster_url VARCHAR(500),
-    release_year SMALLINT
-);
+    poster_url VARCHAR(500)
+) ENGINE = InnoDB;
 
 CREATE TABLE genres (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE movie_genres (
     movie_id INT NOT NULL,
@@ -19,13 +19,13 @@ CREATE TABLE movie_genres (
     PRIMARY KEY (movie_id, genre_id),
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE people (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tmdb_person_id INT UNIQUE,
     name VARCHAR(255) NOT NULL
-);
+) ENGINE = InnoDB;
 
 -- role distinguishes director/writer/cast; billing_order ranks cast (1-4) and is unused for director/writer
 CREATE TABLE movie_credits (
@@ -36,14 +36,14 @@ CREATE TABLE movie_credits (
     billing_order INT,
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     FOREIGN KEY (person_id) REFERENCES people(id) ON DELETE CASCADE
-);
+) ENGINE = InnoDB;
 
 -- one row per physical screen; type is what actually drives format (a screen only ever runs one format)
 CREATE TABLE screens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     type VARCHAR(50) NOT NULL
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE showings (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,7 +52,7 @@ CREATE TABLE showings (
     show_datetime DATETIME NOT NULL,
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     FOREIGN KEY (screen_id) REFERENCES screens(id) ON DELETE CASCADE
-);
+) ENGINE = InnoDB;
 
 CREATE INDEX idx_showings_show_datetime ON showings (show_datetime);
 CREATE INDEX idx_movies_title ON movies (title);

@@ -1,22 +1,17 @@
-# `docker compose up` starts every service below at once, no separate commands needed
+# Starts the website and database together with one command: `docker compose up`.
 services:
   web:
-    image: php:8.3-apache
+    # Builds the PHP/Apache image from the project's Dockerfile.
+    build: .
     ports:
       - "8080:80"
     volumes:
       - .:/var/www/html
-    # loads TMDB_* and DB_* vars (and anything else in .env) into the container's environment for getenv() to read
+    # Gives the PHP application the settings from the project's `.env` file.
     env_file:
       - .env
     depends_on:
       - db
-    # Serve from public/ instead of the project root
-    # -E with an optional (/public)? group keeps this rewrite idempotent if the container restarts without being recreated
-    command: >
-      bash -c "docker-php-ext-install pdo_mysql mysqli
-      && sed -i -E 's#/var/www/html(/public)?#/var/www/html/public#g' /etc/apache2/sites-available/000-default.conf /etc/apache2/apache2.conf
-      && apache2-foreground"
   db:
     image: mariadb:11
     restart: unless-stopped
@@ -27,12 +22,15 @@ services:
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    # host-side 3307 avoids clashing with a local MySQL/MariaDB already using 3306; only needed for optional GUI access, "web" always reaches this over the compose network as "db:3306"
+    # The database uses port 3307 on your Mac so it does not clash with XAMPP or
+    # another local MySQL/MariaDB using port 3306. PHP connects to it internally.
     ports:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
-      # auto-run once against an empty data dir on first boot only, not on every restart
+      # Creates the tables and starter screens the first time the database is empty.
+      # It does not run again on normal restarts because the database data is kept
+      # in the named `db_data` volume.
       - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
 volumes:
