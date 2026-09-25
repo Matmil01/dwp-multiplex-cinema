@@ -17,7 +17,7 @@ function screenFormatMeta(string $type): array
         ],
         'digital' => [
             'badge' => 'format-badge--digital',
-            'label' => 'Digital',
+            'label' => 'Standard Digital',
             'blurb' => 'Our everyday screening room — 2K digital projection.',
         ],
         '4k' => [

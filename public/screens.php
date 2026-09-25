@@ -4,19 +4,27 @@ require __DIR__ . '/../models/Showing.php';
 require __DIR__ . '/../components/format-badge.php';
 
 // Group the flat screen/showing rows into one entry per screen, dropping the placeholder
-// showing row a LEFT JOIN produces when a screen has nothing scheduled.
+// showing row a LEFT JOIN produces when a screen has nothing scheduled. Only the earliest
+// upcoming showing per movie is kept (rows arrive ordered by show_datetime) — the full list of
+// dates/times for a movie already lives on its movie-details.php page, so this page just says
+// what's playing in each screen/format and links out for the full timetable.
 $screensSchedule = [];
 foreach (Showing::upcomingByScreen() as $row) {
     if (!isset($screensSchedule[$row['screen_id']])) {
         $screensSchedule[$row['screen_id']] = [
             'name' => $row['screen_name'],
             'type' => $row['screen_type'],
-            'showings' => [],
+            'movies' => [],
         ];
     }
-    if ($row['showing_id'] !== null) {
-        $screensSchedule[$row['screen_id']]['showings'][] = $row;
+    if ($row['showing_id'] === null || isset($screensSchedule[$row['screen_id']]['movies'][$row['movie_id']])) {
+        continue;
     }
+    $screensSchedule[$row['screen_id']]['movies'][$row['movie_id']] = [
+        'movie_id' => $row['movie_id'],
+        'movie_title' => $row['movie_title'],
+        'next_show_datetime' => $row['show_datetime'],
+    ];
 }
 
 // "Today"/"Tomorrow" instead of the raw date, otherwise weekday + date (same idea as movie-details.php).
@@ -44,7 +52,6 @@ function screenShowingDayLabel(string $showDatetime): string
 </head>
 <body class="site-body">
     <header class="site-header">
-        <h1 class="site-title">DWP Multiplex Cinema</h1>
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
@@ -60,21 +67,21 @@ function screenShowingDayLabel(string $showDatetime): string
                     <thead>
                         <tr>
                             <th>Movie</th>
-                            <th>Date</th>
-                            <th>Time</th>
+                            <th>Next Showing</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (empty($screen['showings'])): ?>
+                        <?php if (empty($screen['movies'])): ?>
                             <tr>
                                 <td class="schedule-table__empty" colspan="3">Nothing currently scheduled.</td>
                             </tr>
                         <?php endif; ?>
-                        <?php foreach ($screen['showings'] as $showing): ?>
+                        <?php foreach ($screen['movies'] as $movie): ?>
                             <tr>
-                                <td><a href="movie-details.php?id=<?= (int) $showing['movie_id'] ?>" class="schedule-table__movie-link"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></a></td>
-                                <td class="schedule-table__muted"><?= htmlspecialchars(screenShowingDayLabel($showing['show_datetime']), ENT_QUOTES) ?></td>
-                                <td><a href="#" class="showtime-button"><?= htmlspecialchars(date('g:i A', strtotime($showing['show_datetime'])), ENT_QUOTES) ?></a></td>
+                                <td><a href="movie-details.php?id=<?= (int) $movie['movie_id'] ?>" class="schedule-table__movie-link"><?= htmlspecialchars($movie['movie_title'], ENT_QUOTES) ?></a></td>
+                                <td class="schedule-table__muted"><?= htmlspecialchars(screenShowingDayLabel($movie['next_show_datetime']), ENT_QUOTES) ?>, <?= htmlspecialchars(date('H:i', strtotime($movie['next_show_datetime'])), ENT_QUOTES) ?></td>
+                                <td><a href="movie-details.php?id=<?= (int) $movie['movie_id'] ?>" class="showtime-button">View showtimes</a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

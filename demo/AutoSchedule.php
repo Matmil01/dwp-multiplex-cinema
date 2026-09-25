@@ -2,10 +2,8 @@
 
 require_once __DIR__ . '/../classes/Db.php';
 
-// Keeps the schedule from ever running dry: if the furthest-out showing is getting
-// close, copies the most recent week of real showings forward by 7 days. No template
-// or extra table — it only ever repeats whatever is actually in the showings table
-// right now, so admin edits (additions or deletions) carry forward automatically.
+// Keeps the schedule from ever running dry if enabled in config.php
+// Repeats the most recent week in the showings table.
 class AutoSchedule
 {
     private const BUFFER_DAYS = 14;

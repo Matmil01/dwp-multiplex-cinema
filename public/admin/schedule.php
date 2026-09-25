@@ -4,7 +4,10 @@ require __DIR__ . '/../../models/Showing.php';
 require __DIR__ . '/../../models/Movie.php';
 require __DIR__ . '/../../demo/AutoSchedule.php';
 
-AutoSchedule::ensureBuffer();
+$config = require __DIR__ . '/../../config/config.php';
+if ($config['auto_schedule_enabled']) {
+    AutoSchedule::ensureBuffer();
+}
 
 $date = $_GET['date'] ?? date('Y-m-d');
 $saveError = null;
@@ -32,6 +35,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save'
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     Showing::delete((int) $_POST['id']);
     header('Location: schedule.php?date=' . urlencode($date) . '&deleted=1');
+    exit;
+}
+
+// Drag-and-drop grid endpoint: same save path as the form, just responds with JSON instead of redirecting.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'move') {
+    header('Content-Type: application/json');
+    try {
+        Showing::save([
+            'id' => (int) $_POST['id'],
+            'movie_id' => (int) $_POST['movie_id'],
+            'screen_id' => (int) $_POST['screen_id'],
+            'show_datetime' => $_POST['show_datetime'],
+        ]);
+        echo json_encode(['ok' => true]);
+    } catch (Throwable $e) {
+        http_response_code(422);
+        echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// Duplicate-on-timeline endpoint: same movie/screen as the clicked block, placed right after it ends.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'duplicate') {
+    header('Content-Type: application/json');
+    try {
+        $newId = Showing::save([
+            'id' => null,
+            'movie_id' => (int) $_POST['movie_id'],
+            'screen_id' => (int) $_POST['screen_id'],
+            'show_datetime' => $_POST['show_datetime'],
+        ]);
+        echo json_encode(['ok' => true, 'id' => $newId]);
+    } catch (Throwable $e) {
+        http_response_code(422);
+        echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
+    }
     exit;
 }
 
@@ -70,6 +109,14 @@ function timelineStyle(string $showDatetime, ?int $durationMinutes): array
 
     return [$left, $width];
 }
+
+// Raw (unclamped) minutes since the grid's 12:00 start, for the drag script's snapping math.
+function timelineMinutes(string $showDatetime): int
+{
+    $startOfSpan = strtotime(date('Y-m-d', strtotime($showDatetime)) . ' 12:00');
+
+    return (int) round((strtotime($showDatetime) - $startOfSpan) / 60);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,11 +124,13 @@ function timelineStyle(string $showDatetime, ?int $durationMinutes): array
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule - Admin - DWP Multiplex Cinema</title>
-    <link rel="stylesheet" href="../assets/main.css">
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/nav-footer.css">
+    <link rel="stylesheet" href="../assets/css/forms.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body class="site-body">
     <header class="site-header">
-        <h1 class="site-title">Admin</h1>
         <?php require __DIR__ . '/../../components/admin-navbar.php'; ?>
     </header>
 
@@ -104,7 +153,7 @@ function timelineStyle(string $showDatetime, ?int $durationMinutes): array
                         <?php foreach ($screens as $screen): ?>
                             <div class="schedule-board__row">
                                 <div class="schedule-board__screen-name"><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></div>
-                                <div class="schedule-board__timeline">
+                                <div class="schedule-board__timeline" data-screen-id="<?= (int) $screen['id'] ?>">
                                     <div class="schedule-board__hour"></div>
                                     <div class="schedule-board__hour"></div>
                                     <div class="schedule-board__hour"></div>
@@ -118,10 +167,22 @@ function timelineStyle(string $showDatetime, ?int $durationMinutes): array
                                     <div class="schedule-board__hour"></div>
                                     <div class="schedule-board__hour schedule-board__hour--last"></div>
                                     <?php foreach ($showingsByScreen[$screen['id']] ?? [] as $showing): ?>
-                                        <?php [$left, $width] = timelineStyle($showing['show_datetime'], $showing['duration_minutes']); ?>
-                                        <a href="?date=<?= htmlspecialchars($date, ENT_QUOTES) ?>&edit_id=<?= (int) $showing['id'] ?>" class="schedule-board__showing" style="left: <?= $left ?>%; width: <?= $width ?>%;">
-                                            <?= htmlspecialchars(date('H:i', strtotime($showing['show_datetime'])), ENT_QUOTES) ?> &middot; <?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?>
-                                        </a>
+                                        <?php
+                                        [$left, $width] = timelineStyle($showing['show_datetime'], $showing['duration_minutes']);
+                                        $startTime = date('H:i', strtotime($showing['show_datetime']));
+                                        $endTime = date('H:i', strtotime($showing['show_datetime']) + ($showing['duration_minutes'] ?: 90) * 60);
+                                        ?>
+                                        <div class="schedule-board__showing"
+                                           style="left: <?= $left ?>%; width: <?= $width ?>%;"
+                                           title="<?= htmlspecialchars("$startTime\u{2013}$endTime \u{00b7} {$showing['movie_title']}", ENT_QUOTES) ?>"
+                                           data-id="<?= (int) $showing['id'] ?>"
+                                           data-movie-id="<?= (int) $showing['movie_id'] ?>"
+                                           data-minutes="<?= timelineMinutes($showing['show_datetime']) ?>"
+                                           data-duration="<?= (int) ($showing['duration_minutes'] ?: 90) ?>"
+                                           data-edit-href="?date=<?= htmlspecialchars($date, ENT_QUOTES) ?>&edit_id=<?= (int) $showing['id'] ?>">
+                                            <span class="schedule-board__showing-label"><?= htmlspecialchars($startTime, ENT_QUOTES) ?>&ndash;<?= htmlspecialchars($endTime, ENT_QUOTES) ?> &middot; <?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></span>
+                                            <button type="button" class="schedule-board__duplicate" title="Duplicate this showing right after it">+</button>
+                                        </div>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
@@ -234,6 +295,11 @@ function timelineStyle(string $showDatetime, ?int $durationMinutes): array
             resultsBox.classList.add('is-hidden');
             resultsBox.innerHTML = '';
         });
+    </script>
+
+    <script src="../assets/js/schedule-drag.js"></script>
+    <script>
+        initScheduleDrag(<?= json_encode($date) ?>);
     </script>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>

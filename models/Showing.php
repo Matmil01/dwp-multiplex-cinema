@@ -79,7 +79,7 @@ class Showing
     public static function forDate(string $date): array
     {
         $stmt = Db::connection()->prepare(
-            'SELECT s.id, s.screen_id, s.show_datetime, m.title AS movie_title, m.duration_minutes
+            'SELECT s.id, s.screen_id, s.movie_id, s.show_datetime, m.title AS movie_title, m.duration_minutes
              FROM showings s
              JOIN movies m ON m.id = s.movie_id
              WHERE DATE(s.show_datetime) = ?

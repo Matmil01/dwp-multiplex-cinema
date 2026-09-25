@@ -4,7 +4,10 @@ require __DIR__ . '/../models/Showing.php';
 require __DIR__ . '/../demo/AutoSchedule.php';
 require __DIR__ . '/../components/format-badge.php';
 
-AutoSchedule::ensureBuffer();
+$config = require __DIR__ . '/../config/config.php';
+if ($config['auto_schedule_enabled']) {
+    AutoSchedule::ensureBuffer();
+}
 
 // Showing::today() returns one row per showing; group into one card per movie with a list of times.
 $todayByMovie = [];
@@ -13,7 +16,7 @@ foreach (Showing::today() as $row) {
         $todayByMovie[$row['movie_id']] = $row;
         $todayByMovie[$row['movie_id']]['times'] = [];
     }
-    $todayByMovie[$row['movie_id']]['times'][] = date('g:i A', strtotime($row['show_datetime']));
+    $todayByMovie[$row['movie_id']]['times'][] = date('H:i', strtotime($row['show_datetime']));
 }
 $todayMovies = array_values($todayByMovie);
 
@@ -41,7 +44,6 @@ function showingDayLabel(string $showDatetime): string
 </head>
 <body class="site-body">
     <header class="site-header">
-        <h1 class="site-title">DWP Multiplex Cinema</h1>
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 

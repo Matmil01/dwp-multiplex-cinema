@@ -10,7 +10,6 @@
 </head>
 <body class="site-body">
     <header class="site-header">
-        <h1 class="site-title">Admin</h1>
         <?php require __DIR__ . '/../../components/admin-navbar.php'; ?>
     </header>
 
@@ -33,7 +32,7 @@
                         <td>Quentin Tarantino</td>
                         <td>Movie placeholder A</td>
                         <td>Standard Digital</td>
-                        <td>Today, 7:00 PM</td>
+                        <td>Today, 19:00</td>
                         <td>Paid</td>
                         <td><a href="#" class="inline-link">Invoice</a></td>
                     </tr>
@@ -41,7 +40,7 @@
                         <td>Placeholder Customer</td>
                         <td>Movie placeholder B</td>
                         <td>IMAX</td>
-                        <td>Today, 9:30 PM</td>
+                        <td>Today, 21:30</td>
                         <td>Pending</td>
                         <td><a href="#" class="inline-link">Invoice</a></td>
                     </tr>
@@ -49,7 +48,7 @@
                         <td>Guest (jane@example.com)</td>
                         <td>Movie placeholder C</td>
                         <td>35mm</td>
-                        <td>Tomorrow, 8:00 PM</td>
+                        <td>Tomorrow, 20:00</td>
                         <td>Cancelled</td>
                         <td><a href="#" class="inline-link">Invoice</a></td>
                     </tr>

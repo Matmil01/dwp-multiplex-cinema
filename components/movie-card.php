@@ -16,7 +16,7 @@
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <p class="movie-card__next-showing">Next: <?= htmlspecialchars(showingDayLabel($movie['next_show_datetime']), ENT_QUOTES) ?>, <?= htmlspecialchars(date('g:i A', strtotime($movie['next_show_datetime'])), ENT_QUOTES) ?></p>
+                <p class="movie-card__next-showing">Next: <?= htmlspecialchars(showingDayLabel($movie['next_show_datetime']), ENT_QUOTES) ?>, <?= htmlspecialchars(date('H:i', strtotime($movie['next_show_datetime'])), ENT_QUOTES) ?></p>
             <?php endif; ?>
         </div>
     </div>
