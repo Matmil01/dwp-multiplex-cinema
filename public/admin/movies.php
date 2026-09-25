@@ -82,6 +82,22 @@ if ($searchQuery !== '') {
     }
 }
 
+if ($editor === null) {
+    $editor = [
+        'id' => null,
+        'tmdb_id' => null,
+        'title' => '',
+        'description' => '',
+        'duration_minutes' => null,
+        'poster_url' => '',
+        'release_year' => null,
+        'genres' => '',
+        'director' => '',
+        'writers' => '',
+        'cast' => '',
+    ];
+}
+
 $catalog = Movie::all();
 ?>
 <!DOCTYPE html>
@@ -140,58 +156,54 @@ $catalog = Movie::all();
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($editor): ?>
-                        <form method="post" class="movie-editor">
-                            <input type="hidden" name="action" value="save">
-                            <input type="hidden" name="id" value="<?= htmlspecialchars((string) $editor['id'], ENT_QUOTES) ?>">
-                            <input type="hidden" name="tmdb_id" value="<?= htmlspecialchars((string) $editor['tmdb_id'], ENT_QUOTES) ?>">
+                    <form method="post" class="movie-editor">
+                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" name="id" value="<?= htmlspecialchars((string) $editor['id'], ENT_QUOTES) ?>">
+                        <input type="hidden" name="tmdb_id" value="<?= htmlspecialchars((string) $editor['tmdb_id'], ENT_QUOTES) ?>">
 
-                            <?php if ($editor['poster_url']): ?>
-                                <img src="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
-                                <input type="hidden" name="poster_url" value="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>">
-                            <?php else: ?>
-                                <input type="hidden" name="poster_url" value="">
-                            <?php endif; ?>
+                        <?php if ($editor['poster_url']): ?>
+                            <img src="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
+                            <input type="hidden" name="poster_url" value="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>">
+                        <?php else: ?>
+                            <input type="hidden" name="poster_url" value="">
+                        <?php endif; ?>
 
+                        <div class="form-field">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" value="<?= htmlspecialchars($editor['title'], ENT_QUOTES) ?>" required class="form-input">
+                        </div>
+                        <div class="form-field-row">
                             <div class="form-field">
-                                <label class="form-label">Title</label>
-                                <input type="text" name="title" value="<?= htmlspecialchars($editor['title'], ENT_QUOTES) ?>" required class="form-input">
-                            </div>
-                            <div class="form-field-row">
-                                <div class="form-field">
-                                    <label class="form-label">Release Year</label>
-                                    <input type="number" name="release_year" min="1888" max="2100" value="<?= htmlspecialchars((string) ($editor['release_year'] ?? ''), ENT_QUOTES) ?>" class="form-input">
-                                </div>
-                                <div class="form-field">
-                                    <label class="form-label">Runtime (min)</label>
-                                    <input type="number" name="duration_minutes" value="<?= htmlspecialchars((string) ($editor['duration_minutes'] ?? ''), ENT_QUOTES) ?>" class="form-input">
-                                </div>
+                                <label class="form-label">Release Year</label>
+                                <input type="number" name="release_year" min="1888" max="2100" value="<?= htmlspecialchars((string) ($editor['release_year'] ?? ''), ENT_QUOTES) ?>" class="form-input">
                             </div>
                             <div class="form-field">
-                                <label class="form-label">Genres (comma-separated)</label>
-                                <input type="text" name="genres" value="<?= htmlspecialchars($editor['genres'], ENT_QUOTES) ?>" class="form-input">
+                                <label class="form-label">Runtime (min)</label>
+                                <input type="number" name="duration_minutes" value="<?= htmlspecialchars((string) ($editor['duration_minutes'] ?? ''), ENT_QUOTES) ?>" class="form-input">
                             </div>
-                            <div class="form-field">
-                                <label class="form-label">Synopsis</label>
-                                <textarea name="description" rows="3" class="form-input"><?= htmlspecialchars($editor['description'], ENT_QUOTES) ?></textarea>
-                            </div>
-                            <div class="form-field">
-                                <label class="form-label">Director</label>
-                                <input type="text" name="director" value="<?= htmlspecialchars($editor['director'], ENT_QUOTES) ?>" class="form-input">
-                            </div>
-                            <div class="form-field">
-                                <label class="form-label">Writers (comma-separated)</label>
-                                <input type="text" name="writers" value="<?= htmlspecialchars($editor['writers'], ENT_QUOTES) ?>" class="form-input">
-                            </div>
-                            <div class="form-field">
-                                <label class="form-label">Cast (comma-separated)</label>
-                                <input type="text" name="cast" value="<?= htmlspecialchars($editor['cast'], ENT_QUOTES) ?>" class="form-input">
-                            </div>
-                            <button type="submit" class="button">Save Movie</button>
-                        </form>
-                    <?php else: ?>
-                        <p class="empty-message">Search TMDB above, or click Edit on a catalog entry, to fill out this form.</p>
-                    <?php endif; ?>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Genres (comma-separated)</label>
+                            <input type="text" name="genres" value="<?= htmlspecialchars($editor['genres'], ENT_QUOTES) ?>" class="form-input">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Synopsis</label>
+                            <textarea name="description" rows="3" class="form-input"><?= htmlspecialchars($editor['description'], ENT_QUOTES) ?></textarea>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Director</label>
+                            <input type="text" name="director" value="<?= htmlspecialchars($editor['director'], ENT_QUOTES) ?>" class="form-input">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Writers (comma-separated)</label>
+                            <input type="text" name="writers" value="<?= htmlspecialchars($editor['writers'], ENT_QUOTES) ?>" class="form-input">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Cast (comma-separated)</label>
+                            <input type="text" name="cast" value="<?= htmlspecialchars($editor['cast'], ENT_QUOTES) ?>" class="form-input">
+                        </div>
+                        <button type="submit" class="button">Save Movie</button>
+                    </form>
                 </div>
 
                 <div>

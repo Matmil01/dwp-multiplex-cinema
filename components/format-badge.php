@@ -5,6 +5,16 @@
 function screenFormatMeta(string $type): array
 {
     static $meta = [
+        '8mm' => [
+            'badge' => 'format-badge--8mm',
+            'label' => '8mm',
+            'blurb' => 'Our smallest gauge — home-movie film stock, screened for its rough, archival texture.',
+        ],
+        '16mm' => [
+            'badge' => 'format-badge--16mm',
+            'label' => '16mm',
+            'blurb' => 'A smaller, grainier film print than 35mm, historically used for archive and repertory prints.',
+        ],
         '35mm' => [
             'badge' => 'format-badge--35mm',
             'label' => '35mm',
@@ -14,16 +24,6 @@ function screenFormatMeta(string $type): array
             'badge' => 'format-badge--70mm',
             'label' => '70mm',
             'blurb' => 'Large-format film print, a bigger frame and sharper image than 35mm.',
-        ],
-        'digital' => [
-            'badge' => 'format-badge--digital',
-            'label' => 'Standard Digital',
-            'blurb' => 'Our everyday screening room — 2K digital projection.',
-        ],
-        '4k' => [
-            'badge' => 'format-badge--4k',
-            'label' => '4K',
-            'blurb' => 'Premium digital projection at 4K resolution with laser illumination.',
         ],
         'imax' => [
             'badge' => 'format-badge--imax',

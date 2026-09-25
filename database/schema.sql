@@ -111,9 +111,9 @@ END$$
 DELIMITER ;
 
 INSERT INTO screens (name, type) VALUES
+    ('8mm Screen', '8mm'),
+    ('16mm Screen', '16mm'),
     ('35mm Screen', '35mm'),
     ('70mm Screen', '70mm'),
-    ('Standard Digital', 'digital'),
-    ('4K Screen', '4k'),
     ('IMAX Screen', 'imax'),
     ('Drive-In Screen', 'drive-in');

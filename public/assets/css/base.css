@@ -96,6 +96,14 @@
 	text-transform: uppercase;
 }
 
+.format-badge--8mm {
+	color: #d97706;
+}
+
+.format-badge--16mm {
+	color: #fbbf24;
+}
+
 .format-badge--35mm {
 	color: #fcd34d;
 }
@@ -106,10 +114,6 @@
 
 .format-badge--digital {
 	color: #d1d5db;
-}
-
-.format-badge--4k {
-	color: #bfdbfe;
 }
 
 .format-badge--imax {

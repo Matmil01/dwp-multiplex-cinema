@@ -31,7 +31,7 @@
                     <tr>
                         <td>Quentin Tarantino</td>
                         <td>Movie placeholder A</td>
-                        <td>Standard Digital</td>
+                        <td>35mm</td>
                         <td>Today, 19:00</td>
                         <td>Paid</td>
                         <td><a href="#" class="inline-link">Invoice</a></td>

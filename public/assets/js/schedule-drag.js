@@ -193,6 +193,11 @@ function initScheduleDrag(gridDate) {
             return;
         }
 
+        if (minutes === startMinutes) {
+            drag = null;
+            return;
+        }
+
         const body = new URLSearchParams({
             action: 'move',
             id: block.dataset.id,

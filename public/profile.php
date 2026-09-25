@@ -25,7 +25,7 @@
                 <div class="booking-card">
                     <div>
                         <p class="booking-card__title">Movie placeholder A</p>
-                        <p class="booking-card__details">Sept 12, 2026 &middot; Standard Digital &middot; 2 seats</p>
+                        <p class="booking-card__details">Sept 12, 2026 &middot; 35mm &middot; 2 seats</p>
                     </div>
                     <span class="booking-card__status">Paid</span>
                 </div>
