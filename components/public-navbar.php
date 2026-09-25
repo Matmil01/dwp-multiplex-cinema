@@ -1,6 +1,6 @@
+<h1 class="site-title"><a href="index.php" class="site-title__link">DWP Multiplex Cinema</a></h1>
 <nav class="site-nav">
     <div class="site-nav__links">
-        <a href="index.php">Home</a>
         <a href="movies.php">Movies</a>
         <a href="screens.php">Screens</a>
         <a href="news.php">News</a>

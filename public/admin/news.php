@@ -10,7 +10,6 @@
 </head>
 <body class="site-body">
     <header class="site-header">
-        <h1 class="site-title">Admin</h1>
         <?php require __DIR__ . '/../../components/admin-navbar.php'; ?>
     </header>
 
