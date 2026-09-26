@@ -1,4 +1,4 @@
-<h1 class="site-title"><a href="../index.php" class="site-title__link">DWP Multiplex Cinema</a></h1>
+<h1 class="site-title"><a href="../index.php" class="site-title__link">Untitled Cinema</a></h1>
 <nav class="admin-nav">
     <div class="admin-nav__links">
         <a href="index.php">Dashboard</a>

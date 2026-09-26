@@ -31,7 +31,7 @@ function showingDayLabel(string $showDatetime): string
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?> - DWP Multiplex Cinema</title>
+    <title><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?> - Untitled Cinema</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/nav-footer.css">
     <link rel="stylesheet" href="assets/css/movies.css">

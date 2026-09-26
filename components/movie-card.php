@@ -8,7 +8,7 @@
         <div class="movie-card__details">
             <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($movie['screen_type']), ENT_QUOTES) ?>"><?= htmlspecialchars(formatBadgeLabel($movie['screen_type']), ENT_QUOTES) ?></span>
             <h3 class="movie-card__title"><a href="movie-details.php?id=<?= (int) $movie['movie_id'] ?>"><?= htmlspecialchars($movie['title'], ENT_QUOTES) ?></a></h3>
-            <p class="movie-card__metadata"><?= htmlspecialchars(implode(' · ', array_filter([$movie['genres'], $movie['duration_minutes'] ? $movie['duration_minutes'] . ' min' : null])), ENT_QUOTES) ?></p>
+            <p class="movie-card__metadata"><?= htmlspecialchars(implode(' · ', array_filter([$movie['release_year'] ?? null, $movie['genres'], $movie['duration_minutes'] ? $movie['duration_minutes'] . ' min' : null])), ENT_QUOTES) ?></p>
             <?php if (isset($movie['times'])): ?>
                 <div class="showtime-list">
                     <?php foreach ($movie['times'] as $time): ?>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Headline placeholder - DWP Multiplex Cinema</title>
+    <title>Headline placeholder - Untitled Cinema</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/nav-footer.css">
     <link rel="stylesheet" href="assets/css/showings-news.css">
@@ -15,7 +15,7 @@
 
     <main class="site-main">
         <article class="news-article">
-            <div class="news-article__thumbnail">Thumbnail</div>
+            <div class="news-article__thumbnail">Article image coming soon</div>
             <p class="news-card__date">September 15, 2026</p>
             <h2 class="news-article__title">Headline placeholder A</h2>
             <p class="news-article__body">

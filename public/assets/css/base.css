@@ -31,20 +31,30 @@ h3 {
 }
 
 .site-header {
+	position: relative;
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: var(--space-6);
 	border-bottom: 1px solid var(--color-border);
 }
 
+.site-header::after {
+	content: "";
+	position: absolute;
+	inset: auto 1.5rem -5px 1.5rem;
+	height: 1px;
+	background: var(--color-border-soft);
+}
+
 .site-title {
 	margin: 0;
 	font-size: 1.5rem;
 	font-weight: 700;
+	text-align: center;
 }
 
 .site-title__link {
-	color: inherit;
+	color: #AA2734;
 	text-decoration: none;
 }
 
@@ -57,27 +67,31 @@ h3 {
 }
 
 .home-section {
-	min-height: 100vh;
 	padding-block: var(--space-8);
 }
 
 .section-title {
-	margin: 0 0 var(--space-6);
-	font-size: 1.25rem;
+	margin: 0 0 var(--space-4);
+	font-size: 1.5rem;
 	font-weight: 600;
 }
 
-.section-label {
-	margin: 0 0 var(--space-4);
-	color: var(--color-text-muted);
-	font-size: 0.875rem;
-	font-weight: 600;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
+/* Top-level section headings (Tonight's Program, About, News); sub-headings like "Later This Week" stay at the base size. */
+.section-title--primary {
+	margin-bottom: var(--space-6);
+	font-size: 2.25rem;
+}
+
+.section-title__brand {
+	color: #AA2734;
 }
 
 .program-group {
 	margin-bottom: 2.5rem;
+}
+
+.ctabutton {
+	margin-top: var(--space-4);
 }
 
 .text-link {
@@ -96,16 +110,17 @@ h3 {
 .muted-text {
 	margin: 0;
 	color: var(--color-text-muted);
+}
+
+.empty-message {
 	font-size: 0.875rem;
 }
 
 .format-badge {
 	display: inline-block;
 	margin-bottom: var(--space-2);
-	padding: 0.125rem var(--space-2);
-	border: 1px solid currentColor;
-	border-radius: 0;
-	font-size: 0.75rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
 }
@@ -147,7 +162,7 @@ h3 {
 	border-radius: 0;
 	background: transparent;
 	color: var(--color-text);
-	font-size: 0.75rem;
+	font-size: 0.9375rem;
 	text-decoration: none;
 }
 
@@ -156,7 +171,9 @@ h3 {
 	color: var(--color-page);
 }
 
-.button {
+.button,
+.ctabutton {
+	display: inline-block;
 	padding: var(--space-2) var(--space-4);
 	border-radius: 0;
 	background: var(--color-border);
@@ -165,7 +182,8 @@ h3 {
 	text-decoration: none;
 }
 
-.button:hover {
+.button:hover,
+.ctabutton:hover {
 	background: var(--color-link);
 }
 

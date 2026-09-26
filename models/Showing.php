@@ -31,7 +31,7 @@ class Showing
     public static function today(): array
     {
         return Db::connection()->query(
-            "SELECT s.id, s.show_datetime, m.id AS movie_id, m.title, m.duration_minutes, m.poster_url,
+            "SELECT s.id, s.show_datetime, m.id AS movie_id, m.title, m.release_year, m.duration_minutes, m.poster_url,
                     sc.name AS screen_name, sc.type AS screen_type,
                     GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') AS genres
              FROM showings s
@@ -40,18 +40,16 @@ class Showing
              LEFT JOIN movie_genres mg ON mg.movie_id = m.id
              LEFT JOIN genres g ON g.id = mg.genre_id
              WHERE DATE(s.show_datetime) = CURDATE()
-             GROUP BY s.id, m.id, m.title, m.duration_minutes, m.poster_url, sc.name, sc.type
+             GROUP BY s.id, m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.name, sc.type
              ORDER BY s.show_datetime"
         )->fetchAll();
     }
 
-    // One row per movie's earliest showing after today, for the front page's smaller "Later This
-    // Week" teaser. The subquery pins the join to that specific earliest showing, so screen_type
-    // reflects the showing actually being displayed (a movie could play on more than one screen).
+    // One row per screen type's earliest showing after today, for the front page's "Later This Week" teaser.
     public static function laterThisWeekPreview(int $limit): array
     {
         $stmt = Db::connection()->prepare(
-            "SELECT m.id AS movie_id, m.title, m.duration_minutes, m.poster_url,
+            "SELECT m.id AS movie_id, m.title, m.release_year, m.duration_minutes, m.poster_url,
                     sc.name AS screen_name, sc.type AS screen_type,
                     s.show_datetime AS next_show_datetime,
                     GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') AS genres
@@ -61,12 +59,17 @@ class Showing
              LEFT JOIN movie_genres mg ON mg.movie_id = m.id
              LEFT JOIN genres g ON g.id = mg.genre_id
              WHERE s.show_datetime >= CURDATE() + INTERVAL 1 DAY
-               AND s.show_datetime = (
-                   SELECT MIN(s2.show_datetime) FROM showings s2
-                   WHERE s2.movie_id = m.id AND s2.show_datetime >= CURDATE() + INTERVAL 1 DAY
+                             AND s.id = (
+                                     SELECT s2.id
+                                     FROM showings s2
+                                     JOIN screens sc2 ON sc2.id = s2.screen_id
+                                     WHERE sc2.type = sc.type
+                                         AND s2.show_datetime >= CURDATE() + INTERVAL 1 DAY
+                                     ORDER BY s2.show_datetime, s2.id
+                                     LIMIT 1
                )
-             GROUP BY m.id, m.title, m.duration_minutes, m.poster_url, sc.name, sc.type, s.show_datetime
-             ORDER BY s.show_datetime
+             GROUP BY m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.name, sc.type, s.show_datetime
+                         ORDER BY FIELD(sc.type, '8mm', '16mm', '35mm', '70mm', 'imax', 'drive-in')
              LIMIT ?"
         );
         $stmt->bindValue(1, $limit, PDO::PARAM_INT);

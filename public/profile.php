@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - DWP Multiplex Cinema</title>
+    <title>Profile - Untitled Cinema</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/nav-footer.css">
     <link rel="stylesheet" href="assets/css/profile-booking.css">

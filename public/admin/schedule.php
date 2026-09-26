@@ -123,7 +123,7 @@ function timelineMinutes(string $showDatetime): int
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule - Admin - DWP Multiplex Cinema</title>
+    <title>Schedule - Admin - Untitled Cinema</title>
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/nav-footer.css">
     <link rel="stylesheet" href="../assets/css/forms.css">
@@ -180,7 +180,10 @@ function timelineMinutes(string $showDatetime): int
                                            data-minutes="<?= timelineMinutes($showing['show_datetime']) ?>"
                                            data-duration="<?= (int) ($showing['duration_minutes'] ?: 90) ?>"
                                            data-edit-href="?date=<?= htmlspecialchars($date, ENT_QUOTES) ?>&edit_id=<?= (int) $showing['id'] ?>">
-                                            <span class="schedule-board__showing-label"><?= htmlspecialchars($startTime, ENT_QUOTES) ?>&ndash;<?= htmlspecialchars($endTime, ENT_QUOTES) ?> &middot; <?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></span>
+                                            <span class="schedule-board__showing-label">
+                                                <span class="schedule-board__showing-time"><?= htmlspecialchars($startTime, ENT_QUOTES) ?>&ndash;<?= htmlspecialchars($endTime, ENT_QUOTES) ?></span>
+                                                <span class="schedule-board__showing-title"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></span>
+                                            </span>
                                             <button type="button" class="schedule-board__duplicate" title="Duplicate this showing right after it">+</button>
                                         </div>
                                     <?php endforeach; ?>

@@ -18,7 +18,7 @@ function screenFormatMeta(string $type): array
         '35mm' => [
             'badge' => 'format-badge--35mm',
             'label' => '35mm',
-            'blurb' => 'Shown in 35mm unless noted in 16mm. Classic film-print projection, warmer grain and colour than digital.',
+            'blurb' => 'The classic theatrical film format, with a larger image area and finer detail than 16mm.',
         ],
         '70mm' => [
             'badge' => 'format-badge--70mm',

@@ -1,4 +1,3 @@
-<h1 class="site-title"><a href="index.php" class="site-title__link">DWP Multiplex Cinema</a></h1>
 <nav class="site-nav">
     <div class="site-nav__links">
         <a href="movies.php">Movies</a>
@@ -6,6 +5,7 @@
         <a href="news.php">News</a>
         <a href="contact.php">Contact</a>
     </div>
+    <h1 class="site-title"><a href="index.php" class="site-title__link">Untitled Cinema</a></h1>
     <div class="site-nav__links site-nav__account-links">
         <a href="login.php">Login</a>
         <a href="register.php">Register</a>

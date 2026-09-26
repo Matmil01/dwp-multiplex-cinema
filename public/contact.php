@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - DWP Multiplex Cinema</title>
+    <title>Contact - Untitled Cinema</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/nav-footer.css">
     <link rel="stylesheet" href="assets/css/forms.css">
@@ -15,7 +15,7 @@
 
     <main class="site-main">
         <section>
-            <h2 class="section-title">Contact Us</h2>
+            <h2 class="section-title section-title--primary">Contact Us</h2>
             <form method="post" action="#" class="form-stack">
                 <div class="form-field">
                     <label for="name" class="form-label">Name</label>

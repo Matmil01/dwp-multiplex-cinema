@@ -15,7 +15,7 @@ if ($status !== 'all') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movies - DWP Multiplex Cinema</title>
+    <title>Movies - Untitled Cinema</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/nav-footer.css">
     <link rel="stylesheet" href="assets/css/movies.css">
@@ -27,7 +27,7 @@ if ($status !== 'all') {
 
     <main class="site-main">
         <section>
-            <h2 class="section-title">Movies</h2>
+            <h2 class="section-title section-title--primary">All Movies</h2>
 
             <div class="filter-tabs">
                 <a href="?status=all" class="filter-tab <?= $status === 'all' ? 'filter-tab--active' : '' ?>">All Movies</a>
