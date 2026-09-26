@@ -35,7 +35,7 @@
 
 .news-card__date {
 	margin: var(--space-1) 0 0;
-	color: #6b7280;
+	color: var(--color-text-muted);
 	font-size: 0.875rem;
 }
 
@@ -46,8 +46,8 @@
 	height: 5rem;
 	margin-bottom: var(--space-2);
 	border-radius: 0.5rem;
-	background: #1f2937;
-	color: #6b7280;
+	background: var(--color-surface-alt);
+	color: var(--color-text-muted);
 	font-size: 0.75rem;
 }
 
@@ -99,7 +99,7 @@
 
 .schedule-table th {
 	width: 25%;
-	color: #6b7280;
+	color: var(--color-text-muted);
 	font-size: 0.75rem;
 	font-weight: 400;
 	letter-spacing: 0.1em;
@@ -115,7 +115,7 @@
 }
 
 .schedule-table__empty {
-	color: #6b7280;
+	color: var(--color-text-muted);
 	text-align: center;
 }
 
@@ -153,8 +153,8 @@
 	height: 5rem;
 	flex-shrink: 0;
 	border-radius: 0.5rem;
-	background: #1f2937;
-	color: #6b7280;
+	background: var(--color-surface-alt);
+	color: var(--color-text-muted);
 	font-size: 0.75rem;
 }
 
@@ -173,8 +173,8 @@
 	height: 12rem;
 	margin-bottom: var(--space-4);
 	border-radius: 0.5rem;
-	background: #1f2937;
-	color: #6b7280;
+	background: var(--color-surface-alt);
+	color: var(--color-text-muted);
 	font-size: 0.875rem;
 }
 

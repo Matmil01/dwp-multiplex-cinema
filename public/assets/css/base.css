@@ -1,10 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Limelight&display=swap');
+
 :root {
-	--color-page: #030712;
-	--color-surface: #111827;
-	--color-border: #1f2937;
-	--color-text: #ffffff;
-	--color-text-muted: #9ca3af;
-	--color-link: #60a5fa;
+	--color-page: #12181f;
+	--color-surface: #161d24;
+	--color-surface-alt: #1c252d;
+	--color-border: #ebc96d;
+	--color-border-soft: rgba(235, 201, 109, 0.4);
+	--color-text: #ebc96d;
+	--color-text-muted: #d7c38a;
+	--color-link: #f5dfa0;
 	--space-1: 0.25rem;
 	--space-2: 0.5rem;
 	--space-4: 1rem;
@@ -17,10 +21,18 @@
 	margin: 0;
 	background: var(--color-page);
 	color: var(--color-text);
-	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-family: 'Century Gothic', Futura, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+	font-family: 'Limelight', serif;
 }
 
 .site-header {
+	max-width: 1200px;
+	margin: 0 auto;
 	padding: var(--space-6);
 	border-bottom: 1px solid var(--color-border);
 }
@@ -38,6 +50,8 @@
 
 .site-main {
 	display: grid;
+	max-width: 1200px;
+	margin: 0 auto;
 	gap: var(--space-8);
 	padding: var(--space-6);
 }
@@ -81,7 +95,7 @@
 .empty-message,
 .muted-text {
 	margin: 0;
-	color: #6b7280;
+	color: var(--color-text-muted);
 	font-size: 0.875rem;
 }
 
@@ -90,7 +104,7 @@
 	margin-bottom: var(--space-2);
 	padding: 0.125rem var(--space-2);
 	border: 1px solid currentColor;
-	border-radius: 0.25rem;
+	border-radius: 0;
 	font-size: 0.75rem;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
@@ -129,28 +143,30 @@
 
 .showtime-button {
 	padding: var(--space-1) var(--space-2);
-	border-radius: 0.25rem;
-	background: #1f2937;
+	border: 1px solid var(--color-border);
+	border-radius: 0;
+	background: transparent;
 	color: var(--color-text);
 	font-size: 0.75rem;
 	text-decoration: none;
 }
 
 .showtime-button:hover {
-	background: #1e3a8a;
+	background: var(--color-border);
+	color: var(--color-page);
 }
 
 .button {
 	padding: var(--space-2) var(--space-4);
-	border-radius: 0.5rem;
-	background: #1e3a8a;
-	color: var(--color-text);
+	border-radius: 0;
+	background: var(--color-border);
+	color: var(--color-page);
 	font-size: 0.875rem;
 	text-decoration: none;
 }
 
 .button:hover {
-	background: #1e40af;
+	background: var(--color-link);
 }
 
 .inline-link {
