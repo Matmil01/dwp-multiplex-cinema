@@ -5,11 +5,6 @@
 function screenFormatMeta(string $type): array
 {
     static $meta = [
-        '8mm' => [
-            'badge' => 'format-badge--8mm',
-            'label' => '8mm',
-            'blurb' => 'Our smallest gauge — home-movie film stock, screened for its rough, archival texture.',
-        ],
         '16mm' => [
             'badge' => 'format-badge--16mm',
             'label' => '16mm',
@@ -29,11 +24,6 @@ function screenFormatMeta(string $type): array
             'badge' => 'format-badge--imax',
             'label' => 'IMAX',
             'blurb' => "Our largest screen, with IMAX's proprietary sound and projection system.",
-        ],
-        'drive-in' => [
-            'badge' => 'format-badge--digital',
-            'label' => 'Drive-in',
-            'blurb' => 'Watch from your car on our outdoor screen — weather permitting.',
         ],
     ];
     static $default = ['badge' => 'format-badge--digital', 'label' => '', 'blurb' => ''];

@@ -8,7 +8,7 @@ class Showing
     public static function screens(): array
     {
         return Db::connection()->query(
-            "SELECT id, name FROM screens ORDER BY FIELD(type, '8mm', '16mm', '35mm', '70mm', 'imax', 'drive-in')"
+            "SELECT id, name FROM screens ORDER BY FIELD(type, '16mm', '35mm', '70mm', 'imax')"
         )->fetchAll();
     }
 
@@ -22,7 +22,7 @@ class Showing
              FROM screens sc
              LEFT JOIN showings s ON s.screen_id = sc.id AND s.show_datetime >= NOW()
              LEFT JOIN movies m ON m.id = s.movie_id
-             ORDER BY FIELD(sc.type, '8mm', '16mm', '35mm', '70mm', 'imax', 'drive-in'), s.show_datetime"
+               ORDER BY FIELD(sc.type, '16mm', '35mm', '70mm', 'imax'), s.show_datetime"
         )->fetchAll();
     }
 
@@ -69,7 +69,7 @@ class Showing
                                      LIMIT 1
                )
              GROUP BY m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.name, sc.type, s.show_datetime
-                         ORDER BY FIELD(sc.type, '8mm', '16mm', '35mm', '70mm', 'imax', 'drive-in')
+                         ORDER BY FIELD(sc.type, '16mm', '35mm', '70mm', 'imax')
              LIMIT ?"
         );
         $stmt->bindValue(1, $limit, PDO::PARAM_INT);
