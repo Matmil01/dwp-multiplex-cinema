@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/../models/Showing.php';
+require __DIR__ . '/../models/CompanyInfo.php';
 require __DIR__ . '/../demo/AutoSchedule.php';
 require __DIR__ . '/../components/screen-format.php';
 
@@ -8,6 +9,8 @@ $config = require __DIR__ . '/../config/config.php';
 if ($config['auto_schedule_enabled']) {
     AutoSchedule::ensureBuffer();
 }
+
+$company = CompanyInfo::find();
 
 // Showing::today() returns one row per showing; group into one card per movie with a list of times.
 $todayByMovie = [];
@@ -79,7 +82,7 @@ function showingDayLabel(string $showDatetime): string
 
         <section class="home-section">
             <h2 class="section-title section-title--primary">About <span class="section-title__brand">Untitled Cinema</span></h2>
-            <p class="muted-text">Don't come. We hate people.</p>
+            <p class="muted-text"><?= nl2br(htmlspecialchars($company['description'], ENT_QUOTES)) ?></p>
         </section>
 
         <section class="home-section">

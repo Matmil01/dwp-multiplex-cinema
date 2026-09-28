@@ -2,9 +2,9 @@
 // (snapped to 5 min, magnetic against neighbor edges). Screen stays fixed — a print is booked for a
 // specific screen/format, so dragging a showing onto another row isn't allowed. Overlap is checked
 // client-side against the other blocks on the row before we ever hit the server/DB trigger. Called
-// once per page load with the grid's date (see schedule.php).
-function initScheduleDrag(gridDate) {
-    const SPAN_MINUTES = 12 * 60; // grid covers 12:00-23:59
+// once per page load with the grid's date and the company's opening hour/span (see schedule.php).
+function initScheduleDrag(gridDate, openingHour, spanMinutes) {
+    const SPAN_MINUTES = spanMinutes;
     const SNAP_MINUTES = 5;
     const MAGNET_MINUTES = 10; // snap flush against a neighbor's edge when within this many minutes
 
@@ -78,7 +78,7 @@ function initScheduleDrag(gridDate) {
     }
 
     function minutesToDatetime(minutes) {
-        const totalMinutes = 12 * 60 + minutes;
+        const totalMinutes = openingHour * 60 + minutes;
         const hh = String(Math.floor(totalMinutes / 60) % 24).padStart(2, '0');
         const mm = String(totalMinutes % 60).padStart(2, '0');
         return `${gridDate} ${hh}:${mm}:00`;

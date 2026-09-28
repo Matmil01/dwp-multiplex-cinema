@@ -53,6 +53,17 @@ CREATE TABLE showings (
     FOREIGN KEY (screen_id) REFERENCES screens(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+-- single-row table holding admin-editable company info
+CREATE TABLE company_info (
+    id INT PRIMARY KEY DEFAULT 1,
+    description TEXT,
+    opening_time TIME NOT NULL,
+    closing_time TIME NOT NULL,
+    address VARCHAR(150),
+    phone VARCHAR(30),
+    CHECK (opening_time < closing_time)
+) ENGINE = InnoDB;
+
 CREATE INDEX idx_showings_show_datetime ON showings (show_datetime);
 CREATE INDEX idx_movies_title ON movies (title);
 
@@ -114,3 +125,6 @@ INSERT INTO screens (type) VALUES
     ('35mm'),
     ('70mm'),
     ('imax');
+
+INSERT INTO company_info (id, description, opening_time, closing_time, address, phone) VALUES
+    (1, 'Don''t come. We hate people.', '12:00:00', '23:59:00', '308 Negra Arroyo Lane, Albuquerque, New Mexico 87104', '(505) 503-4455');

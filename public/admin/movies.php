@@ -120,14 +120,19 @@ $catalog = Movie::all();
         <section>
             <h2 class="section-title">Movies</h2>
 
-            <?php if (isset($_GET['saved'])): ?>
-                <p class="notice notice--success"><?= htmlspecialchars($_GET['saved'], ENT_QUOTES) ?> saved.</p>
-            <?php elseif (isset($_GET['deleted'])): ?>
-                <p class="notice notice--success">Movie deleted.</p>
-            <?php endif; ?>
-            <?php if ($saveError): ?>
-                <p class="notice notice--error">Save failed: <?= htmlspecialchars($saveError, ENT_QUOTES) ?></p>
-            <?php endif; ?>
+            <?php
+            if (isset($_GET['saved'])) {
+                $snackbarType = 'success';
+                $snackbarMessage = $_GET['saved'] . ' saved.';
+            } elseif (isset($_GET['deleted'])) {
+                $snackbarType = 'success';
+                $snackbarMessage = 'Movie deleted.';
+            } elseif ($saveError) {
+                $snackbarType = 'error';
+                $snackbarMessage = 'Save failed: ' . $saveError;
+            }
+            require __DIR__ . '/../../components/snackbar.php';
+            ?>
 
             <div class="movie-manager">
                 <div>
