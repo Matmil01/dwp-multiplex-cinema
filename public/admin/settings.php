@@ -39,6 +39,17 @@ $company = CompanyInfo::find();
     </header>
 
     <main class="site-main">
+        <?php
+        if ($saved) {
+            $snackbarType = 'success';
+            $snackbarMessage = 'Changes saved.';
+        } elseif ($saveError) {
+            $snackbarType = 'error';
+            $snackbarMessage = $saveError;
+        }
+        require __DIR__ . '/../../components/snackbar.php';
+        ?>
+
         <section>
             <h2 class="section-title">Company Info</h2>
             <form method="post" action="" class="form-stack">
