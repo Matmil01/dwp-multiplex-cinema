@@ -78,63 +78,70 @@ class Movie
     public static function save(array $input): int
     {
         $db = Db::connection();
+        $db->beginTransaction();
 
-        $movieId = $input['id'] ?? null;
-        if ($movieId === null && !empty($input['tmdb_id'])) {
-            $movieId = self::existsByTmdbId((int) $input['tmdb_id']);
+        try {
+            $movieId = $input['id'] ?? null;
+            if ($movieId === null && !empty($input['tmdb_id'])) {
+                $movieId = self::existsByTmdbId((int) $input['tmdb_id']);
+            }
+
+            if ($movieId === null) {
+                $stmt = $db->prepare(
+                    'INSERT INTO movies (tmdb_id, title, description, duration_minutes, poster_url, release_year)
+                     VALUES (?, ?, ?, ?, ?, ?)'
+                );
+                $stmt->execute([
+                    $input['tmdb_id'] ?: null,
+                    $input['title'],
+                    $input['description'],
+                    $input['duration_minutes'] ?: null,
+                    $input['poster_url'] ?: null,
+                    $input['release_year'] ?: null,
+                ]);
+                $movieId = (int) $db->lastInsertId();
+            } else {
+                $stmt = $db->prepare(
+                    'UPDATE movies SET title = ?, description = ?, duration_minutes = ?, poster_url = ?, release_year = ? WHERE id = ?'
+                );
+                $stmt->execute([
+                    $input['title'],
+                    $input['description'],
+                    $input['duration_minutes'] ?: null,
+                    $input['poster_url'] ?: null,
+                    $input['release_year'] ?: null,
+                    $movieId,
+                ]);
+            }
+
+            $db->prepare('DELETE FROM movie_genres WHERE movie_id = ?')->execute([$movieId]);
+            foreach (self::splitList($input['genres'] ?? '') as $genreName) {
+                $genreId = self::findOrCreateByName('genres', $genreName);
+                $db->prepare('INSERT IGNORE INTO movie_genres (movie_id, genre_id) VALUES (?, ?)')
+                    ->execute([$movieId, $genreId]);
+            }
+
+            $db->prepare('DELETE FROM movie_credits WHERE movie_id = ?')->execute([$movieId]);
+
+            $director = trim($input['director'] ?? '');
+            if ($director !== '') {
+                self::attachCreditByName($movieId, $director, 'director', null);
+            }
+
+            foreach (self::splitList($input['writers'] ?? '') as $writer) {
+                self::attachCreditByName($movieId, $writer, 'writer', null);
+            }
+
+            foreach (self::splitList($input['cast'] ?? '') as $index => $castName) {
+                self::attachCreditByName($movieId, $castName, 'cast', $index + 1);
+            }
+
+            $db->commit();
+            return $movieId;
+        } catch (Throwable $e) {
+            $db->rollBack();
+            throw $e;
         }
-
-        if ($movieId === null) {
-            $stmt = $db->prepare(
-                'INSERT INTO movies (tmdb_id, title, description, duration_minutes, poster_url, release_year)
-                 VALUES (?, ?, ?, ?, ?, ?)'
-            );
-            $stmt->execute([
-                $input['tmdb_id'] ?: null,
-                $input['title'],
-                $input['description'],
-                $input['duration_minutes'] ?: null,
-                $input['poster_url'] ?: null,
-                $input['release_year'] ?: null,
-            ]);
-            $movieId = (int) $db->lastInsertId();
-        } else {
-            $stmt = $db->prepare(
-                'UPDATE movies SET title = ?, description = ?, duration_minutes = ?, poster_url = ?, release_year = ? WHERE id = ?'
-            );
-            $stmt->execute([
-                $input['title'],
-                $input['description'],
-                $input['duration_minutes'] ?: null,
-                $input['poster_url'] ?: null,
-                $input['release_year'] ?: null,
-                $movieId,
-            ]);
-        }
-
-        $db->prepare('DELETE FROM movie_genres WHERE movie_id = ?')->execute([$movieId]);
-        foreach (self::splitList($input['genres'] ?? '') as $genreName) {
-            $genreId = self::findOrCreateByName('genres', $genreName);
-            $db->prepare('INSERT IGNORE INTO movie_genres (movie_id, genre_id) VALUES (?, ?)')
-                ->execute([$movieId, $genreId]);
-        }
-
-        $db->prepare('DELETE FROM movie_credits WHERE movie_id = ?')->execute([$movieId]);
-
-        $director = trim($input['director'] ?? '');
-        if ($director !== '') {
-            self::attachCreditByName($movieId, $director, 'director', null);
-        }
-
-        foreach (self::splitList($input['writers'] ?? '') as $writer) {
-            self::attachCreditByName($movieId, $writer, 'writer', null);
-        }
-
-        foreach (self::splitList($input['cast'] ?? '') as $index => $castName) {
-            self::attachCreditByName($movieId, $castName, 'cast', $index + 1);
-        }
-
-        return $movieId;
     }
 
     public static function delete(int $id): void

@@ -2,6 +2,7 @@
 
 require __DIR__ . '/../models/Movie.php';
 require __DIR__ . '/../models/Showing.php';
+require __DIR__ . '/../components/screen-format.php';
 
 $movie = Movie::find((int) ($_GET['id'] ?? 0));
 
@@ -94,7 +95,7 @@ function showingDayLabel(string $showDatetime): string
                     <div class="showing-card">
                         <div>
                             <p class="showing-card__time"><?= htmlspecialchars(showingDayLabel($showing['show_datetime']), ENT_QUOTES) ?>, <?= htmlspecialchars(date('H:i', strtotime($showing['show_datetime'])), ENT_QUOTES) ?></p>
-                            <p class="showing-card__screen"><?= htmlspecialchars($showing['screen_name'], ENT_QUOTES) ?></p>
+                            <p class="showing-card__screen"><?= htmlspecialchars(screenDisplayName($showing['screen_type']), ENT_QUOTES) ?></p>
                         </div>
                         <a href="#" class="button">Book</a>
                     </div>

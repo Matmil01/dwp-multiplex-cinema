@@ -1,7 +1,5 @@
 <?php
 
-// Presentation metadata (badge color, marketing blurb) per screen type — not stored in the DB
-// since it's just marketing copy, shared by the front page and the Screens page.
 function screenFormatMeta(string $type): array
 {
     static $meta = [
@@ -26,7 +24,7 @@ function screenFormatMeta(string $type): array
             'blurb' => "Our largest screen, with IMAX's proprietary sound and projection system.",
         ],
     ];
-    static $default = ['badge' => 'format-badge--digital', 'label' => '', 'blurb' => ''];
+    static $default = ['badge' => 'format-badge--unknown', 'label' => 'Unknown', 'blurb' => 'Format information unavailable.'];
 
     return $meta[$type] ?? $default;
 }
@@ -44,4 +42,9 @@ function formatBadgeLabel(string $type): string
 function formatBlurb(string $type): string
 {
     return screenFormatMeta($type)['blurb'];
+}
+
+function screenDisplayName(string $type): string
+{
+    return formatBadgeLabel($type) . ' Screen';
 }

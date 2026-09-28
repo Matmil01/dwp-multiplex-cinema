@@ -1,7 +1,7 @@
 <?php
 
 require __DIR__ . '/../models/Showing.php';
-require __DIR__ . '/../components/format-badge.php';
+require __DIR__ . '/../components/screen-format.php';
 
 // Group the flat screen/showing rows into one entry per screen, dropping the placeholder
 // showing row a LEFT JOIN produces when a screen has nothing scheduled. Only the earliest
@@ -12,7 +12,6 @@ $screensSchedule = [];
 foreach (Showing::upcomingByScreen() as $row) {
     if (!isset($screensSchedule[$row['screen_id']])) {
         $screensSchedule[$row['screen_id']] = [
-            'name' => $row['screen_name'],
             'type' => $row['screen_type'],
             'movies' => [],
         ];
@@ -68,7 +67,7 @@ function screenShowingDayLabel(string $showDatetime): string
                 <section class="screen-schedule">
                     <div class="screen-schedule__header">
                         <div class="screen-schedule__intro">
-                            <h2 class="screen-schedule__title"><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></h2>
+                            <h2 class="screen-schedule__title"><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?></h2>
                             <p class="screen-schedule__blurb"><?= htmlspecialchars(formatBlurb($screen['type']), ENT_QUOTES) ?></p>
                         </div>
                         <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($screen['type']), ENT_QUOTES) ?>"><?= htmlspecialchars(formatBadgeLabel($screen['type']), ENT_QUOTES) ?></span>

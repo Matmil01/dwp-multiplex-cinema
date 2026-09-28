@@ -33,26 +33,6 @@
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">Recent Bookings</h2>
-            <div class="booking-list">
-                <div class="booking-card">
-                    <div>
-                        <p class="booking-card__title">Movie placeholder A</p>
-                        <p class="booking-card__details">Guest: Quentin Tarantino &middot; 2 seats</p>
-                    </div>
-                    <span class="booking-card__status">Paid</span>
-                </div>
-                <div class="booking-card">
-                    <div>
-                        <p class="booking-card__title">Movie placeholder B</p>
-                        <p class="booking-card__details">Placeholder Customer &middot; 1 seat</p>
-                    </div>
-                    <span class="booking-card__status">Pending</span>
-                </div>
-            </div>
-            <a href="bookings.php" class="text-link">See all bookings &rarr;</a>
-        </section>
     </main>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>

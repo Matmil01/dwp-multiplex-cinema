@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../models/Showing.php';
 require __DIR__ . '/../demo/AutoSchedule.php';
-require __DIR__ . '/../components/format-badge.php';
+require __DIR__ . '/../components/screen-format.php';
 
 $config = require __DIR__ . '/../config/config.php';
 if ($config['auto_schedule_enabled']) {

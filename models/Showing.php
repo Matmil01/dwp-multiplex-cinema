@@ -8,7 +8,7 @@ class Showing
     public static function screens(): array
     {
         return Db::connection()->query(
-            "SELECT id, name FROM screens ORDER BY FIELD(type, '16mm', '35mm', '70mm', 'imax')"
+            "SELECT id, type FROM screens ORDER BY FIELD(type, '16mm', '35mm', '70mm', 'imax')"
         )->fetchAll();
     }
 
@@ -17,7 +17,7 @@ class Showing
     public static function upcomingByScreen(): array
     {
         return Db::connection()->query(
-            "SELECT sc.id AS screen_id, sc.name AS screen_name, sc.type AS screen_type,
+            "SELECT sc.id AS screen_id, sc.type AS screen_type,
                     s.id AS showing_id, s.show_datetime, m.id AS movie_id, m.title AS movie_title
              FROM screens sc
              LEFT JOIN showings s ON s.screen_id = sc.id AND s.show_datetime >= NOW()
@@ -32,7 +32,7 @@ class Showing
     {
         return Db::connection()->query(
             "SELECT s.id, s.show_datetime, m.id AS movie_id, m.title, m.release_year, m.duration_minutes, m.poster_url,
-                    sc.name AS screen_name, sc.type AS screen_type,
+                    sc.type AS screen_type,
                     GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') AS genres
              FROM showings s
              JOIN movies m ON m.id = s.movie_id
@@ -40,7 +40,7 @@ class Showing
              LEFT JOIN movie_genres mg ON mg.movie_id = m.id
              LEFT JOIN genres g ON g.id = mg.genre_id
              WHERE DATE(s.show_datetime) = CURDATE()
-             GROUP BY s.id, m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.name, sc.type
+             GROUP BY s.id, m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.type
              ORDER BY s.show_datetime"
         )->fetchAll();
     }
@@ -50,7 +50,7 @@ class Showing
     {
         $stmt = Db::connection()->prepare(
             "SELECT m.id AS movie_id, m.title, m.release_year, m.duration_minutes, m.poster_url,
-                    sc.name AS screen_name, sc.type AS screen_type,
+                    sc.type AS screen_type,
                     s.show_datetime AS next_show_datetime,
                     GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') AS genres
              FROM showings s
@@ -68,7 +68,7 @@ class Showing
                                      ORDER BY s2.show_datetime, s2.id
                                      LIMIT 1
                )
-             GROUP BY m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.name, sc.type, s.show_datetime
+             GROUP BY m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.type, s.show_datetime
                          ORDER BY FIELD(sc.type, '16mm', '35mm', '70mm', 'imax')
              LIMIT ?"
         );
@@ -104,11 +104,11 @@ class Showing
         return $stmt->fetch() ?: null;
     }
 
-    // Upcoming showings for one movie, joined with the screen name, for the public movie page.
+    // Upcoming showings for one movie, joined with the screen type, for the public movie page.
     public static function upcomingForMovie(int $movieId): array
     {
         $stmt = Db::connection()->prepare(
-            'SELECT s.id, s.show_datetime, sc.name AS screen_name
+            'SELECT s.id, s.show_datetime, sc.type AS screen_type
              FROM showings s
              JOIN screens sc ON sc.id = s.screen_id
              WHERE s.movie_id = ? AND s.show_datetime >= NOW()

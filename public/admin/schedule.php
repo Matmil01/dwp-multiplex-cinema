@@ -3,6 +3,7 @@
 require __DIR__ . '/../../models/Showing.php';
 require __DIR__ . '/../../models/Movie.php';
 require __DIR__ . '/../../demo/AutoSchedule.php';
+require __DIR__ . '/../../components/screen-format.php';
 
 $config = require __DIR__ . '/../../config/config.php';
 if ($config['auto_schedule_enabled']) {
@@ -152,7 +153,7 @@ function timelineMinutes(string $showDatetime): int
                     <div class="schedule-board__rows">
                         <?php foreach ($screens as $screen): ?>
                             <div class="schedule-board__row">
-                                <div class="schedule-board__screen-name"><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></div>
+                                <div class="schedule-board__screen-name"><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?></div>
                                 <div class="schedule-board__timeline" data-screen-id="<?= (int) $screen['id'] ?>">
                                     <div class="schedule-board__hour"></div>
                                     <div class="schedule-board__hour"></div>
@@ -233,7 +234,7 @@ function timelineMinutes(string $showDatetime): int
                         <label class="form-label">Screen</label>
                         <select name="screen_id" required class="form-input">
                             <?php foreach ($screens as $screen): ?>
-                                <option value="<?= (int) $screen['id'] ?>" <?= (($editor['screen_id'] ?? null) == $screen['id']) ? 'selected' : '' ?>><?= htmlspecialchars($screen['name'], ENT_QUOTES) ?></option>
+                                <option value="<?= (int) $screen['id'] ?>" <?= (($editor['screen_id'] ?? null) == $screen['id']) ? 'selected' : '' ?>><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

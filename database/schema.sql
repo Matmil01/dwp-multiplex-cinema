@@ -1,16 +1,16 @@
 CREATE TABLE movies (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tmdb_id INT UNIQUE,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(100) NOT NULL,
     release_year SMALLINT NOT NULL,
     description TEXT,
     duration_minutes INT,
-    poster_url VARCHAR(500)
+    poster_url VARCHAR(150)
 ) ENGINE = InnoDB;
 
 CREATE TABLE genres (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(20) NOT NULL UNIQUE
 ) ENGINE = InnoDB;
 
 CREATE TABLE movie_genres (
@@ -24,7 +24,7 @@ CREATE TABLE movie_genres (
 CREATE TABLE people (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tmdb_person_id INT UNIQUE,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(100) NOT NULL
 ) ENGINE = InnoDB;
 
 -- role distinguishes director/writer/cast; billing_order ranks cast (1-4) and is unused for director/writer
@@ -38,11 +38,10 @@ CREATE TABLE movie_credits (
     FOREIGN KEY (person_id) REFERENCES people(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
--- one row per physical screen; type is what actually drives format (a screen only ever runs one format)
+-- one row per physical screen, identified only by its format (no separate display name column)
 CREATE TABLE screens (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    type VARCHAR(50) NOT NULL
+    type VARCHAR(10) NOT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE showings (
@@ -110,8 +109,8 @@ END$$
 
 DELIMITER ;
 
-INSERT INTO screens (name, type) VALUES
-    ('16mm Screen', '16mm'),
-    ('35mm Screen', '35mm'),
-    ('70mm Screen', '70mm'),
-    ('IMAX Screen', 'imax');
+INSERT INTO screens (type) VALUES
+    ('16mm'),
+    ('35mm'),
+    ('70mm'),
+    ('imax');
