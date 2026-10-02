@@ -230,6 +230,7 @@ $catalog = Movie::all();
                                     <p class="catalog-item__metadata">
                                         <?php
                                         $meta = array_filter([
+                                            $movie['release_year'],
                                             implode(', ', $movie['genres']),
                                             $movie['duration_minutes'] ? $movie['duration_minutes'] . ' min' : null,
                                         ]);

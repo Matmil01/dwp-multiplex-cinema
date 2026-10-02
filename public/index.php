@@ -55,12 +55,24 @@ function showingDayLabel(string $showDatetime): string
             <h2 class="section-title section-title--primary">Tonight's Program</h2>
 
             <div class="program-group">
-                <div class="movie-grid movie-grid--today">
-                    <?php if (empty($todayMovies)): ?>
-                        <p class="empty-message">No showings scheduled for today yet.</p>
-                    <?php endif; ?>
-                    <?php foreach ($todayMovies as $movie): ?>
-                        <?php require __DIR__ . '/../components/movie-card.php'; ?>
+                <div class="format-rows">
+                    <?php foreach (Showing::screens() as $screen): ?>
+                        <?php $formatMovies = array_values(array_filter($todayMovies, fn($m) => $m['screen_type'] === $screen['type'])); ?>
+                        <div class="format-row">
+                            <div class="format-row__info">
+                                <h3 class="format-row__title"><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?></h3>
+                                <p class="format-row__blurb"><?= htmlspecialchars(formatBlurb($screen['type']), ENT_QUOTES) ?></p>
+                            </div>
+                            <div class="format-row__movies">
+                                <?php if (empty($formatMovies)): ?>
+                                    <p class="empty-message">No <?= htmlspecialchars(formatBadgeLabel($screen['type']), ENT_QUOTES) ?> showings tonight.</p>
+                                <?php endif; ?>
+                                <?php foreach ($formatMovies as $movie): ?>
+                                    <?php $movie['show_format_badge'] = false; ?>
+                                    <?php require __DIR__ . '/../components/movie-card.php'; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 </div>
                 <a href="screens.php" class="ctabutton">See the full schedule &rarr;</a>
@@ -68,7 +80,7 @@ function showingDayLabel(string $showDatetime): string
 
             <div class="program-group">
                 <h2 class="section-title">Later This Week</h2>
-                <div class="movie-grid movie-grid--week">
+                <div class="movie-grid movie-grid--today">
                     <?php if (empty($laterThisWeek)): ?>
                         <p class="empty-message">Nothing else scheduled yet.</p>
                     <?php endif; ?>

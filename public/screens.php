@@ -70,7 +70,6 @@ function screenShowingDayLabel(string $showDatetime): string
                             <h2 class="screen-schedule__title"><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?></h2>
                             <p class="screen-schedule__blurb"><?= htmlspecialchars(formatBlurb($screen['type']), ENT_QUOTES) ?></p>
                         </div>
-                        <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($screen['type']), ENT_QUOTES) ?>"><?= htmlspecialchars(formatBadgeLabel($screen['type']), ENT_QUOTES) ?></span>
                     </div>
                     <table class="schedule-table">
                         <thead>
