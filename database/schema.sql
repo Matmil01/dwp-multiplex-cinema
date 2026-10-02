@@ -57,7 +57,6 @@ CREATE TABLE showings (
 CREATE TABLE news (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    excerpt VARCHAR(200),
     body TEXT NOT NULL,
     image_path VARCHAR(150),
     published_at DATETIME NOT NULL

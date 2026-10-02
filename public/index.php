@@ -2,6 +2,7 @@
 
 require __DIR__ . '/../models/Showing.php';
 require __DIR__ . '/../models/CompanyInfo.php';
+require __DIR__ . '/../models/News.php';
 require __DIR__ . '/../demo/AutoSchedule.php';
 require __DIR__ . '/../components/screen-format.php';
 
@@ -24,6 +25,7 @@ foreach (Showing::today() as $row) {
 $todayMovies = array_values($todayByMovie);
 
 $laterThisWeek = Showing::laterThisWeekPreview(6);
+$latestNews = array_slice(News::all(), 0, 6);
 
 // "Tomorrow" instead of the raw date, otherwise the weekday name (same idea as movie-details.php).
 function showingDayLabel(string $showDatetime): string
@@ -100,48 +102,22 @@ function showingDayLabel(string $showDatetime): string
         <section class="home-section">
             <h2 class="section-title section-title--primary">News</h2>
             <div class="news-grid">
-                <article class="news-card">
-                    <div class="news-card__thumbnail">Thumbnail</div>
-                    <p class="news-card__date">September 15, 2026</p>
-                    <h3 class="news-card__title"><a href="news-article.php?id=1">Headline placeholder A</a></h3>
-                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=1" class="text-link">Read more &rarr;</a>
-                </article>
-                <article class="news-card">
-                    <div class="news-card__thumbnail">Thumbnail</div>
-                    <p class="news-card__date">September 10, 2026</p>
-                    <h3 class="news-card__title"><a href="news-article.php?id=2">Headline placeholder B</a></h3>
-                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=2" class="text-link">Read more &rarr;</a>
-                </article>
-                <article class="news-card">
-                    <div class="news-card__thumbnail">Thumbnail</div>
-                    <p class="news-card__date">September 4, 2026</p>
-                    <h3 class="news-card__title"><a href="news-article.php?id=3">Headline placeholder C</a></h3>
-                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=3" class="text-link">Read more &rarr;</a>
-                </article>
-                <article class="news-card">
-                    <div class="news-card__thumbnail">Thumbnail</div>
-                    <p class="news-card__date">August 28, 2026</p>
-                    <h3 class="news-card__title"><a href="news-article.php?id=4">Headline placeholder D</a></h3>
-                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=4" class="text-link">Read more &rarr;</a>
-                </article>
-                <article class="news-card">
-                    <div class="news-card__thumbnail">Thumbnail</div>
-                    <p class="news-card__date">August 21, 2026</p>
-                    <h3 class="news-card__title"><a href="news-article.php?id=5">Headline placeholder E</a></h3>
-                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=5" class="text-link">Read more &rarr;</a>
-                </article>
-                <article class="news-card">
-                    <div class="news-card__thumbnail">Thumbnail</div>
-                    <p class="news-card__date">August 14, 2026</p>
-                    <h3 class="news-card__title"><a href="news-article.php?id=6">Headline placeholder F</a></h3>
-                    <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                    <a href="news-article.php?id=6" class="text-link">Read more &rarr;</a>
-                </article>
+                <?php if (empty($latestNews)): ?>
+                    <p class="empty-message">No news yet &mdash; check back soon.</p>
+                <?php endif; ?>
+                <?php foreach ($latestNews as $article): ?>
+                    <article class="news-card">
+                        <?php if ($article['image_path']): ?>
+                            <img src="<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-card__thumbnail">
+                        <?php else: ?>
+                            <div class="news-card__thumbnail">Thumbnail</div>
+                        <?php endif; ?>
+                        <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
+                        <h3 class="news-card__title"><a href="news-article.php?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
+                        <p class="news-card__excerpt"><?= htmlspecialchars(News::excerpt($article['body']), ENT_QUOTES) ?></p>
+                        <a href="news-article.php?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
+                    </article>
+                <?php endforeach; ?>
             </div>
             <a href="news.php" class="ctabutton">See all news &rarr;</a>
         </section>

@@ -1,3 +1,8 @@
+<?php
+require __DIR__ . '/../models/News.php';
+
+$articles = News::all();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,42 +23,24 @@
             <h2 class="section-title section-title--primary">News</h2>
 
             <div class="news-list">
-                <article class="news-list-item">
-                    <div class="news-list-item__thumbnail">Article image coming soon</div>
-                    <div class="news-list-item__content">
-                        <p class="news-card__date">September 15, 2026</p>
-                        <h3 class="news-card__title"><a href="news-article.php?id=1">Headline placeholder A</a></h3>
-                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=1" class="text-link">Read more &rarr;</a>
-                    </div>
-                </article>
-                <article class="news-list-item">
-                    <div class="news-list-item__thumbnail">Article image coming soon</div>
-                    <div class="news-list-item__content">
-                        <p class="news-card__date">September 10, 2026</p>
-                        <h3 class="news-card__title"><a href="news-article.php?id=2">Headline placeholder B</a></h3>
-                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=2" class="text-link">Read more &rarr;</a>
-                    </div>
-                </article>
-                <article class="news-list-item">
-                    <div class="news-list-item__thumbnail">Article image coming soon</div>
-                    <div class="news-list-item__content">
-                        <p class="news-card__date">September 4, 2026</p>
-                        <h3 class="news-card__title"><a href="news-article.php?id=3">Headline placeholder C</a></h3>
-                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=3" class="text-link">Read more &rarr;</a>
-                    </div>
-                </article>
-                <article class="news-list-item">
-                    <div class="news-list-item__thumbnail">Article image coming soon</div>
-                    <div class="news-list-item__content">
-                        <p class="news-card__date">August 28, 2026</p>
-                        <h3 class="news-card__title"><a href="news-article.php?id=4">Headline placeholder D</a></h3>
-                        <p class="news-card__excerpt">Snippet placeholder text, a short teaser of the full post.</p>
-                        <a href="news-article.php?id=4" class="text-link">Read more &rarr;</a>
-                    </div>
-                </article>
+                <?php if (empty($articles)): ?>
+                    <p class="empty-message">No news yet &mdash; check back soon.</p>
+                <?php endif; ?>
+                <?php foreach ($articles as $article): ?>
+                    <article class="news-list-item">
+                        <?php if ($article['image_path']): ?>
+                            <img src="<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-list-item__thumbnail">
+                        <?php else: ?>
+                            <div class="news-list-item__thumbnail">Article image coming soon</div>
+                        <?php endif; ?>
+                        <div class="news-list-item__content">
+                            <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
+                            <h3 class="news-card__title"><a href="news-article.php?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
+                            <p class="news-card__excerpt"><?= htmlspecialchars(News::excerpt($article['body']), ENT_QUOTES) ?></p>
+                            <a href="news-article.php?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
             </div>
         </section>
     </main>
