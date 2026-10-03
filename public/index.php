@@ -112,8 +112,8 @@ function showingDayLabel(string $showDatetime): string
                         <?php else: ?>
                             <div class="news-card__thumbnail">Thumbnail</div>
                         <?php endif; ?>
-                        <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
                         <h3 class="news-card__title"><a href="news-article.php?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
+                        <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
                         <p class="news-card__excerpt"><?= htmlspecialchars(News::excerpt($article['body']), ENT_QUOTES) ?></p>
                         <a href="news-article.php?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
                     </article>

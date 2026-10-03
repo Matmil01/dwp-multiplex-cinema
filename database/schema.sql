@@ -59,7 +59,7 @@ CREATE TABLE news (
     title VARCHAR(100) NOT NULL,
     body TEXT NOT NULL,
     image_path VARCHAR(150),
-    published_at DATETIME NOT NULL
+    published_at DATE NOT NULL
 ) ENGINE = InnoDB;
 
 -- single-row table holding admin-editable company info
@@ -78,7 +78,7 @@ CREATE INDEX idx_movies_title ON movies (title);
 
 -- Public pages read from this instead of news directly, so future-dated posts stay hidden until then.
 CREATE VIEW visible_news AS
-SELECT * FROM news WHERE published_at <= NOW() ORDER BY published_at DESC;
+SELECT * FROM news WHERE published_at <= CURDATE() ORDER BY published_at DESC;
 
 -- Blocks two showings from overlapping on the same screen (based on movie runtime); this trigger is
 -- the actual guardrail, the admin form just displays whatever error it raises.
