@@ -53,6 +53,15 @@ CREATE TABLE showings (
     FOREIGN KEY (screen_id) REFERENCES screens(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
+-- TO DO: NEWS. Standalone, no relation to the movies/screens/showings tables above
+CREATE TABLE news (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    body TEXT NOT NULL,
+    image_path VARCHAR(150),
+    published_at DATE NOT NULL
+) ENGINE = InnoDB;
+
 -- single-row table holding admin-editable company info
 CREATE TABLE company_info (
     id INT PRIMARY KEY DEFAULT 1,
@@ -66,6 +75,10 @@ CREATE TABLE company_info (
 
 CREATE INDEX idx_showings_show_datetime ON showings (show_datetime);
 CREATE INDEX idx_movies_title ON movies (title);
+
+-- Public pages read from this instead of news directly, so future-dated posts stay hidden until then.
+CREATE VIEW visible_news AS
+SELECT * FROM news WHERE published_at <= CURDATE() ORDER BY published_at DESC;
 
 -- Blocks two showings from overlapping on the same screen (based on movie runtime); this trigger is
 -- the actual guardrail, the admin form just displays whatever error it raises.

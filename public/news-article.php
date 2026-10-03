@@ -1,9 +1,20 @@
+<?php
+require __DIR__ . '/../models/News.php';
+
+$article = News::find((int) ($_GET['id'] ?? 0));
+
+if (!$article) {
+    http_response_code(404);
+    echo 'Article not found.';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Headline placeholder - Untitled Cinema</title>
+    <title><?= htmlspecialchars($article['title'], ENT_QUOTES) ?> - Untitled Cinema</title>
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/nav-footer.css">
     <link rel="stylesheet" href="assets/css/showings-news.css">
@@ -15,14 +26,14 @@
 
     <main class="site-main">
         <article class="news-article">
-            <div class="news-article__thumbnail">Article image coming soon</div>
-            <p class="news-card__date">September 15, 2026</p>
-            <h2 class="news-article__title">Headline placeholder A</h2>
-            <p class="news-article__body">
-                Full post body placeholder text goes here. This is where the entire news
-                post content will render once it's pulled from the database instead of
-                being hardcoded like this.
-            </p>
+            <h2 class="news-article__title"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></h2>
+            <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
+            <?php if ($article['image_path']): ?>
+                <img src="<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-article__thumbnail">
+            <?php else: ?>
+                <div class="news-article__thumbnail">Article image coming soon</div>
+            <?php endif; ?>
+            <p class="news-article__body"><?= nl2br(htmlspecialchars($article['body'], ENT_QUOTES)) ?></p>
         </article>
     </main>
 
