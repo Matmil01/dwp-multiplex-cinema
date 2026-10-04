@@ -73,14 +73,14 @@ $company = CompanyInfo::find();
                     <label for="phone" class="form-label">Phone</label>
                     <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($company['phone'] ?? '', ENT_QUOTES) ?>" class="form-input">
                 </div>
-                <button type="submit" class="button">Save Changes</button>
+                <button type="submit" class="base-button">Save Changes</button>
             </form>
         </section>
 
         <section>
             <div class="page-heading">
                 <h2 class="section-title">Staff Accounts</h2>
-                <a href="#" class="button">Invite Staff</a>
+                <a href="#" class="base-button">Invite Staff</a>
             </div>
             <div class="admin-list">
                 <div class="admin-list-item">

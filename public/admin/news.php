@@ -184,7 +184,7 @@ $posts = News::allForAdmin();
                             <label class="form-label">Body</label>
                             <textarea name="body" rows="6" required class="form-input"><?= htmlspecialchars($editor['body'], ENT_QUOTES) ?></textarea>
                         </div>
-                        <button type="submit" class="button">Save Post</button>
+                        <button type="submit" class="base-button">Save Post</button>
                     </form>
                 </div>
 

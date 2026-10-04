@@ -77,7 +77,11 @@ function showingDayLabel(string $showDatetime): string
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <a href="screens.php" class="ctabutton">See the full schedule &rarr;</a>
+                <?php
+                $ticketHref = 'screens.php';
+                $ticketLabel = 'See the full schedule';
+                require __DIR__ . '/../components/cta-button.php';
+                ?>
             </div>
 
             <div class="program-group">
@@ -90,7 +94,7 @@ function showingDayLabel(string $showDatetime): string
                         <?php require __DIR__ . '/../components/movie-card.php'; ?>
                     <?php endforeach; ?>
                 </div>
-                <a href="screens.php" class="ctabutton">See the full schedule &rarr;</a>
+                <?php require __DIR__ . '/../components/cta-button.php'; ?>
             </div>
         </section>
 
@@ -119,7 +123,11 @@ function showingDayLabel(string $showDatetime): string
                     </article>
                 <?php endforeach; ?>
             </div>
-            <a href="news.php" class="ctabutton">See all news &rarr;</a>
+            <?php
+            $ticketHref = 'news.php';
+            $ticketLabel = 'See all news';
+            require __DIR__ . '/../components/cta-button.php';
+            ?>
         </section>
     </main>
 

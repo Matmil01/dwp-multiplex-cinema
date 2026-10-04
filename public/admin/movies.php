@@ -140,7 +140,7 @@ $catalog = Movie::all();
 
                     <form method="get" class="search-form">
                         <input type="text" name="q" value="<?= htmlspecialchars($searchQuery, ENT_QUOTES) ?>" placeholder="Search TMDB by title..." class="form-input">
-                        <button type="submit" class="button">Search</button>
+                        <button type="submit" class="base-button">Search</button>
                     </form>
 
                     <?php if ($searchError): ?>
@@ -207,7 +207,7 @@ $catalog = Movie::all();
                             <label class="form-label">Cast (comma-separated)</label>
                             <input type="text" name="cast" value="<?= htmlspecialchars($editor['cast'], ENT_QUOTES) ?>" class="form-input">
                         </div>
-                        <button type="submit" class="button">Save Movie</button>
+                        <button type="submit" class="base-button">Save Movie</button>
                     </form>
                 </div>
 

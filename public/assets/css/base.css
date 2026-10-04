@@ -90,8 +90,65 @@ h3 {
 	margin-bottom: 2.5rem;
 }
 
-.ctabutton {
-	margin-top: var(--space-4);
+.cta-button-row {
+	display: flex;
+	justify-content: center;
+	margin-top: var(--space-6);
+}
+
+.cta-button {
+	--ticket-fill: var(--color-border);
+	--ticket-text: var(--color-page);
+	position: relative;
+	display: inline-grid;
+	place-items: center;
+	box-sizing: border-box;
+	width: 16rem;
+	max-width: 100%;
+	min-height: 3rem;
+	padding: 0.75rem 1.25rem;
+	color: var(--ticket-text);
+	font-size: 0.8125rem;
+	font-weight: 800;
+	letter-spacing: 0;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.cta-button__outline {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+
+.cta-button__shape {
+	fill: var(--ticket-fill);
+	stroke: var(--ticket-fill);
+	stroke-width: 4;
+}
+
+.cta-button__border {
+	fill: none;
+	stroke: #AA2734;
+	stroke-width: 3;
+}
+
+.cta-button__label {
+	position: relative;
+}
+
+.cta-button:hover,
+.cta-button:focus-visible {
+	--ticket-fill: var(--color-link);
+	--ticket-text: var(--color-page);
+}
+
+.cta-button:focus-visible {
+	outline: 2px solid var(--color-link);
+	outline-offset: 4px;
 }
 
 .text-link {
@@ -167,19 +224,20 @@ h3 {
 	color: var(--color-page);
 }
 
-.button,
-.ctabutton {
+.base-button {
 	display: inline-block;
 	padding: var(--space-2) var(--space-4);
+	border: none;
 	border-radius: 0;
 	background: var(--color-border);
 	color: var(--color-page);
+	font: inherit;
 	font-size: 0.875rem;
 	text-decoration: none;
+	cursor: pointer;
 }
 
-.button:hover,
-.ctabutton:hover {
+.base-button:hover {
 	background: var(--color-link);
 }
 

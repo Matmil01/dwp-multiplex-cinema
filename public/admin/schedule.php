@@ -242,7 +242,7 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
                         <input type="time" name="show_time" value="<?= htmlspecialchars($editor['show_time'] ?? '18:00', ENT_QUOTES) ?>" required class="form-input">
                     </div>
 
-                    <button type="submit" class="button">Save</button>
+                    <button type="submit" class="base-button">Save</button>
                     <?php if ($editor): ?>
                         <a href="?date=<?= htmlspecialchars($date, ENT_QUOTES) ?>" class="schedule-form__cancel">Cancel</a>
                     <?php endif; ?>

@@ -25,7 +25,7 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" id="password" name="password" class="form-input">
                 </div>
-                <button type="submit" class="button">Log In</button>
+                <button type="submit" class="base-button">Log In</button>
             </form>
             <p class="form-helper-text">Don't have an account? <a href="register.php" class="inline-link">Register</a></p>
         </section>

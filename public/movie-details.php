@@ -97,7 +97,7 @@ function showingDayLabel(string $showDatetime): string
                             <p class="showing-card__time"><?= htmlspecialchars(showingDayLabel($showing['show_datetime']), ENT_QUOTES) ?>, <?= htmlspecialchars(date('H:i', strtotime($showing['show_datetime'])), ENT_QUOTES) ?></p>
                             <p class="showing-card__screen"><?= htmlspecialchars(screenDisplayName($showing['screen_type']), ENT_QUOTES) ?></p>
                         </div>
-                        <a href="#" class="button">Book</a>
+                        <a href="#" class="base-button">Book</a>
                     </div>
                 <?php endforeach; ?>
             </div>

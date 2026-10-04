@@ -33,7 +33,7 @@
                     <label for="password_confirm" class="form-label">Confirm Password</label>
                     <input type="password" id="password_confirm" name="password_confirm" class="form-input">
                 </div>
-                <button type="submit" class="button">Register</button>
+                <button type="submit" class="base-button">Register</button>
             </form>
             <p class="form-helper-text">Already have an account? <a href="login.php" class="inline-link">Log in</a></p>
         </section>
