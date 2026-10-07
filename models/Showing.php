@@ -124,6 +124,15 @@ class Showing
     public static function save(array $input): int
     {
         $db = Db::connection();
+
+        // Read the saved runtime so the form cannot supply a made-up movie length.
+        $runtimeQuery = $db->prepare('SELECT duration_minutes FROM movies WHERE id = ?');
+        $runtimeQuery->execute([$input['movie_id']]);
+        // Missing, zero, or negative runtimes cannot be used to check whether showings overlap.
+        if ((int) $runtimeQuery->fetchColumn() <= 0) {
+            throw new RuntimeException('Set a runtime greater than zero for this movie in Movies before scheduling it.');
+        }
+
         $params = [$input['movie_id'], $input['screen_id'], $input['show_datetime']];
 
         try {

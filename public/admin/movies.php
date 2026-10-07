@@ -36,7 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
     exit;
 }
 
-if (isset($_GET['tmdb_id'])) {
+if ($saveError !== null) {
+    // Saving failed: refill the editor with what you submitted, including any unsaved changes.
+    $editor = [
+        'id' => $_POST['id'] ?? null,
+        'tmdb_id' => $_POST['tmdb_id'] ?? null,
+        'title' => $_POST['title'] ?? '',
+        'description' => $_POST['description'] ?? '',
+        'duration_minutes' => $_POST['duration_minutes'] ?? '',
+        'poster_url' => $_POST['poster_url'] ?? '',
+        'release_year' => $_POST['release_year'] ?? '',
+        'genres' => $_POST['genres'] ?? '',
+        'director' => $_POST['director'] ?? '',
+        'writers' => $_POST['writers'] ?? '',
+        'cast' => $_POST['cast'] ?? '',
+    ];
+// Only load database or TMDB values when there are no failed-save edits to preserve.
+} elseif (isset($_GET['tmdb_id'])) {
     try {
         $details = (new TmdbAdapter())->getMovieDetails((int) $_GET['tmdb_id']);
         $editor = [

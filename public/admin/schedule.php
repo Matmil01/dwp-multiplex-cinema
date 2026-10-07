@@ -76,7 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'dupli
     exit;
 }
 
-if (isset($_GET['edit_id'])) {
+if ($saveError !== null) {
+    // If saving failed, refill the form with what you submitted instead of the old saved values.
+    $editor = [
+        'id' => ($_POST['id'] ?? '') !== '' ? (int) $_POST['id'] : null,
+        'movie_id' => (int) ($_POST['movie_id'] ?? 0),
+        'movie_title' => $_POST['movie_title'] ?? '',
+        'screen_id' => (int) ($_POST['screen_id'] ?? 0),
+        'show_time' => $_POST['show_time'] ?? '',
+    ];
+} elseif (isset($_GET['edit_id'])) {
     $editor = Showing::find((int) $_GET['edit_id']);
     if ($editor) {
         $editor['show_time'] = date('H:i', strtotime($editor['show_datetime']));
@@ -145,11 +154,16 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
         <section>
             <div class="page-heading">
                 <h2 class="section-title">Schedule</h2>
+                <p class="schedule-board__month"><?= htmlspecialchars(date('F Y', strtotime($date)), ENT_QUOTES) ?></p>
             </div>
 
             <div class="schedule-board-wrap">
-                <div class="schedule-board">
-                    <?php $hourCount = $closingHour - $openingHour; ?>
+                <?php
+                // Count the hours shown on the timeline, using the company's opening and closing hours.
+                $hourCount = $closingHour - $openingHour;
+                ?>
+                <!-- Pass the hour count to CSS so the columns match the hour labels below. -->
+                <div class="schedule-board" style="--schedule-hour-count: <?= $hourCount ?>;">
                     <div class="schedule-board__hours">
                         <div></div>
                         <?php for ($hour = $openingHour; $hour < $closingHour; $hour++): ?>
@@ -195,7 +209,7 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
         </section>
 
         <section>
-            <h3 class="admin-subheading"><?= $editor ? 'Edit Showing' : 'Add Showing' ?></h3>
+            <h3 class="admin-subheading"><?= !empty($editor['id']) ? 'Edit Showing' : 'Add Showing' ?></h3>
 
             <?php if (isset($_GET['saved'])): ?>
                 <p class="notice notice--success">Showing saved.</p>
@@ -224,7 +238,8 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
 
                     <div class="schedule-picker">
                         <label class="form-label">Movie</label>
-                        <input type="text" id="movieSearch" autocomplete="off" placeholder="Search by title&hellip;" value="<?= htmlspecialchars($editor['movie_title'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                        <!-- Submit the search text too, so it can be restored after a failed save. -->
+                        <input type="text" id="movieSearch" name="movie_title" autocomplete="off" placeholder="Search by title&hellip;" value="<?= htmlspecialchars($editor['movie_title'] ?? '', ENT_QUOTES) ?>" class="form-input">
                         <div id="movieResults" class="schedule-picker__results is-hidden"></div>
                     </div>
 
@@ -248,7 +263,7 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
                     <?php endif; ?>
                 </form>
 
-                <?php if ($editor): ?>
+                <?php if (!empty($editor['id'])): ?>
                     <form method="post" onsubmit="return confirm('Delete this showing?')">
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="id" value="<?= (int) $editor['id'] ?>">
@@ -262,7 +277,9 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
     <script>
         // Type-to-search movie picker: filters the catalog client-side (same trick as the
         // catalog filter on the Movies admin page) instead of a <select> with hundreds of options.
-        const movies = <?= json_encode(array_map(fn($m) => ['id' => (int) $m['id'], 'title' => $m['title']], $movies)) ?>;
+        // json_encode turns the PHP movie list into data JavaScript can read.
+        // These flags safely encode <, >, &, and quotes, so a title cannot break out of this script.
+        const movies = <?= json_encode(array_map(fn($m) => ['id' => (int) $m['id'], 'title' => $m['title']], $movies), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         const searchInput = document.getElementById('movieSearch');
         const resultsBox = document.getElementById('movieResults');
         const movieIdInput = document.getElementById('movieId');
@@ -273,15 +290,39 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
 
             if (term === '') {
                 resultsBox.classList.add('is-hidden');
-                resultsBox.innerHTML = '';
+                // Remove all old results when the search field is empty.
+                resultsBox.replaceChildren();
                 return;
             }
 
             const matches = movies.filter(m => m.title.toLowerCase().includes(term)).slice(0, 8);
 
-            resultsBox.innerHTML = matches.map(m =>
-                `<button type="button" data-id="${m.id}" data-title="${m.title.replace(/"/g, '&quot;')}" class="schedule-picker__result">${m.title}</button>`
-            ).join('') || '<p class="schedule-picker__empty">No matches</p>';
+            // Clear the previous results before adding the new matches.
+            resultsBox.replaceChildren();
+            // Create one search-result button for each matching movie.
+            for (const movie of matches) {
+                // Create a real button instead of building an HTML string from the movie title.
+                const button = document.createElement('button');
+                // Clicking a result should select a movie, not submit the form.
+                button.type = 'button';
+                // Store the movie ID and title on the button so the click handler below can read them.
+                button.dataset.id = movie.id;
+                button.dataset.title = movie.title;
+                // Use the existing CSS class to keep the same appearance.
+                button.className = 'schedule-picker__result';
+                // Display the title as plain text. Even a title containing HTML will not run as code.
+                button.textContent = movie.title;
+                // Add the finished button to the visible list of results.
+                resultsBox.append(button);
+            }
+
+            // If nothing matched, show a message instead of an empty results box.
+            if (matches.length === 0) {
+                const message = document.createElement('p');
+                message.className = 'schedule-picker__empty';
+                message.textContent = 'No matches';
+                resultsBox.append(message);
+            }
 
             resultsBox.classList.remove('is-hidden');
         });
@@ -295,7 +336,8 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
             movieIdInput.value = button.dataset.id;
             searchInput.value = button.dataset.title;
             resultsBox.classList.add('is-hidden');
-            resultsBox.innerHTML = '';
+            // The movie has been selected, so remove the search-result buttons.
+            resultsBox.replaceChildren();
         });
     </script>
 

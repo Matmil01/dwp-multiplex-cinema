@@ -55,6 +55,12 @@
 	margin-bottom: 0;
 }
 
+.schedule-board__month {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: 0.875rem;
+}
+
 .admin-list {
 	display: grid;
 	max-width: 32rem;
@@ -303,7 +309,8 @@
 .schedule-board__hours,
 .schedule-board__row {
 	display: grid;
-	grid-template-columns: 6.875rem repeat(12, minmax(0, 1fr));
+	/* Keep space for the screen name, then add one equal column per hour passed from PHP. */
+	grid-template-columns: 6.875rem repeat(var(--schedule-hour-count), minmax(0, 1fr));
 }
 
 .schedule-board__hours {
@@ -329,9 +336,10 @@
 
 .schedule-board__timeline {
 	position: relative;
-	grid-column: span 12;
+	/* Each screen's timeline spans all hourly columns, with matching grid lines inside it. */
+	grid-column: span var(--schedule-hour-count);
 	display: grid;
-	grid-template-columns: repeat(12, 1fr);
+	grid-template-columns: repeat(var(--schedule-hour-count), 1fr);
 	height: 3.5rem;
 	overflow: hidden;
 	border: 1px solid var(--color-border);

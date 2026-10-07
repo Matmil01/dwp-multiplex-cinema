@@ -101,6 +101,20 @@ class Movie
                 ]);
                 $movieId = (int) $db->lastInsertId();
             } else {
+                // Compare the saved runtime with the submitted one; other edits do not need schedule checks.
+                $runtimeQuery = $db->prepare('SELECT duration_minutes FROM movies WHERE id = ?');
+                $runtimeQuery->execute([$movieId]);
+                $runtimeChanged = (int) $runtimeQuery->fetchColumn() !== (int) $input['duration_minutes'];
+
+                if ($runtimeChanged && (int) $input['duration_minutes'] <= 0) {
+                    $showingQuery = $db->prepare('SELECT id FROM showings WHERE movie_id = ? LIMIT 1');
+                    $showingQuery->execute([$movieId]);
+                    // A movie already on the schedule must keep a positive runtime for overlap checks.
+                    if ($showingQuery->fetchColumn() !== false) {
+                        throw new RuntimeException('This movie has showings. Keep its runtime greater than zero.');
+                    }
+                }
+
                 $stmt = $db->prepare(
                     'UPDATE movies SET title = ?, description = ?, duration_minutes = ?, poster_url = ?, release_year = ? WHERE id = ?'
                 );
@@ -112,6 +126,13 @@ class Movie
                     $input['release_year'] ?: null,
                     $movieId,
                 ]);
+
+                if ($runtimeChanged && (int) $input['duration_minutes'] > 0) {
+                    // Setting the same movie ID still runs the showing-update trigger for each showing.
+                    // It checks overlaps using the new runtime. Any conflict rolls back this entire movie save.
+                    $db->prepare('UPDATE showings SET movie_id = movie_id WHERE movie_id = ?')
+                        ->execute([$movieId]);
+                }
             }
 
             $db->prepare('DELETE FROM movie_genres WHERE movie_id = ?')->execute([$movieId]);
@@ -140,6 +161,10 @@ class Movie
             return $movieId;
         } catch (Throwable $e) {
             $db->rollBack();
+            // Explain a trigger rejection in terms of the runtime edit, rather than exposing the SQL error.
+            if ($e instanceof PDOException && $e->getCode() === '45000') {
+                throw new RuntimeException('This runtime would make existing showings overlap. Adjust the schedule before changing it.');
+            }
             throw $e;
         }
     }

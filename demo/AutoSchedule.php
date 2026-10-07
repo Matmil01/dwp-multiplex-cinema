@@ -29,9 +29,11 @@ class AutoSchedule
     {
         $weekStart = (new DateTime($furthestDatetime))->modify('-7 days')->format('Y-m-d H:i:s');
 
+        // Only repeat movies with a positive runtime, so automatic showings can be checked for overlaps too.
         $stmt = $db->prepare(
-            'SELECT movie_id, screen_id, show_datetime FROM showings
-             WHERE show_datetime > ? AND show_datetime <= ?'
+            'SELECT s.movie_id, s.screen_id, s.show_datetime FROM showings s
+             JOIN movies m ON m.id = s.movie_id
+             WHERE s.show_datetime > ? AND s.show_datetime <= ? AND m.duration_minutes > 0'
         );
         $stmt->execute([$weekStart, $furthestDatetime]);
 

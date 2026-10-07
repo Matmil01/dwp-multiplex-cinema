@@ -13,16 +13,19 @@ if ($config['auto_schedule_enabled']) {
 
 $company = CompanyInfo::find();
 
-// Showing::today() returns one row per showing; group into one card per movie with a list of times.
-$todayByMovie = [];
+// Collect today's showings into one card per movie and format, with a list of times.
+$todayByMovieAndFormat = [];
 foreach (Showing::today() as $row) {
-    if (!isset($todayByMovie[$row['movie_id']])) {
-        $todayByMovie[$row['movie_id']] = $row;
-        $todayByMovie[$row['movie_id']]['times'] = [];
+    // For example, "12:35mm" and "12:imax" keep the same movie's formats separate.
+    $movieFormatKey = $row['movie_id'] . ':' . $row['screen_type'];
+    if (!isset($todayByMovieAndFormat[$movieFormatKey])) {
+        $todayByMovieAndFormat[$movieFormatKey] = $row;
+        $todayByMovieAndFormat[$movieFormatKey]['times'] = [];
     }
-    $todayByMovie[$row['movie_id']]['times'][] = date('H:i', strtotime($row['show_datetime']));
+    // Add this time only to the card for this movie in this format.
+    $todayByMovieAndFormat[$movieFormatKey]['times'][] = date('H:i', strtotime($row['show_datetime']));
 }
-$todayMovies = array_values($todayByMovie);
+$todayMovies = array_values($todayByMovieAndFormat);
 
 $laterThisWeek = Showing::laterThisWeekPreview(6);
 $latestNews = array_slice(News::all(), 0, 6);

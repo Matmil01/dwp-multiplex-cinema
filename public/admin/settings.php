@@ -20,7 +20,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$company = CompanyInfo::find();
+if ($saveError !== null) {
+    // Saving failed: keep your changes in the form so you can correct the problem and retry.
+    $company = [
+        'description' => $_POST['description'] ?? '',
+        'opening_time' => $_POST['opening_time'] ?? '',
+        'closing_time' => $_POST['closing_time'] ?? '',
+        'address' => $_POST['address'] ?? '',
+        'phone' => $_POST['phone'] ?? '',
+    ];
+} else {
+    $company = CompanyInfo::find();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

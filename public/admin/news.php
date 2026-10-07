@@ -66,20 +66,28 @@ $editor = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save') {
     try {
-        $currentImagePath = trim($_POST['current_image_path'] ?? '');
+        // Read the old image path from the saved article, not from a form field that can be changed.
+        $postId = ($_POST['id'] ?? '') !== '' ? (int) $_POST['id'] : null;
+        $existing = $postId !== null ? News::findForAdmin($postId) : null;
+        if ($postId !== null && !$existing) {
+            throw new RuntimeException('News post not found.');
+        }
+        $currentImagePath = $existing['image_path'] ?? '';
         $imagePath = handleNewsImageUpload($_FILES['image'] ?? ['error' => UPLOAD_ERR_NO_FILE], $currentImagePath);
 
-        if ($imagePath !== $currentImagePath) {
-            deleteNewsImageIfManaged($currentImagePath);
-        }
-
+        // Keep the old image on disk while saving. If this fails, the article still has its image.
         News::save([
-            'id' => $_POST['id'] !== '' ? (int) $_POST['id'] : null,
+            'id' => $postId,
             'title' => trim($_POST['title'] ?? ''),
             'body' => trim($_POST['body'] ?? ''),
             'image_path' => $imagePath,
             'published_at' => $_POST['published_at'] ?? '',
         ]);
+
+        // The article now points to the new image, so the old one can be removed safely.
+        if ($imagePath !== $currentImagePath) {
+            deleteNewsImageIfManaged($currentImagePath);
+        }
         header('Location: news.php?saved=' . urlencode(trim($_POST['title'] ?? '')));
         exit;
     } catch (Throwable $e) {
@@ -97,7 +105,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
     exit;
 }
 
-if (isset($_GET['edit_id'])) {
+if ($saveError !== null) {
+    // Saving failed: keep the submitted text and date so you can correct the problem and retry.
+    $editor = [
+        'id' => $postId ?? null,
+        'title' => $_POST['title'] ?? '',
+        'body' => $_POST['body'] ?? '',
+        // Show the existing saved image. Browsers do not let us refill the file picker.
+        'image_path' => $currentImagePath ?? '',
+        'published_at' => $_POST['published_at'] ?? '',
+    ];
+} elseif (isset($_GET['edit_id'])) {
     $post = News::findForAdmin((int) $_GET['edit_id']);
     if ($post) {
         $editor = [
@@ -163,7 +181,6 @@ $posts = News::allForAdmin();
                     <form method="post" enctype="multipart/form-data" class="movie-editor">
                         <input type="hidden" name="action" value="save">
                         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $editor['id'], ENT_QUOTES) ?>">
-                        <input type="hidden" name="current_image_path" value="<?= htmlspecialchars($editor['image_path'], ENT_QUOTES) ?>">
 
                         <div class="form-field">
                             <label class="form-label">Title</label>

@@ -4,7 +4,7 @@
 return [
     // enable/disable automatic scheduling, duplicating current week two weeks ahead.
     // While false, run DELETE FROM showings; to clear the schedule before manually populating it.
-    'auto_schedule_enabled' => false,
+    'auto_schedule_enabled' => true,
     'tmdb' => [
         'read_token' => getenv('TMDB_READ_TOKEN') ?: '',
     ],
