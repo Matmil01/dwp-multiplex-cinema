@@ -59,17 +59,17 @@ class Showing
              LEFT JOIN movie_genres mg ON mg.movie_id = m.id
              LEFT JOIN genres g ON g.id = mg.genre_id
              WHERE s.show_datetime >= CURDATE() + INTERVAL 1 DAY
-                             AND s.id = (
-                                     SELECT s2.id
-                                     FROM showings s2
-                                     JOIN screens sc2 ON sc2.id = s2.screen_id
-                                     WHERE sc2.type = sc.type
-                                         AND s2.show_datetime >= CURDATE() + INTERVAL 1 DAY
-                                     ORDER BY s2.show_datetime, s2.id
-                                     LIMIT 1
-               )
+               AND s.id = (
+                   SELECT s2.id
+                   FROM showings s2
+                   JOIN screens sc2 ON sc2.id = s2.screen_id
+                   WHERE sc2.type = sc.type
+                     AND s2.show_datetime >= CURDATE() + INTERVAL 1 DAY
+                   ORDER BY s2.show_datetime, s2.id
+                   LIMIT 1
+                 )
              GROUP BY m.id, m.title, m.release_year, m.duration_minutes, m.poster_url, sc.type, s.show_datetime
-                         ORDER BY FIELD(sc.type, '16mm', '35mm', '70mm', 'imax')
+             ORDER BY FIELD(sc.type, '16mm', '35mm', '70mm', 'imax')
              LIMIT ?"
         );
         $stmt->bindValue(1, $limit, PDO::PARAM_INT);

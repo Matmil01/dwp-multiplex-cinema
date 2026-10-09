@@ -28,10 +28,12 @@ services:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
-      # Creates the tables and starter screens the first time the database is empty.
-      # It does not run again on normal restarts because the database data is kept
-      # in the named `db_data` volume.
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      # Initializes an empty database in filename order: structure, views, triggers, then baseline data.
+      # These scripts do not run again on normal restarts because data is kept in `db_data`.
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/views.sql:/docker-entrypoint-initdb.d/02-views.sql
+      - ./database/triggers.sql:/docker-entrypoint-initdb.d/03-triggers.sql
+      - ./database/seeddata.sql:/docker-entrypoint-initdb.d/04-seeddata.sql
 
 volumes:
   db_data:
