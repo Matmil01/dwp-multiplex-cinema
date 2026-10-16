@@ -55,7 +55,7 @@ CREATE TABLE showings (
    FOREIGN KEY (screen_id) REFERENCES screens(id) ON DELETE CASCADE
 );
 
--- TO DO: NEWS. Standalone, no relation to the movies/screens/showings tables above
+-- news table is standalone, no relation to the movies/screens/showings tables above
 CREATE TABLE news (
    id INT AUTO_INCREMENT PRIMARY KEY,
    title VARCHAR(100) NOT NULL,

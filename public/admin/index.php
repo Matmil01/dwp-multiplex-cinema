@@ -1,3 +1,8 @@
+<?php
+require __DIR__ . '/../../models/Showing.php';
+
+$showingsToday = count(Showing::today());
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +33,7 @@
                 </div>
                 <div class="metric-card">
                     <p class="metric-card__label">Showings Today</p>
-                    <p class="metric-card__value">9</p>
+                    <p class="metric-card__value"><?= $showingsToday ?></p>
                 </div>
             </div>
         </section>

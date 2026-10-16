@@ -75,17 +75,17 @@ if ($saveError !== null) {
     $movie = Movie::find((int) $_GET['edit_id']);
     if ($movie) {
         $editor = [
-            'id' => $movie['id'],
-            'tmdb_id' => $movie['tmdb_id'],
-            'title' => $movie['title'],
-            'description' => $movie['description'],
-            'duration_minutes' => $movie['duration_minutes'],
-            'poster_url' => $movie['poster_url'],
-            'release_year' => $movie['release_year'],
-            'genres' => implode(', ', $movie['genres']),
-            'director' => $movie['director'] ?? '',
-            'writers' => implode(', ', $movie['writers']),
-            'cast' => implode(', ', $movie['cast']),
+            'id' => $movie->id,
+            'tmdb_id' => $movie->tmdb_id,
+            'title' => $movie->title,
+            'description' => $movie->description,
+            'duration_minutes' => $movie->duration_minutes,
+            'poster_url' => $movie->poster_url,
+            'release_year' => $movie->release_year,
+            'genres' => implode(', ', $movie->genres),
+            'director' => $movie->director ?? '',
+            'writers' => implode(', ', $movie->writers),
+            'cast' => implode(', ', $movie->cast),
         ];
     }
 }

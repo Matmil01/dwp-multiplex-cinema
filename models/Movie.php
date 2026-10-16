@@ -5,6 +5,44 @@ require_once __DIR__ . '/../classes/Db.php';
 // All reads/writes for the movies table and its genres/credits.
 class Movie
 {
+    public $id;
+    public $tmdb_id;
+    public $title;
+    public $description;
+    public $release_year;
+    public $duration_minutes;
+    public $poster_url;
+    public $genres;
+    public $director;
+    public $writers;
+    public $cast;
+
+    public function __construct(array $row)
+    {
+        $this->id = (int) $row['id'];
+        $this->tmdb_id = $row['tmdb_id'];
+        $this->title = $row['title'];
+        $this->description = $row['description'];
+        $this->release_year = $row['release_year'];
+        $this->duration_minutes = $row['duration_minutes'];
+        $this->poster_url = $row['poster_url'];
+        $this->genres = $row['genres'];
+        $this->director = $row['director'];
+        $this->writers = $row['writers'];
+        $this->cast = $row['cast'];
+    }
+
+    public function metadataLine(): string
+    {
+        $meta = array_filter([
+            $this->release_year,
+            implode(', ', $this->genres),
+            $this->duration_minutes ? $this->duration_minutes . ' min' : null,
+        ]);
+
+        return implode(' · ', $meta);
+    }
+
     // Plain catalog list, no schedule info attached — used by the admin catalog and the schedule
     // page's movie picker. See allWithStatus() for the version the public site uses.
     public static function all(): array
@@ -57,20 +95,20 @@ class Movie
     }
 
     // Full record + genres/credits, shaped for pre-filling the editor form.
-    public static function find(int $id): ?array
+    public static function find(int $id): ?self
     {
         $stmt = Db::connection()->prepare('SELECT * FROM movies WHERE id = ?');
         $stmt->execute([$id]);
-        $movie = $stmt->fetch();
+        $row = $stmt->fetch();
 
-        if (!$movie) {
+        if (!$row) {
             return null;
         }
 
-        $movie['genres'] = self::genresFor($id);
-        $movie += self::creditsFor($id);
+        $row['genres'] = self::genresFor($id);
+        $row += self::creditsFor($id);
 
-        return $movie;
+        return new self($row);
     }
 
     // Upsert: updates an existing row (by id, or by tmdb_id if already imported), otherwise inserts.

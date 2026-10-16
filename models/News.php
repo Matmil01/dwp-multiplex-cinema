@@ -5,6 +5,26 @@ require_once __DIR__ . '/../classes/Db.php';
 // Public reads go through the visible_news view, so posts scheduled for the future stay hidden.
 class News
 {
+    public $id;
+    public $title;
+    public $body;
+    public $image_path;
+    public $published_at;
+
+    public function __construct(array $row)
+    {
+        $this->id = (int) $row['id'];
+        $this->title = $row['title'];
+        $this->body = $row['body'];
+        $this->image_path = $row['image_path'];
+        $this->published_at = $row['published_at'];
+    }
+
+    public function publishedLabel(): string
+    {
+        return date('F j, Y', strtotime($this->published_at));
+    }
+
     public static function all(): array
     {
         return Db::connection()->query(
@@ -12,12 +32,13 @@ class News
         )->fetchAll();
     }
 
-    public static function find(int $id): ?array
+    public static function find(int $id): ?News
     {
         $stmt = Db::connection()->prepare('SELECT * FROM visible_news WHERE id = ?');
         $stmt->execute([$id]);
+        $row = $stmt->fetch();
 
-        return $stmt->fetch() ?: null;
+        return $row ? new self($row) : null;
     }
 
     // Admin reads the raw table (not the view), so drafts/future posts are visible for editing.
