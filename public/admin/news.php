@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '/../../components/require-admin.php';
 require __DIR__ . '/../../models/News.php';
 
 const NEWS_UPLOAD_DIR = __DIR__ . '/../assets/uploads/news';

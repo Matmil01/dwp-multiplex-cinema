@@ -1,22 +1,34 @@
+<?php
+require __DIR__ . '/../../models/User.php';
+
+session_start();
+
+$user = isset($_SESSION['user_id']) ? User::find($_SESSION['user_id']) : null;
+
+if (!$user) {
+    header('Location: login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Untitled Cinema</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/nav-footer.css">
-    <link rel="stylesheet" href="assets/css/profile-booking.css">
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/nav-footer.css">
+    <link rel="stylesheet" href="../assets/css/profile-booking.css">
 </head>
 <body class="site-body">
     <header class="site-header">
-        <?php require __DIR__ . '/../components/public-navbar.php'; ?>
+        <?php require __DIR__ . '/../../components/public-navbar.php'; ?>
     </header>
 
     <main class="site-main">
         <section>
-            <h2 class="profile-name">Placeholder Customer</h2>
-            <p class="profile-details">placeholder@example.com &middot; 120 loyalty points</p>
+            <h2 class="profile-name"><?= htmlspecialchars($user['name'], ENT_QUOTES) ?></h2>
+            <p class="profile-details"><?= htmlspecialchars($user['email'], ENT_QUOTES) ?> &middot; <a href="logout.php" class="inline-link">Log out</a></p>
         </section>
 
         <section>
@@ -40,6 +52,6 @@
         </section>
     </main>
 
-    <?php require __DIR__ . '/../components/footer.php'; ?>
+    <?php require __DIR__ . '/../../components/footer.php'; ?>
 </body>
 </html>

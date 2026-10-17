@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '/../../components/require-admin.php';
 require __DIR__ . '/../../classes/TmdbAdapter.php';
 require __DIR__ . '/../../models/Movie.php';
 

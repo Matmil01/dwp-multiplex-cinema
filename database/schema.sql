@@ -75,5 +75,14 @@ CREATE TABLE company_info (
    CHECK (opening_time < closing_time)
 );
 
+-- password_hash holds the output of PHP password_hash(), never the plain password
+CREATE TABLE users (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(100) NOT NULL,
+   email VARCHAR(150) NOT NULL UNIQUE,
+   password_hash VARCHAR(255) NOT NULL,
+   role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer'
+);
+
 CREATE INDEX idx_showings_show_datetime ON showings (show_datetime);
 CREATE INDEX idx_movies_title ON movies (title);

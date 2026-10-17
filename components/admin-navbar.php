@@ -7,5 +7,6 @@
         <a href="schedule.php">Schedule</a>
         <a href="news.php">News</a>
         <a href="settings.php">Settings</a>
+        <a href="../account/logout.php">Log out</a>
     </div>
 </nav>

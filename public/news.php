@@ -1,4 +1,5 @@
 <?php
+session_start();
 require __DIR__ . '/../models/News.php';
 
 $articles = News::all();

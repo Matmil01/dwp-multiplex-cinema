@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require __DIR__ . '/../models/Movie.php';
 
 $validStatuses = ['all', 'now_showing', 'not_scheduled', 'previously_shown'];

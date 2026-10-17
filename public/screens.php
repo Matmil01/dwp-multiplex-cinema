@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require __DIR__ . '/../models/Showing.php';
 require __DIR__ . '/../components/screen-format.php';
 

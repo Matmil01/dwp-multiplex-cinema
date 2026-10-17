@@ -30,6 +30,12 @@
 	outline-offset: 2px;
 }
 
+.form-error {
+	margin: 0;
+	color: #f87171;
+	font-size: 0.875rem;
+}
+
 .form-helper-text {
 	margin: var(--space-4) 0 0;
 	color: var(--color-text-muted);

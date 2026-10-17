@@ -1,4 +1,5 @@
 <?php
+session_start();
 require __DIR__ . '/../models/News.php';
 
 $article = News::find((int) ($_GET['id'] ?? 0));

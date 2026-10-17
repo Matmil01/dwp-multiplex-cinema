@@ -1,3 +1,4 @@
+<?php require __DIR__ . '/../../components/require-admin.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
