@@ -93,7 +93,7 @@ function showingDayLabel(string $showDatetime): string
                 <h2 class="section-title section-title--primary">About <span class="section-title__brand">Untitled Cinema</span></h2>
                 <p class="muted-text"><?= nl2br(htmlspecialchars($company['description'], ENT_QUOTES)) ?></p>
             </div>
-            <img class="about__image" src="assets/images/About-Section-right.jpeg" alt="">
+            <img class="about__image" src="assets/images/about-section-right.jpeg" alt="">
         </section>
 
         <section class="home-section">

@@ -13,7 +13,7 @@
 .metric-card__label {
 	margin: 0;
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .metric-card__value {
@@ -25,7 +25,7 @@
 .admin-table {
 	width: 100%;
 	border-collapse: collapse;
-	font-size: 0.875rem;
+	font-size: 1rem;
 	text-align: left;
 }
 
@@ -58,7 +58,7 @@
 .schedule-board__month {
 	margin: 0;
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .admin-list {
@@ -85,18 +85,18 @@
 .admin-list-item__details {
 	margin: 0;
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .admin-list-item__actions {
 	display: flex;
 	gap: 0.75rem;
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .danger-link {
 	color: #f87171;
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .danger-link:hover {
@@ -111,7 +111,7 @@
 
 .notice {
 	margin: 0 0 var(--space-4);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .notice--success {
@@ -130,7 +130,7 @@
 	transform: translateX(-50%);
 	padding: var(--space-2) var(--space-4);
 	border-radius: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 1rem;
 	background: var(--color-surface-alt);
 	border: 1px solid var(--color-border);
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -156,7 +156,7 @@
 .admin-subheading {
 	margin: 0 0 0.75rem;
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 	font-weight: 600;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
@@ -221,7 +221,7 @@
 }
 
 .movie-result__title {
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .movie-result__year,
@@ -269,19 +269,19 @@
 
 .catalog-item__title {
 	margin: 0;
-	font-size: 0.875rem;
+	font-size: 1rem;
 	font-weight: 600;
 }
 
 .catalog-item__metadata {
 	margin: 0;
-	font-size: 0.75rem;
+	font-size: 1rem;
 }
 
 .catalog-item__actions {
 	flex-shrink: 0;
 	align-items: center;
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .danger-button {
@@ -290,7 +290,7 @@
 	background: transparent;
 	color: #f87171;
 	font: inherit;
-	font-size: 0.875rem;
+	font-size: 1rem;
 	cursor: pointer;
 }
 
@@ -316,7 +316,7 @@
 .schedule-board__hours {
 	margin-bottom: var(--space-2);
 	color: #6b7280;
-	font-size: 0.75rem;
+	font-size: 1rem;
 }
 
 .schedule-board__rows {
@@ -331,7 +331,7 @@
 .schedule-board__screen-name {
 	padding-right: var(--space-2);
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .schedule-board__timeline {
@@ -368,7 +368,7 @@
 	border-radius: 0.375rem;
 	background: rgb(120 53 15);
 	color: #fde68a;
-	font-size: 0.75rem;
+	font-size: 1rem;
 	text-decoration: none;
 	cursor: grab;
 }
@@ -460,7 +460,7 @@
 	padding: 0.375rem 0.75rem;
 	border-radius: 0.375rem;
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 	text-decoration: none;
 }
 
@@ -505,7 +505,7 @@
 	background: transparent;
 	color: var(--color-text);
 	font: inherit;
-	font-size: 0.875rem;
+	font-size: 1rem;
 	text-align: left;
 }
 

@@ -11,7 +11,7 @@
 
 .form-label {
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .form-input {
@@ -33,11 +33,11 @@
 .form-error {
 	margin: 0;
 	color: #f87171;
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .form-helper-text {
 	margin: var(--space-4) 0 0;
 	color: var(--color-text-muted);
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
