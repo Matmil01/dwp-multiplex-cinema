@@ -35,8 +35,9 @@ class CompanyInfo
         }
 
         $db->prepare(
-            'UPDATE company_info SET description = ?, opening_time = ?, closing_time = ?, address = ?, phone = ? WHERE id = 1'
+            'UPDATE company_info SET tagline = ?, description = ?, opening_time = ?, closing_time = ?, address = ?, phone = ? WHERE id = 1'
         )->execute([
+            $input['tagline'],
             $input['description'],
             $input['opening_time'],
             $input['closing_time'],

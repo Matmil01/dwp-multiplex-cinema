@@ -5,7 +5,7 @@
         <a href="/news.php">News</a>
         <a href="/contact.php">Contact</a>
     </div>
-    <h1 class="site-title"><a href="/index.php" class="site-title__link">Untitled Cinema</a></h1>
+    <p class="site-title"><a href="/index.php" class="site-title__link">Untitled Cinema</a></p>
     <div class="site-nav__links site-nav__account-links">
         <?php if (isset($_SESSION['user_id'])): ?>
             <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>

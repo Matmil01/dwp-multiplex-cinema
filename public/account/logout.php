@@ -1,8 +1,6 @@
 <?php
+
 session_start();
+require __DIR__ . '/../../controllers/AccountController.php';
 
-$_SESSION = [];
-session_destroy();
-
-header('Location: ../index.php');
-exit;
+(new AccountController())->logout();

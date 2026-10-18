@@ -5,16 +5,27 @@ INSERT INTO screens (type) VALUES
     ('70mm'),
     ('imax');
 
-INSERT INTO company_info (id, description, opening_time, closing_time, address, phone) VALUES
-    (1, 'Don''t come. We hate people.', '12:00:00', '23:59:00', '308 Negra Arroyo Lane, Albuquerque, New Mexico 87104', '(505) 503-4455');
+INSERT INTO company_info (id, tagline, description, opening_time, closing_time, address, phone) VALUES
+    (1, 'The future sucks. Let''s go back to the 1990s.',
+    'A return to the 1990s peak of the motion picture industry, Untitled Cinema is a revival house in suburban Albuquerque, New Mexico. We show only films from 1990 to 1999, each on its own projector: 16mm, 35mm, 70mm or IMAX. Whether you grew up on these films or are seeing them for the first time, come watch them the way they were meant to be seen.',
+    '12:00:00', '23:59:00',
+    '308 Negra Arroyo Lane, Albuquerque, New Mexico 87104', 
+    '(505) 503-4455');
 
--- Single demo film. Its poster URL is left empty so the placeholder image shows.
+-- Demo admin login: admin@cinema.com / admin (password stored as a bcrypt hash from password_hash()).
+INSERT INTO users (name, email, password_hash, role) VALUES
+    ('Owner',
+    'admin@cinema.com',
+    '$2y$10$3D0JJnZWat48jF5BKfi.wuKLYRcsk036AuOmC9JAWcLzFfd3XLH5C',
+    'admin');
+
+-- Single demo film. The poster is a TMDB URL, same as films added through the admin.
 INSERT INTO genres (name) VALUES
     ('Action'),
     ('Sci-Fi');
 
-INSERT INTO movies (title, release_year, description, duration_minutes) VALUES
-    ('The Matrix', 1999, 'A computer programmer learns that his world is a simulation and joins a rebellion against the machines that run it.', 136);
+INSERT INTO movies (title, release_year, description, duration_minutes, poster_url) VALUES
+    ('The Matrix', 1999, 'A computer programmer learns that his world is a simulation and joins a rebellion against the machines that run it.', 136, 'https://image.tmdb.org/t/p/w200/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg');
 
 INSERT INTO movie_genres (movie_id, genre_id) VALUES
     (1, 1), (1, 2);

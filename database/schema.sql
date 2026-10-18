@@ -67,6 +67,7 @@ CREATE TABLE news (
 -- single-row table holding admin-editable company info
 CREATE TABLE company_info (
    id INT PRIMARY KEY DEFAULT 1,
+   tagline VARCHAR(150) NOT NULL,
    description TEXT,
    opening_time TIME NOT NULL,
    closing_time TIME NOT NULL,

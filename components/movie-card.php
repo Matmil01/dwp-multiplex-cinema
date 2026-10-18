@@ -5,7 +5,9 @@
 ?>
 <article class="movie-card">
     <div class="movie-card__content">
-        <img src="<?= htmlspecialchars($movie['poster_url'] ?: 'assets/images/movie.jpg', ENT_QUOTES) ?>" alt="<?= htmlspecialchars($movie['title'], ENT_QUOTES) ?> poster" class="movie-card__poster">
+        <?php if ($movie['poster_url']): ?>
+            <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="<?= htmlspecialchars($movie['title'], ENT_QUOTES) ?> poster" class="movie-card__poster">
+        <?php endif; ?>
         <div class="movie-card__details">
             <?php if ($movie['show_format_badge'] ?? true): ?>
                 <span class="format-badge <?= htmlspecialchars(formatBadgeClasses($movie['screen_type']), ENT_QUOTES) ?>"><?= htmlspecialchars(formatBadgeLabel($movie['screen_type']), ENT_QUOTES) ?></span>
