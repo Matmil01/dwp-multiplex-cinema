@@ -40,14 +40,15 @@
 .news-card__excerpt {
 	margin: 0 0 var(--space-2);
 	color: var(--color-text-muted);
-	font-size: 1.0625rem;
-	line-height: 1.75;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .news-card__date {
 	margin: var(--space-1) 0;
 	color: var(--color-text-muted);
 	font-size: 1rem;
+	line-height: 1.5;
 }
 
 .news-card__thumbnail {
@@ -112,15 +113,16 @@
 	max-width: 48rem;
 	margin: 0;
 	color: var(--color-text-muted);
-	font-size: 1rem;
-	line-height: 1.5;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .schedule-table {
 	width: 100%;
 	table-layout: fixed;
 	border-collapse: collapse;
-	font-size: 1rem;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .schedule-table th,
@@ -132,7 +134,7 @@
 
 .schedule-table th {
 	color: var(--color-text-muted);
-	font-size: 1rem;
+	font-size: 1.125rem;
 	font-weight: 600;
 	text-transform: uppercase;
 }
@@ -346,5 +348,5 @@
 	margin: 0;
 	color: var(--color-text-muted);
 	font-size: 1.125rem;
-	line-height: 1.8;
+	line-height: 1.7;
 }

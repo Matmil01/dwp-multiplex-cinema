@@ -58,17 +58,6 @@
         </section>
 
         <section>
-            <div class="page-heading">
-                <h2 class="section-title">Staff Accounts</h2>
-                <a href="#" class="base-button">Invite Staff</a>
-            </div>
-            <div class="admin-list">
-                <div class="admin-list-item">
-                    <p class="admin-list-item__title">Placeholder Staff Member</p>
-                    <a href="#" class="danger-link">Remove</a>
-                </div>
-            </div>
-        </section>
     </main>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>

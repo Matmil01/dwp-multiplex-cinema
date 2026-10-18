@@ -69,7 +69,7 @@ class TmdbAdapter
             'duration_minutes' => $data['runtime'] ?? null,
             'release_year' => $data['release_date'] ? (int) substr($data['release_date'], 0, 4) : null,
             'poster_url' => $data['poster_path'] ? self::IMAGE_BASE_URL . $data['poster_path'] : null,
-            'genres' => array_map(fn(array $g) => $g['name'], $data['genres'] ?? []),
+            'genres' => array_column(array_slice($data['genres'] ?? [], 0, 2), 'name'),
             'director' => $director,
             'writers' => $writers,
             'cast' => $cast,

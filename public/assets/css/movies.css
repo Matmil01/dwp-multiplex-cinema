@@ -58,13 +58,15 @@
 .movie-card__metadata {
 	margin: 0;
 	color: var(--color-text-muted);
-	font-size: 1.0625rem;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .movie-card__next-showing {
 	margin: var(--space-1) 0 0;
 	color: var(--color-text-muted);
-	font-size: 1rem;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 @media (min-width: 40rem) {
@@ -117,6 +119,8 @@
 .format-row__blurb {
 	margin: 0;
 	color: var(--color-text-muted);
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .format-row__movies {
@@ -241,13 +245,16 @@
 .movie-details__description {
 	margin: 0 0 var(--space-4);
 	color: var(--color-text-muted);
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .movie-credits {
 	display: grid;
 	gap: var(--space-1);
 	margin: 0;
-	font-size: 1rem;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 .movie-credits__row {
@@ -282,13 +289,16 @@
 
 .showing-card__time {
 	margin: 0;
+	font-size: 1.125rem;
 	font-weight: 600;
+	line-height: 1.7;
 }
 
 .showing-card__screen {
 	margin: 0;
 	color: var(--color-text-muted);
-	font-size: 1rem;
+	font-size: 1.125rem;
+	line-height: 1.7;
 }
 
 @media (min-width: 40rem) {
