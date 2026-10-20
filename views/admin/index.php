@@ -20,11 +20,7 @@
             <div class="metric-grid">
                 <div class="metric-card">
                     <p class="metric-card__label">Today's Bookings</p>
-                    <p class="metric-card__value">12</p>
-                </div>
-                <div class="metric-card">
-                    <p class="metric-card__label">Pending Payments</p>
-                    <p class="metric-card__value">3</p>
+                    <p class="metric-card__value"><?= $bookingsToday ?></p>
                 </div>
                 <div class="metric-card">
                     <p class="metric-card__label">Showings Today</p>

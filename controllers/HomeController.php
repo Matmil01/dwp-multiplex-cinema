@@ -14,14 +14,22 @@ class HomeController
         // Collect today's showings into one card per movie and format, with a list of times.
         $todayByMovieAndFormat = [];
         foreach (Showing::today() as $row) {
+            // Showings that already started are left off, same as on the movie pages.
+            if (!Booking::isOpen($row)) {
+                continue;
+            }
+
             // For example, "12:35mm" and "12:imax" keep the same movie's formats separate.
             $movieFormatKey = $row['movie_id'] . ':' . $row['screen_type'];
             if (!isset($todayByMovieAndFormat[$movieFormatKey])) {
                 $todayByMovieAndFormat[$movieFormatKey] = $row;
                 $todayByMovieAndFormat[$movieFormatKey]['times'] = [];
             }
-            // Add this time only to the card for this movie in this format.
-            $todayByMovieAndFormat[$movieFormatKey]['times'][] = date('H:i', strtotime($row['show_datetime']));
+            // Add this time only to the card for this movie in this format; the id lets the pill link to booking.
+            $todayByMovieAndFormat[$movieFormatKey]['times'][] = [
+                'showing_id' => $row['id'],
+                'label' => date('H:i', strtotime($row['show_datetime'])),
+            ];
         }
         $todayMovies = array_values($todayByMovieAndFormat);
 

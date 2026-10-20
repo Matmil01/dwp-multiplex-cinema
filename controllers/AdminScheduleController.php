@@ -68,7 +68,13 @@ class AdminScheduleController
 
     public function delete(string $date, int $id): void
     {
-        Showing::delete($id);
+        try {
+            Showing::delete($id);
+        } catch (RuntimeException $e) {
+            $this->showPage($date, $e->getMessage(), null, []);
+            return;
+        }
+
         header('Location: /admin/schedule?date=' . urlencode($date) . '&deleted=1');
         exit;
     }

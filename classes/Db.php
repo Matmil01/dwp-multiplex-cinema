@@ -14,6 +14,8 @@ class Db
             self::$connection = new PDO($dsn, $db['user'], $db['password'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                // Puts NOW() and CURDATE() on PHP's clock; an offset like +02:00 works without the database's timezone tables.
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '" . date('P') . "'",
             ]);
         }
 

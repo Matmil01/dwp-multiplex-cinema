@@ -41,9 +41,14 @@ CREATE TABLE movie_credits (
 );
 
 -- one row per physical screen, identified only by its format (no separate display name column)
+-- seat_rows/seats_per_row/aisle_after describe the seating grid; seats themselves are not stored per screen
 CREATE TABLE screens (
    id INT AUTO_INCREMENT PRIMARY KEY,
-   type VARCHAR(10) NOT NULL
+   type VARCHAR(10) NOT NULL,
+   seat_rows TINYINT NOT NULL,
+   seats_per_row TINYINT NOT NULL,
+   aisle_after TINYINT NOT NULL,
+   ticket_price DECIMAL(6,2) NOT NULL
 );
 
 CREATE TABLE showings (
@@ -83,6 +88,31 @@ CREATE TABLE users (
    email VARCHAR(150) NOT NULL UNIQUE,
    password_hash VARCHAR(255) NOT NULL,
    role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer'
+);
+
+-- price_per_seat is copied from the screen at booking time so old invoices don't change when prices do
+CREATE TABLE bookings (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   user_id INT NOT NULL,
+   showing_id INT NOT NULL,
+   status ENUM('paid', 'cancelled') NOT NULL DEFAULT 'paid',
+   price_per_seat DECIMAL(6,2) NOT NULL,
+   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   FOREIGN KEY (user_id) REFERENCES users(id),
+   FOREIGN KEY (showing_id) REFERENCES showings(id)
+);
+
+-- showing_id repeats what bookings already knows (a deliberate 3NF exception): the UNIQUE key below needs it
+-- to stop two bookings holding the same seat. Cancelling a booking deletes its seats, which frees them.
+CREATE TABLE booking_seats (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   booking_id INT NOT NULL,
+   showing_id INT NOT NULL,
+   seat_row CHAR(1) NOT NULL,
+   seat_number TINYINT NOT NULL,
+   UNIQUE (showing_id, seat_row, seat_number),
+   FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
+   FOREIGN KEY (showing_id) REFERENCES showings(id)
 );
 
 CREATE INDEX idx_showings_show_datetime ON showings (show_datetime);

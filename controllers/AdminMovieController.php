@@ -65,7 +65,13 @@ class AdminMovieController
 
     public function delete(int $id): void
     {
-        Movie::delete($id);
+        try {
+            Movie::delete($id);
+        } catch (RuntimeException $e) {
+            header('Location: /admin/movies?delete_blocked=1');
+            exit;
+        }
+
         header('Location: /admin/movies?deleted=1');
         exit;
     }
@@ -124,6 +130,9 @@ class AdminMovieController
         } elseif (isset($query['deleted'])) {
             $snackbarType = 'success';
             $snackbarMessage = 'Movie deleted.';
+        } elseif (isset($query['delete_blocked'])) {
+            $snackbarType = 'error';
+            $snackbarMessage = 'This movie has showings with bookings and can\'t be deleted.';
         }
 
         require __DIR__ . '/../views/admin/movies.php';

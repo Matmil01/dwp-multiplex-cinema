@@ -1,5 +1,5 @@
 <?php
-// Expects $movie in scope; shows a row of showtime pills if $movie['times'] is set,
+// Expects $movie in scope; shows a row of showtime pills if $movie['times'] is set (each with showing_id, label),
 // otherwise a single "Next: ..." line if $movie['next_show_datetime'] is set.
 // $movie['show_format_badge'] (default true) lets a page that already names the format elsewhere skip it.
 ?>
@@ -17,7 +17,7 @@
             <?php if (isset($movie['times'])): ?>
                 <div class="showtime-list">
                     <?php foreach ($movie['times'] as $time): ?>
-                        <a href="#" class="showtime-button"><?= htmlspecialchars($time, ENT_QUOTES) ?></a>
+                        <a href="/book?showing=<?= (int) $time['showing_id'] ?>" class="showtime-button"><?= htmlspecialchars($time['label'], ENT_QUOTES) ?></a>
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>

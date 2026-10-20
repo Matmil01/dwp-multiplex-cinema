@@ -72,7 +72,22 @@ class AccountController
             exit;
         }
 
+        $bookings = Booking::forUser($user['id']);
+
         require __DIR__ . '/../views/account/profile.php';
+    }
+
+    public function cancelBooking(?int $userId, int $bookingId): void
+    {
+        if ($userId === null) {
+            header('Location: /login');
+            exit;
+        }
+
+        Booking::cancel($bookingId, $userId);
+
+        header('Location: /profile');
+        exit;
     }
 
     public function logout(): void

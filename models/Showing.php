@@ -92,6 +92,22 @@ class Showing
         return $stmt->fetch() ?: null;
     }
 
+    // One showing with its movie title plus the screen's seating layout and ticket price, for the booking page.
+    public static function findForBooking(int $id): ?array
+    {
+        $stmt = Db::connection()->prepare(
+            'SELECT s.id, s.show_datetime, m.title AS movie_title,
+                    sc.type AS screen_type, sc.seat_rows, sc.seats_per_row, sc.aisle_after, sc.ticket_price
+             FROM showings s
+             JOIN movies m ON m.id = s.movie_id
+             JOIN screens sc ON sc.id = s.screen_id
+             WHERE s.id = ?'
+        );
+        $stmt->execute([$id]);
+
+        return $stmt->fetch() ?: null;
+    }
+
     // Upcoming showings for one movie, joined with the screen type, for the public movie page.
     public static function upcomingForMovie(int $movieId): array
     {
@@ -119,6 +135,15 @@ class Showing
         // Missing, zero, or negative runtimes cannot be used to check whether showings overlap.
         if ((int) $runtimeQuery->fetchColumn() <= 0) {
             throw new RuntimeException('Set a runtime greater than zero for this movie in Movies before scheduling it.');
+        }
+
+        // Changing a showing that people have booked would move or break their seats.
+        if (!empty($input['id'])) {
+            $bookedSeat = $db->prepare('SELECT 1 FROM booking_seats WHERE showing_id = ? LIMIT 1');
+            $bookedSeat->execute([$input['id']]);
+            if ($bookedSeat->fetchColumn()) {
+                throw new RuntimeException('This showing has bookings, so it can\'t be changed. Cancel its bookings first.');
+            }
         }
 
         $params = [$input['movie_id'], $input['screen_id'], $input['show_datetime']];
@@ -149,6 +174,15 @@ class Showing
 
     public static function delete(int $id): void
     {
-        Db::connection()->prepare('DELETE FROM showings WHERE id = ?')->execute([$id]);
+        try {
+            Db::connection()->prepare('DELETE FROM showings WHERE id = ?')->execute([$id]);
+        } catch (PDOException $e) {
+            // 1451 is MariaDB's "row is still referenced" error: bookings point at this showing.
+            if (($e->errorInfo[1] ?? 0) === 1451) {
+                throw new RuntimeException('This showing has bookings and can\'t be deleted.');
+            }
+
+            throw $e;
+        }
     }
 }

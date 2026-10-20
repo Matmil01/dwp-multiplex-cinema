@@ -1,9 +1,9 @@
 -- Baseline data needed for a usable cinema setup.
-INSERT INTO screens (type) VALUES
-    ('16mm'),
-    ('35mm'),
-    ('70mm'),
-    ('imax');
+INSERT INTO screens (type, seat_rows, seats_per_row, aisle_after, ticket_price) VALUES
+    ('16mm', 5, 8, 4, 75.00),
+    ('35mm', 8, 12, 6, 95.00),
+    ('70mm', 10, 14, 7, 115.00),
+    ('imax', 12, 16, 8, 145.00);
 
 INSERT INTO company_info (id, tagline, description, opening_time, closing_time, address, phone) VALUES
     (1, 'The future sucks. Let''s go back to the 1990s.',

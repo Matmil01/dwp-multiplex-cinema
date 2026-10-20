@@ -207,7 +207,16 @@ class Movie
 
     public static function delete(int $id): void
     {
-        Db::connection()->prepare('DELETE FROM movies WHERE id = ?')->execute([$id]);
+        try {
+            Db::connection()->prepare('DELETE FROM movies WHERE id = ?')->execute([$id]);
+        } catch (PDOException $e) {
+            // 1451 is MariaDB's "row is still referenced" error: bookings point at one of this movie's showings.
+            if (($e->errorInfo[1] ?? 0) === 1451) {
+                throw new RuntimeException('This movie has showings with bookings and can\'t be deleted.');
+            }
+
+            throw $e;
+        }
     }
 
     private static function genresFor(int $movieId): array
