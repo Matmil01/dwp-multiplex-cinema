@@ -13,6 +13,13 @@ $routes = [
     'GET /news'         => fn() => (new NewsController())->index(),
     'GET /news/article' => fn() => (new NewsController())->show((int) ($_GET['id'] ?? 0)),
     'GET /screens'      => fn() => (new ScreenController())->index(),
+    'GET /contact'      => fn() => (new ContactController())->showForm(),
+    'POST /contact'     => fn() => (new ContactController())->send(
+        trim($_POST['name'] ?? ''),
+        trim($_POST['email'] ?? ''),
+        trim($_POST['subject'] ?? ''),
+        trim($_POST['message'] ?? '')
+    ),
     'GET /book'         => fn() => (new BookingController())->showSeats(
         (int) ($_GET['showing'] ?? 0),
         isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null

@@ -14,4 +14,12 @@ return [
         'user' => getenv('DB_USER') ?: '',
         'password' => getenv('DB_PASSWORD') ?: '',
     ],
+    'mail' => [
+        'host' => getenv('MAIL_HOST') ?: '',
+        'port' => (int) (getenv('MAIL_PORT') ?: 587),
+        'user' => getenv('MAIL_USER') ?: '',
+        'password' => getenv('MAIL_PASSWORD') ?: '',
+        'from' => getenv('MAIL_FROM') ?: '',
+        'owner' => getenv('MAIL_OWNER') ?: '',
+    ],
 ];

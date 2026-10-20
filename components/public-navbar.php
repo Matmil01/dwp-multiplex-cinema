@@ -3,7 +3,7 @@
         <a href="/movies">Movies</a>
         <a href="/screens">Screens</a>
         <a href="/news">News</a>
-        <a href="/contact.php">Contact</a>
+        <a href="/contact">Contact</a>
     </div>
     <p class="site-title"><a href="/" class="site-title__link">Untitled Cinema</a></p>
     <div class="site-nav__links site-nav__account-links">

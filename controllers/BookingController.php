@@ -20,14 +20,33 @@ class BookingController
         }
 
         try {
-            Booking::create($userId, $showing, $seats);
+            $bookingId = Booking::create($userId, $showing, $seats);
         } catch (RuntimeException $e) {
             $this->renderSeatPicker($showing, $e->getMessage(), $seats);
             return;
         }
 
+        $this->sendConfirmation($bookingId);
+
         header('Location: /profile');
         exit;
+    }
+
+    // The booking is already saved, so a failed email is ignored rather than shown as a booking error.
+    private function sendConfirmation(int $bookingId): void
+    {
+        $booking = Booking::find($bookingId);
+        $seats = implode(', ', array_map(fn($seat) => $seat['seat_row'] . $seat['seat_number'], $booking['seats']));
+        $total = number_format((float) $booking['price_per_seat'] * count($booking['seats']), 0);
+
+        $body = "Hi {$booking['customer_name']},\n\n"
+            . "Your booking is confirmed.\n\n"
+            . "Movie: {$booking['movie_title']}\n"
+            . 'When: ' . date('D j M Y, H:i', strtotime($booking['show_datetime'])) . "\n"
+            . "Seats: $seats\n"
+            . "Total: $total kr.\n";
+
+        Mailer::send($booking['customer_email'], 'Your booking at Untitled Cinema', $body);
     }
 
     // Sends logged-out visitors to /login and returns null (after a 404) when the showing is missing or already started.
