@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../classes/Db.php';
-
 // Keeps the schedule from ever running dry if enabled in config.php
 // Repeats the most recent week in the showings table.
 class AutoSchedule

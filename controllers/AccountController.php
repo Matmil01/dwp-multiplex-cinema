@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/User.php';
-
 class AccountController
 {
     private const PASSWORD_MIN_LENGTH = 8;
@@ -31,7 +29,7 @@ class AccountController
             $error = 'An account with that email already exists.';
         } else {
             User::create($name, $email, $password);
-            header('Location: login.php');
+            header('Location: /login');
             exit;
         }
 
@@ -56,7 +54,7 @@ class AccountController
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            header('Location: ' . ($user['role'] === 'admin' ? '../admin/index.php' : 'profile.php'));
+            header('Location: ' . ($user['role'] === 'admin' ? '/admin' : '/profile'));
             exit;
         }
 
@@ -70,7 +68,7 @@ class AccountController
         $user = $userId !== null ? User::find($userId) : null;
 
         if (!$user) {
-            header('Location: login.php');
+            header('Location: /login');
             exit;
         }
 
@@ -82,7 +80,7 @@ class AccountController
         $_SESSION = [];
         session_destroy();
 
-        header('Location: ../index.php');
+        header('Location: /');
         exit;
     }
 }

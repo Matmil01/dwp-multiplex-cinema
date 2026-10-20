@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/Showing.php';
-
 class AdminDashboardController
 {
     public function index(): void

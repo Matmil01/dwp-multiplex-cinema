@@ -1,18 +1,6 @@
 <?php
 require __DIR__ . '/../components/screen-format.php';
-
-// "Today"/"Tomorrow" instead of the raw date, otherwise just the date.
-function showingDayLabel(string $showDatetime): string
-{
-    $day = date('Y-m-d', strtotime($showDatetime));
-    if ($day === date('Y-m-d')) {
-        return 'Today';
-    }
-    if ($day === date('Y-m-d', strtotime('+1 day'))) {
-        return 'Tomorrow';
-    }
-    return date('D, M j', strtotime($showDatetime));
-}
+require __DIR__ . '/../components/day-label.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +8,9 @@ function showingDayLabel(string $showDatetime): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($movie->title, ENT_QUOTES) ?> - Untitled Cinema</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/nav-footer.css">
-    <link rel="stylesheet" href="assets/css/movies.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/movies.css">
 </head>
 <body class="site-body">
     <header class="site-header">

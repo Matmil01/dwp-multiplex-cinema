@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../classes/Db.php';
-
 class User
 {
     public static function emailExists(string $email): bool

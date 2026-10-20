@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/News.php';
-
 class AdminNewsController
 {
     private const UPLOAD_DIR = __DIR__ . '/../public/assets/uploads/news';
@@ -16,6 +14,19 @@ class AdminNewsController
     public function index(array $query): void
     {
         $this->showPage($query, null, null);
+    }
+
+    public function handlePost(array $post, array $files, array $query): void
+    {
+        $action = $post['action'] ?? '';
+
+        if ($action === 'save') {
+            $this->save($post, $files);
+        } elseif ($action === 'delete') {
+            $this->delete((int) $post['id']);
+        } else {
+            $this->index($query);
+        }
     }
 
     public function save(array $input, array $files): void
@@ -46,7 +57,7 @@ class AdminNewsController
             if ($imagePath !== $currentImagePath) {
                 $this->deleteImageIfManaged($currentImagePath);
             }
-            header('Location: news.php?saved=' . urlencode(trim($input['title'] ?? '')));
+            header('Location: /admin/news?saved=' . urlencode(trim($input['title'] ?? '')));
             exit;
         } catch (Throwable $e) {
             $saveError = $e->getMessage();
@@ -72,7 +83,7 @@ class AdminNewsController
         if ($existing) {
             $this->deleteImageIfManaged($existing['image_path']);
         }
-        header('Location: news.php?deleted=1');
+        header('Location: /admin/news?deleted=1');
         exit;
     }
 

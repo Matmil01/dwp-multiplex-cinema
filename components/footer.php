@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../models/CompanyInfo.php'; ?>
 <?php $company = CompanyInfo::find(); ?>
 <footer class="site-footer">
     <div class="site-footer__details">

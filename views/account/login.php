@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In - Untitled Cinema</title>
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/nav-footer.css">
-    <link rel="stylesheet" href="../assets/css/forms.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -30,7 +30,7 @@
                 </div>
                 <button type="submit" class="base-button">Log In</button>
             </form>
-            <p class="form-helper-text">Don't have an account? <a href="register.php" class="inline-link">Register</a></p>
+            <p class="form-helper-text">Don't have an account? <a href="/register" class="inline-link">Register</a></p>
         </section>
     </main>
 

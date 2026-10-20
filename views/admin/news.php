@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News - Admin - Untitled Cinema</title>
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/nav-footer.css">
-    <link rel="stylesheet" href="../assets/css/forms.css">
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -36,7 +36,7 @@
                             <input type="date" name="published_at" value="<?= htmlspecialchars($editor['published_at'], ENT_QUOTES) ?>" required class="form-input">
                         </div>
                         <?php if ($editor['image_path']): ?>
-                            <img src="../<?= htmlspecialchars($editor['image_path'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
+                            <img src="/<?= htmlspecialchars($editor['image_path'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
                         <?php endif; ?>
                         <div class="form-field">
                             <label class="form-label">Image (JPEG/PNG/WEBP, max 2MB)</label>

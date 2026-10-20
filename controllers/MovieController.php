@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/Movie.php';
-require_once __DIR__ . '/../models/Showing.php';
-
 class MovieController
 {
     public function index(string $requestedStatus): void

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Untitled Cinema</title>
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/nav-footer.css">
-    <link rel="stylesheet" href="../assets/css/profile-booking.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/profile-booking.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -16,7 +16,7 @@
     <main class="site-main">
         <section>
             <h2 class="profile-name"><?= htmlspecialchars($user['name'], ENT_QUOTES) ?></h2>
-            <p class="profile-details"><?= htmlspecialchars($user['email'], ENT_QUOTES) ?> &middot; <a href="logout.php" class="inline-link">Log out</a></p>
+            <p class="profile-details"><?= htmlspecialchars($user['email'], ENT_QUOTES) ?> &middot; <a href="/logout" class="inline-link">Log out</a></p>
         </section>
 
         <section>

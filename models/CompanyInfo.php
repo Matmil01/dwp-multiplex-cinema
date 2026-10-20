@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../classes/Db.php';
-
 class CompanyInfo
 {
     public static function find(): array

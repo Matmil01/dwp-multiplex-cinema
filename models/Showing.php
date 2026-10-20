@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../classes/Db.php';
-
 // All reads/writes for the showings table (a movie playing on a screen at a specific time).
 class Showing
 {

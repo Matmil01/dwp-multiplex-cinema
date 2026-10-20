@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies - Untitled Cinema</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/nav-footer.css">
-    <link rel="stylesheet" href="assets/css/movies.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/movies.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -29,7 +29,7 @@
                     <p class="empty-message">No movies in this category.</p>
                 <?php endif; ?>
                 <?php foreach ($movies as $movie): ?>
-                    <a href="movie-details.php?id=<?= (int) $movie['id'] ?>" class="movie-poster-card">
+                    <a href="/movie?id=<?= (int) $movie['id'] ?>" class="movie-poster-card">
                         <?php if ($movie['poster_url']): ?>
                             <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-poster-card__image">
                         <?php else: ?>

@@ -1,13 +1,16 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require __DIR__ . '/../config/autoload.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Untitled Cinema</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/nav-footer.css">
-    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
 </head>
 <body class="site-body">
     <header class="site-header">

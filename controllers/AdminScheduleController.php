@@ -1,10 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/Showing.php';
-require_once __DIR__ . '/../models/Movie.php';
-require_once __DIR__ . '/../models/CompanyInfo.php';
-require_once __DIR__ . '/../demo/AutoSchedule.php';
-
 class AdminScheduleController
 {
     // Runs before every action on this page, including the JSON endpoints.
@@ -21,6 +16,23 @@ class AdminScheduleController
         $this->showPage($date, null, null, $query);
     }
 
+    public function handlePost(string $date, array $post, array $query): void
+    {
+        $action = $post['action'] ?? '';
+
+        if ($action === 'save') {
+            $this->save($date, $post);
+        } elseif ($action === 'delete') {
+            $this->delete($date, (int) $post['id']);
+        } elseif ($action === 'move') {
+            $this->move($post);
+        } elseif ($action === 'duplicate') {
+            $this->duplicate($post);
+        } else {
+            $this->index($date, $query);
+        }
+    }
+
     public function save(string $date, array $input): void
     {
         $saveError = null;
@@ -35,7 +47,7 @@ class AdminScheduleController
                     'screen_id' => (int) $input['screen_id'],
                     'show_datetime' => $date . ' ' . $input['show_time'] . ':00',
                 ]);
-                header('Location: schedule.php?date=' . urlencode($date) . '&saved=1');
+                header('Location: /admin/schedule?date=' . urlencode($date) . '&saved=1');
                 exit;
             } catch (Throwable $e) {
                 $saveError = $e->getMessage();
@@ -57,7 +69,7 @@ class AdminScheduleController
     public function delete(string $date, int $id): void
     {
         Showing::delete($id);
-        header('Location: schedule.php?date=' . urlencode($date) . '&deleted=1');
+        header('Location: /admin/schedule?date=' . urlencode($date) . '&deleted=1');
         exit;
     }
 
@@ -118,6 +130,15 @@ class AdminScheduleController
 
         $showingsByScreen = [];
         foreach (Showing::forDate($date) as $showing) {
+            $startTimestamp = strtotime($showing['show_datetime']);
+            $duration = $showing['duration_minutes'] ?: 90;
+
+            [$showing['left'], $showing['width']] = $this->timelineStyle($showing['show_datetime'], $duration, $openingHour, $closingHour);
+            $showing['minutes'] = $this->timelineMinutes($showing['show_datetime'], $openingHour);
+            $showing['duration'] = (int) $duration;
+            $showing['start_time'] = date('H:i', $startTimestamp);
+            $showing['end_time'] = date('H:i', $startTimestamp + $duration * 60);
+
             $showingsByScreen[$showing['screen_id']][] = $showing;
         }
 
@@ -133,5 +154,26 @@ class AdminScheduleController
         $justDeleted = isset($query['deleted']);
 
         require __DIR__ . '/../views/admin/schedule.php';
+    }
+
+    // Grid covers the company's opening-closing window; returns a block's left/width as % of that span.
+    private function timelineStyle(string $showDatetime, int $durationMinutes, int $openingHour, int $closingHour): array
+    {
+        $startOfSpan = strtotime(date('Y-m-d', strtotime($showDatetime)) . " $openingHour:00");
+        $minutesIn = (strtotime($showDatetime) - $startOfSpan) / 60;
+        $span = ($closingHour - $openingHour) * 60;
+
+        $left = max(0, min(100, $minutesIn / $span * 100));
+        $width = max(3, min(100 - $left, $durationMinutes / $span * 100));
+
+        return [$left, $width];
+    }
+
+    // Raw (unclamped) minutes since the grid's opening-hour start, for the drag script's snapping math.
+    private function timelineMinutes(string $showDatetime, int $openingHour): int
+    {
+        $startOfSpan = strtotime(date('Y-m-d', strtotime($showDatetime)) . " $openingHour:00");
+
+        return (int) round((strtotime($showDatetime) - $startOfSpan) / 60);
     }
 }

@@ -1,14 +1,6 @@
 <?php
 require __DIR__ . '/../components/screen-format.php';
-
-// "Tomorrow" instead of the raw date, otherwise the weekday name (same idea as movie-details.php).
-function showingDayLabel(string $showDatetime): string
-{
-    if (date('Y-m-d', strtotime($showDatetime)) === date('Y-m-d', strtotime('+1 day'))) {
-        return 'Tomorrow';
-    }
-    return date('D', strtotime($showDatetime));
-}
+require __DIR__ . '/../components/day-label.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +8,10 @@ function showingDayLabel(string $showDatetime): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Untitled Cinema</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/nav-footer.css">
-    <link rel="stylesheet" href="assets/css/movies.css">
-    <link rel="stylesheet" href="assets/css/showings-news.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/movies.css">
+    <link rel="stylesheet" href="/assets/css/showings-news.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -31,7 +23,7 @@ function showingDayLabel(string $showDatetime): string
             <h1 class="hero__title">Untitled Cinema</h1>
             <p class="hero__tagline"><?= htmlspecialchars($company['tagline'], ENT_QUOTES) ?></p>
             <?php
-            $ticketHref = 'screens.php';
+            $ticketHref = '/screens';
             $ticketLabel = 'See the full schedule';
             require __DIR__ . '/../components/cta-button.php';
             ?>
@@ -64,7 +56,7 @@ function showingDayLabel(string $showDatetime): string
                     <?php endforeach; ?>
                 </div>
                 <?php
-                $ticketHref = 'screens.php';
+                $ticketHref = '/screens';
                 $ticketLabel = 'See the full schedule';
                 require __DIR__ . '/../components/cta-button.php';
                 ?>
@@ -81,7 +73,7 @@ function showingDayLabel(string $showDatetime): string
                     <?php endforeach; ?>
                 </div>
                 <?php
-                $ticketHref = 'screens.php';
+                $ticketHref = '/screens';
                 $ticketLabel = 'See the full schedule';
                 require __DIR__ . '/../components/cta-button.php';
                 ?>
@@ -93,7 +85,7 @@ function showingDayLabel(string $showDatetime): string
                 <h2 class="section-title section-title--primary">About <span class="section-title__brand">Untitled Cinema</span></h2>
                 <p class="muted-text"><?= nl2br(htmlspecialchars($company['description'], ENT_QUOTES)) ?></p>
             </div>
-            <img class="about__image" src="assets/images/about-section-right.jpeg" alt="">
+            <img class="about__image" src="/assets/images/about-section-right.jpeg" alt="">
         </section>
 
         <section class="home-section">
@@ -105,19 +97,19 @@ function showingDayLabel(string $showDatetime): string
                 <?php foreach ($latestNews as $article): ?>
                     <article class="news-card">
                         <?php if ($article['image_path']): ?>
-                            <img src="<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-card__thumbnail">
+                            <img src="/<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-card__thumbnail">
                         <?php else: ?>
                             <div class="news-card__thumbnail">Thumbnail</div>
                         <?php endif; ?>
                         <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
-                        <h3 class="news-card__title"><a href="news-article.php?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
+                        <h3 class="news-card__title"><a href="/news/article?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
                         <p class="news-card__excerpt"><?= htmlspecialchars(News::excerpt($article['body']), ENT_QUOTES) ?></p>
-                        <a href="news-article.php?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
+                        <a href="/news/article?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
                     </article>
                 <?php endforeach; ?>
             </div>
             <?php
-            $ticketHref = 'news.php';
+            $ticketHref = '/news';
             $ticketLabel = 'See all news';
             require __DIR__ . '/../components/cta-button.php';
             ?>

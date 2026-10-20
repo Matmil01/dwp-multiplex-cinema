@@ -1,26 +1,5 @@
 <?php
 require __DIR__ . '/../../components/screen-format.php';
-
-// Grid covers the company's opening-closing window; returns a block's left/width as % of that span.
-function timelineStyle(string $showDatetime, ?int $durationMinutes, int $openingHour, int $closingHour): array
-{
-    $startOfSpan = strtotime(date('Y-m-d', strtotime($showDatetime)) . " $openingHour:00");
-    $minutesIn = (strtotime($showDatetime) - $startOfSpan) / 60;
-    $span = ($closingHour - $openingHour) * 60;
-
-    $left = max(0, min(100, $minutesIn / $span * 100));
-    $width = max(3, min(100 - $left, ($durationMinutes ?: 90) / $span * 100));
-
-    return [$left, $width];
-}
-
-// Raw (unclamped) minutes since the grid's opening-hour start, for the drag script's snapping math.
-function timelineMinutes(string $showDatetime, int $openingHour): int
-{
-    $startOfSpan = strtotime(date('Y-m-d', strtotime($showDatetime)) . " $openingHour:00");
-
-    return (int) round((strtotime($showDatetime) - $startOfSpan) / 60);
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,10 +7,10 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule - Admin - Untitled Cinema</title>
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/nav-footer.css">
-    <link rel="stylesheet" href="../assets/css/forms.css">
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -68,21 +47,16 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
                                         <div class="schedule-board__hour<?= $i === $hourCount - 1 ? ' schedule-board__hour--last' : '' ?>"></div>
                                     <?php endfor; ?>
                                     <?php foreach ($showingsByScreen[$screen['id']] ?? [] as $showing): ?>
-                                        <?php
-                                        [$left, $width] = timelineStyle($showing['show_datetime'], $showing['duration_minutes'], $openingHour, $closingHour);
-                                        $startTime = date('H:i', strtotime($showing['show_datetime']));
-                                        $endTime = date('H:i', strtotime($showing['show_datetime']) + ($showing['duration_minutes'] ?: 90) * 60);
-                                        ?>
                                         <div class="schedule-board__showing"
-                                           style="left: <?= $left ?>%; width: <?= $width ?>%;"
-                                           title="<?= htmlspecialchars("$startTime\u{2013}$endTime \u{00b7} {$showing['movie_title']}", ENT_QUOTES) ?>"
+                                           style="left: <?= $showing['left'] ?>%; width: <?= $showing['width'] ?>%;"
+                                           title="<?= htmlspecialchars("{$showing['start_time']}\u{2013}{$showing['end_time']} \u{00b7} {$showing['movie_title']}", ENT_QUOTES) ?>"
                                            data-id="<?= (int) $showing['id'] ?>"
                                            data-movie-id="<?= (int) $showing['movie_id'] ?>"
-                                           data-minutes="<?= timelineMinutes($showing['show_datetime'], $openingHour) ?>"
-                                           data-duration="<?= (int) ($showing['duration_minutes'] ?: 90) ?>"
+                                           data-minutes="<?= $showing['minutes'] ?>"
+                                           data-duration="<?= $showing['duration'] ?>"
                                            data-edit-href="?date=<?= htmlspecialchars($date, ENT_QUOTES) ?>&edit_id=<?= (int) $showing['id'] ?>">
                                             <span class="schedule-board__showing-label">
-                                                <span class="schedule-board__showing-time"><?= htmlspecialchars($startTime, ENT_QUOTES) ?>&ndash;<?= htmlspecialchars($endTime, ENT_QUOTES) ?></span>
+                                                <span class="schedule-board__showing-time"><?= htmlspecialchars($showing['start_time'], ENT_QUOTES) ?>&ndash;<?= htmlspecialchars($showing['end_time'], ENT_QUOTES) ?></span>
                                                 <span class="schedule-board__showing-title"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></span>
                                             </span>
                                             <button type="button" class="schedule-board__duplicate" title="Duplicate this showing right after it">+</button>
@@ -229,7 +203,7 @@ function timelineMinutes(string $showDatetime, int $openingHour): int
         });
     </script>
 
-    <script src="../assets/js/schedule-drag.js"></script>
+    <script src="/assets/js/schedule-drag.js"></script>
     <script>
         initScheduleDrag(<?= json_encode($date) ?>, <?= $openingHour ?>, <?= ($closingHour - $openingHour) * 60 ?>);
     </script>

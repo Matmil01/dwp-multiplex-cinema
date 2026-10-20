@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../classes/Db.php';
-
 // Public reads go through the visible_news view, so posts scheduled for the future stay hidden.
 class News
 {

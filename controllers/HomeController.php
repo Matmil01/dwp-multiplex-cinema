@@ -1,10 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/Showing.php';
-require_once __DIR__ . '/../models/CompanyInfo.php';
-require_once __DIR__ . '/../models/News.php';
-require_once __DIR__ . '/../demo/AutoSchedule.php';
-
 class HomeController
 {
     public function index(): void

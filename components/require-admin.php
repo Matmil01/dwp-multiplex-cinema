@@ -3,6 +3,6 @@
 session_start();
 
 if (($_SESSION['role'] ?? '') !== 'admin') {
-    header('Location: ../account/login.php');
+    header('Location: /login');
     exit;
 }

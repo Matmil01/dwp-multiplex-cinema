@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News - Untitled Cinema</title>
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/nav-footer.css">
-    <link rel="stylesheet" href="assets/css/showings-news.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/showings-news.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -24,15 +24,15 @@
                 <?php foreach ($articles as $article): ?>
                     <article class="news-list-item">
                         <?php if ($article['image_path']): ?>
-                            <img src="<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-list-item__thumbnail">
+                            <img src="/<?= htmlspecialchars($article['image_path'], ENT_QUOTES) ?>" alt="" class="news-list-item__thumbnail">
                         <?php else: ?>
                             <div class="news-list-item__thumbnail">Article image coming soon</div>
                         <?php endif; ?>
                         <div class="news-list-item__content">
                             <p class="news-card__date"><?= date('F j, Y', strtotime($article['published_at'])) ?></p>
-                            <h3 class="news-card__title"><a href="news-article.php?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
+                            <h3 class="news-card__title"><a href="/news/article?id=<?= (int) $article['id'] ?>"><?= htmlspecialchars($article['title'], ENT_QUOTES) ?></a></h3>
                             <p class="news-card__excerpt"><?= htmlspecialchars(News::excerpt($article['body']), ENT_QUOTES) ?></p>
-                            <a href="news-article.php?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
+                            <a href="/news/article?id=<?= (int) $article['id'] ?>" class="text-link">Read more &rarr;</a>
                         </div>
                     </article>
                 <?php endforeach; ?>

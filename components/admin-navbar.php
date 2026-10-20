@@ -1,12 +1,12 @@
-<h1 class="site-title"><a href="../index.php" class="site-title__link">Untitled Cinema</a></h1>
+<h1 class="site-title"><a href="/" class="site-title__link">Untitled Cinema</a></h1>
 <nav class="admin-nav">
     <div class="admin-nav__links">
-        <a href="index.php">Dashboard</a>
-        <a href="bookings.php">Bookings</a>
-        <a href="movies.php">Movies</a>
-        <a href="schedule.php">Schedule</a>
-        <a href="news.php">News</a>
-        <a href="settings.php">Settings</a>
-        <a href="../account/logout.php">Log out</a>
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/bookings.php">Bookings</a>
+        <a href="/admin/movies">Movies</a>
+        <a href="/admin/schedule">Schedule</a>
+        <a href="/admin/news">News</a>
+        <a href="/admin/settings">Settings</a>
+        <a href="/logout">Log out</a>
     </div>
 </nav>

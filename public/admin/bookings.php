@@ -1,13 +1,16 @@
-<?php require __DIR__ . '/../../components/require-admin.php'; ?>
+<?php
+require __DIR__ . '/../../components/require-admin.php';
+require __DIR__ . '/../../config/autoload.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookings - Admin - Untitled Cinema</title>
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/nav-footer.css">
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/nav-footer.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="site-body">
     <header class="site-header">

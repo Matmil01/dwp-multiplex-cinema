@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../classes/Db.php';
-
 // All reads/writes for the movies table and its genres/credits.
 class Movie
 {
