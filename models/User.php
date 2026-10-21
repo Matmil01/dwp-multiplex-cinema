@@ -2,6 +2,13 @@
 
 class User
 {
+    public static function all(): array
+    {
+        return Db::connection()->query(
+            'SELECT name, email, role FROM users ORDER BY name'
+        )->fetchAll();
+    }
+
     public static function emailExists(string $email): bool
     {
         $stmt = Db::connection()->prepare('SELECT 1 FROM users WHERE email = ?');

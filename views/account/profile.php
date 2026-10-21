@@ -16,8 +16,9 @@
 
     <main class="site-main">
         <section>
+            <h1 class="section-title section-title--primary">Your Profile</h1>
             <h2 class="profile-name"><?= htmlspecialchars($user['name'], ENT_QUOTES) ?></h2>
-            <p class="profile-details"><?= htmlspecialchars($user['email'], ENT_QUOTES) ?> &middot; <a href="/logout" class="inline-link">Log out</a></p>
+            <p class="profile-details">Email: <?= htmlspecialchars($user['email'], ENT_QUOTES) ?></p>
         </section>
 
         <section>
@@ -32,9 +33,9 @@
                             <p class="booking-card__title"><?= htmlspecialchars($booking['movie_title'], ENT_QUOTES) ?></p>
                             <p class="booking-card__details"><?= htmlspecialchars(date('M j, Y, H:i', strtotime($booking['show_datetime'])), ENT_QUOTES) ?> &middot; <?= htmlspecialchars(formatBadgeLabel($booking['screen_type']), ENT_QUOTES) ?> &middot; <?= (int) $booking['seat_count'] ?> <?= (int) $booking['seat_count'] === 1 ? 'seat' : 'seats' ?></p>
                             <?php if (Booking::canCancel($booking)): ?>
-                                <form method="post" action="/profile/cancel" onsubmit="return confirm('Cancel this booking?')">
+                                <form method="post" action="/profile/cancel" data-confirm="Cancel this booking?" data-confirm-label="Cancel booking">
                                     <input type="hidden" name="booking_id" value="<?= (int) $booking['id'] ?>">
-                                    <button type="submit" class="booking-card__cancel">Cancel booking</button>
+                                    <button type="submit" class="danger-button">Cancel booking</button>
                                 </form>
                             <?php endif; ?>
                         </div>
@@ -46,5 +47,6 @@
     </main>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>
+    <script src="/assets/js/confirm-dialog.js"></script>
 </body>
 </html>

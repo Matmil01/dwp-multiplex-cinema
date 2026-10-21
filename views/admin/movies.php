@@ -126,7 +126,7 @@
                                 </div>
                                 <div class="catalog-item__actions">
                                     <a href="?edit_id=<?= (int) $movie['id'] ?>" class="inline-link">Edit</a>
-                                    <form method="post" onsubmit="return confirm('Delete this movie?')">
+                                    <form method="post" data-confirm="Delete this movie?" data-confirm-label="Delete">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $movie['id'] ?>">
                                         <button type="submit" class="danger-button">Delete</button>
@@ -150,5 +150,6 @@
     </script>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>
+    <script src="/assets/js/confirm-dialog.js"></script>
 </body>
 </html>

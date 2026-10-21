@@ -64,8 +64,7 @@
 	color: var(--color-text);
 }
 
-.site-nav a[href$="/account/logout.php"]:hover,
-.admin-nav a[href$="/account/logout.php"]:hover {
+a[href$="/logout"]:hover {
 	color: #AA2734;
 }
 

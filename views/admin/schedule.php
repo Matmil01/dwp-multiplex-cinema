@@ -126,7 +126,7 @@ require __DIR__ . '/../../components/screen-format.php';
                 </form>
 
                 <?php if (!empty($editor['id'])): ?>
-                    <form method="post" onsubmit="return confirm('Delete this showing?')">
+                    <form method="post" data-confirm="Delete this showing?" data-confirm-label="Delete">
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="id" value="<?= (int) $editor['id'] ?>">
                         <button type="submit" class="danger-button">Delete this showing</button>
@@ -209,5 +209,6 @@ require __DIR__ . '/../../components/screen-format.php';
     </script>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>
+    <script src="/assets/js/confirm-dialog.js"></script>
 </body>
 </html>

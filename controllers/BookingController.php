@@ -4,6 +4,12 @@ class BookingController
 {
     public function showSeats(int $showingId, ?int $userId): void
     {
+        // Admins get the read-only seat map (any showing, past or upcoming) instead of the booking picker.
+        if (($_SESSION['role'] ?? '') === 'admin') {
+            header('Location: /admin/showing-seats?showing=' . $showingId);
+            exit;
+        }
+
         $showing = $this->bookableShowing($showingId, $userId);
 
         if ($showing) {
@@ -13,6 +19,12 @@ class BookingController
 
     public function book(int $showingId, ?int $userId, array $seats): void
     {
+        if (($_SESSION['role'] ?? '') === 'admin') {
+            http_response_code(403);
+            echo 'Admins can\'t book seats.';
+            return;
+        }
+
         $showing = $this->bookableShowing($showingId, $userId);
 
         if (!$showing) {

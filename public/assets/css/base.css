@@ -322,6 +322,50 @@ h3 {
 	background: var(--color-link);
 }
 
+/* Destructive actions (cancel, delete): outlined red, fills in on hover. */
+.danger-button {
+	padding: var(--space-1) var(--space-2);
+	border: 1px solid #AA2734;
+	border-radius: 0;
+	background: transparent;
+	color: #f87171;
+	font: inherit;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.danger-button:hover {
+	background: #AA2734;
+	color: var(--color-link);
+}
+
+.confirm-dialog {
+	max-width: 24rem;
+	padding: var(--space-6);
+	border: 1px solid var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-text);
+}
+
+.confirm-dialog::backdrop {
+	background: rgba(18, 24, 31, 0.8);
+}
+
+.confirm-dialog__message {
+	margin: 0 0 var(--space-6);
+	font-size: 1.25rem;
+}
+
+.confirm-dialog__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--space-4);
+}
+
+.confirm-dialog__actions button {
+	padding: var(--space-2) var(--space-4);
+}
+
 .inline-link {
 	color: var(--color-link);
 }

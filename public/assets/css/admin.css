@@ -284,20 +284,6 @@
 	font-size: 1rem;
 }
 
-.danger-button {
-	padding: 0;
-	border: 0;
-	background: transparent;
-	color: #f87171;
-	font: inherit;
-	font-size: 1rem;
-	cursor: pointer;
-}
-
-.danger-button:hover {
-	text-decoration: underline;
-}
-
 .schedule-board-wrap {
 	overflow-x: auto;
 }
@@ -520,6 +506,45 @@
 
 .is-hidden {
 	display: none;
+}
+
+/* Admin seat map: seats are read-only, booked ones keep their number and show the customer on hover. */
+.seat-map--admin .seat {
+	cursor: default;
+}
+
+/* Visible overflow lets the tooltip stick out of the map instead of being clipped by the scroll wrapper. */
+.seat-map--admin .seat-map__scroll {
+	overflow: visible;
+}
+
+.seat-map--admin .seat--booked {
+	position: relative;
+	background: var(--color-border);
+	color: var(--color-page);
+	font-weight: 600;
+	cursor: help;
+}
+
+.seat-map--admin .seat--booked:hover {
+	z-index: 1;
+}
+
+.seat-map--admin .seat--booked:hover::after {
+	content: attr(data-tooltip);
+	position: absolute;
+	bottom: calc(100% + 0.5rem);
+	left: 50%;
+	transform: translateX(-50%);
+	padding: var(--space-2) var(--space-4);
+	border: 1px solid var(--color-border);
+	background: var(--color-page);
+	color: var(--color-text);
+	font-size: 0.875rem;
+	font-weight: 400;
+	white-space: pre-line;
+	text-align: left;
+	pointer-events: none;
 }
 
 @media (min-width: 64rem) {

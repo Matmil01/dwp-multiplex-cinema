@@ -9,26 +9,41 @@ class AdminBookingController
         require __DIR__ . '/../views/admin/bookings.php';
     }
 
-    public function cancel(int $id): void
+    // $showingId is only set by the showing-seats page, so the admin lands back there instead of on the bookings list.
+    public function cancel(int $id, int $showingId = 0): void
     {
         Booking::cancel($id, null);
 
-        header('Location: /admin/bookings');
+        header('Location: ' . ($showingId > 0 ? '/admin/showing-seats?showing=' . $showingId : '/admin/bookings'));
         exit;
     }
 
-    public function invoice(int $id): void
+    public function showingSeats(int $showingId): void
     {
-        $booking = Booking::find($id);
+        $showing = Showing::findForBooking($showingId);
 
-        if (!$booking) {
+        if (!$showing) {
             http_response_code(404);
-            echo 'Booking not found.';
+            echo 'Showing not found.';
             return;
         }
 
-        $company = CompanyInfo::find();
+        $seatOwners = [];
+        $bookings = [];
 
-        require __DIR__ . '/../views/admin/invoice.php';
+        foreach (Booking::seatsForShowing($showingId) as $seat) {
+            $seatId = $seat['seat_row'] . $seat['seat_number'];
+            $seatOwners[$seatId] = $seat;
+
+            $bookings[$seat['booking_id']] ??= [
+                'id' => $seat['booking_id'],
+                'customer_name' => $seat['customer_name'],
+                'customer_email' => $seat['customer_email'],
+                'seats' => [],
+            ];
+            $bookings[$seat['booking_id']]['seats'][] = $seatId;
+        }
+
+        require __DIR__ . '/../views/admin/showing-seats.php';
     }
 }

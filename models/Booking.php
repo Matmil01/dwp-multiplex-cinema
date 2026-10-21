@@ -121,11 +121,11 @@ class Booking
     public static function cancel(int $bookingId, ?int $userId): bool
     {
         $sql = "UPDATE bookings b JOIN showings s ON s.id = b.showing_id SET b.status = 'cancelled'
-                WHERE b.id = ? AND b.status <> 'cancelled'";
+                WHERE b.id = ? AND b.status <> 'cancelled' AND s.show_datetime >= NOW()";
         $params = [$bookingId];
 
         if ($userId !== null) {
-            $sql .= ' AND b.user_id = ? AND s.show_datetime >= NOW()';
+            $sql .= ' AND b.user_id = ?';
             $params[] = $userId;
         }
 
@@ -160,7 +160,7 @@ class Booking
         )->fetchColumn();
     }
 
-    // One booking with its customer, showing details and an ordered list of its seats, for the invoice.
+    // One booking with its customer, showing details and an ordered list of its seats.
     public static function find(int $id): ?array
     {
         $db = Db::connection();
@@ -191,22 +191,39 @@ class Booking
         return $booking;
     }
 
-    // Every booking with customer, movie, screen and seat count, newest showing first, for the admin overview.
+    // Every booking with customer, movie, screen, seat names and count, newest showing first, for the admin overview.
     public static function all(): array
     {
         return Db::connection()->query(
-            'SELECT b.id, b.status, b.price_per_seat, u.name AS customer_name, u.email AS customer_email,
+            'SELECT b.id, b.showing_id, b.status, b.price_per_seat, u.name AS customer_name, u.email AS customer_email,
                     s.show_datetime, m.title AS movie_title, sc.type AS screen_type,
-                    COUNT(bs.id) AS seat_count
+                    COUNT(bs.id) AS seat_count,
+                    GROUP_CONCAT(CONCAT(bs.seat_row, bs.seat_number) ORDER BY bs.seat_row, bs.seat_number SEPARATOR ", ") AS seat_names
              FROM bookings b
              JOIN users u ON u.id = b.user_id
              JOIN showings s ON s.id = b.showing_id
              JOIN movies m ON m.id = s.movie_id
              JOIN screens sc ON sc.id = s.screen_id
              LEFT JOIN booking_seats bs ON bs.booking_id = b.id
-             GROUP BY b.id, b.status, b.price_per_seat, u.name, u.email, s.show_datetime, m.title, sc.type
+             GROUP BY b.id, b.showing_id, b.status, b.price_per_seat, u.name, u.email, s.show_datetime, m.title, sc.type
              ORDER BY s.show_datetime DESC'
         )->fetchAll();
+    }
+
+    // Every reserved seat for one showing with its customer, for the admin seat map. Cancelled bookings have no seats left.
+    public static function seatsForShowing(int $showingId): array
+    {
+        $stmt = Db::connection()->prepare(
+            'SELECT bs.seat_row, bs.seat_number, b.id AS booking_id, u.name AS customer_name, u.email AS customer_email
+             FROM booking_seats bs
+             JOIN bookings b ON b.id = bs.booking_id
+             JOIN users u ON u.id = b.user_id
+             WHERE bs.showing_id = ?
+             ORDER BY bs.seat_row, bs.seat_number'
+        );
+        $stmt->execute([$showingId]);
+
+        return $stmt->fetchAll();
     }
 
     // A user's bookings, newest showing first, with the movie, screen and how many seats each holds.

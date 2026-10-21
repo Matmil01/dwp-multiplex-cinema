@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="admin-list-item__actions">
                                     <a href="?edit_id=<?= (int) $post['id'] ?>" class="inline-link">Edit</a>
-                                    <form method="post" onsubmit="return confirm('Delete this news post?')">
+                                    <form method="post" data-confirm="Delete this news post?" data-confirm-label="Delete">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $post['id'] ?>">
                                         <button type="submit" class="danger-button">Delete</button>
@@ -82,5 +82,6 @@
     </main>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>
+    <script src="/assets/js/confirm-dialog.js"></script>
 </body>
 </html>

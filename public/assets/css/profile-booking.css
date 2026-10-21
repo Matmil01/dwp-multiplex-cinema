@@ -38,16 +38,6 @@
 	font-size: 1rem;
 }
 
-.booking-card__cancel {
-	padding: 0;
-	border: 0;
-	background: transparent;
-	color: #f87171;
-	font: inherit;
-	font-size: 1rem;
-	cursor: pointer;
-}
-
-.booking-card__cancel:hover {
-	text-decoration: underline;
+.booking-card form {
+	margin: var(--space-2) 0 0;
 }

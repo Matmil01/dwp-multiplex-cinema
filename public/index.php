@@ -48,8 +48,9 @@ $routes = [
 
     'GET /admin'           => fn() => (new AdminDashboardController())->index(),
     'GET /admin/bookings'  => fn() => (new AdminBookingController())->index(),
-    'GET /admin/bookings/invoice' => fn() => (new AdminBookingController())->invoice((int) ($_GET['id'] ?? 0)),
-    'POST /admin/bookings/cancel' => fn() => (new AdminBookingController())->cancel((int) ($_POST['booking_id'] ?? 0)),
+    'GET /admin/showing-seats' => fn() => (new AdminBookingController())->showingSeats((int) ($_GET['showing'] ?? 0)),
+    'GET /admin/users'     => fn() => (new AdminUserController())->index(),
+    'POST /admin/bookings/cancel' => fn() => (new AdminBookingController())->cancel((int) ($_POST['booking_id'] ?? 0), (int) ($_POST['showing_id'] ?? 0)),
     'GET /admin/movies'    => fn() => (new AdminMovieController())->index($_GET),
     'POST /admin/movies'   => fn() => (new AdminMovieController())->handlePost($_POST, $_GET),
     'GET /admin/news'      => fn() => (new AdminNewsController())->index($_GET),

@@ -26,6 +26,10 @@
                     <p class="metric-card__label">Showings Today</p>
                     <p class="metric-card__value"><?= $showingsToday ?></p>
                 </div>
+                <div class="metric-card">
+                    <p class="metric-card__label">Total Users</p>
+                    <p class="metric-card__value"><?= $totalUsers ?></p>
+                </div>
             </div>
         </section>
 

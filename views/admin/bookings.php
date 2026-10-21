@@ -23,10 +23,10 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
+                            <th>Date/Time</th>
                             <th>Customer</th>
                             <th>Movie</th>
                             <th>Screen</th>
-                            <th>Date/Time</th>
                             <th>Seats</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -36,17 +36,16 @@
                     <tbody>
                         <?php foreach ($bookings as $booking): ?>
                             <tr>
+                                <td><a href="/admin/showing-seats?showing=<?= (int) $booking['showing_id'] ?>" class="inline-link"><?= htmlspecialchars(date('M j, Y, H:i', strtotime($booking['show_datetime'])), ENT_QUOTES) ?></a></td>
                                 <td><?= htmlspecialchars($booking['customer_name'], ENT_QUOTES) ?> (<?= htmlspecialchars($booking['customer_email'], ENT_QUOTES) ?>)</td>
                                 <td><?= htmlspecialchars($booking['movie_title'], ENT_QUOTES) ?></td>
                                 <td><?= htmlspecialchars(formatBadgeLabel($booking['screen_type']), ENT_QUOTES) ?></td>
-                                <td><?= htmlspecialchars(date('M j, Y, H:i', strtotime($booking['show_datetime'])), ENT_QUOTES) ?></td>
-                                <td><?= (int) $booking['seat_count'] ?></td>
+                                <td><?= htmlspecialchars($booking['seat_names'] ?? '-', ENT_QUOTES) ?></td>
                                 <td><?= number_format((float) $booking['price_per_seat'] * (int) $booking['seat_count'], 0) ?> kr.</td>
                                 <td><?= htmlspecialchars(ucfirst($booking['status']), ENT_QUOTES) ?></td>
                                 <td>
-                                    <?php if ($booking['status'] !== 'cancelled'): ?>
-                                        <a href="/admin/bookings/invoice?id=<?= (int) $booking['id'] ?>" class="inline-link">Invoice</a>
-                                        <form method="post" action="/admin/bookings/cancel" onsubmit="return confirm('Cancel this booking?')">
+                                    <?php if (Booking::canCancel($booking)): ?>
+                                        <form method="post" action="/admin/bookings/cancel" data-confirm="Cancel this booking?" data-confirm-label="Cancel booking">
                                             <input type="hidden" name="booking_id" value="<?= (int) $booking['id'] ?>">
                                             <button type="submit" class="danger-button">Cancel</button>
                                         </form>
@@ -61,5 +60,6 @@
     </main>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>
+    <script src="/assets/js/confirm-dialog.js"></script>
 </body>
 </html>
