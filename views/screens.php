@@ -17,11 +17,13 @@ require __DIR__ . '/../components/day-label.php';
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
-    <main class="site-main">
-        <header class="screens-page-header">
-            <h1 class="screens-page-header__title">Screens &amp; schedule</h1>
-        </header>
+    <section class="hero hero--page hero--screens">
+        <div class="hero__content">
+            <h1 class="hero__title">Screens</h1>
+        </div>
+    </section>
 
+    <main class="site-main">
         <div class="screen-schedules">
             <?php if (empty($screensSchedule)): ?>
                 <p class="screens-empty">No upcoming screenings are scheduled right now.</p>

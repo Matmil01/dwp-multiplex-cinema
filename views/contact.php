@@ -14,10 +14,15 @@
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
+    <section class="hero hero--page hero--contact">
+        <div class="hero__content">
+            <h1 class="hero__title">Contact</h1>
+        </div>
+    </section>
+
     <main class="site-main">
         <section>
             <?php require __DIR__ . '/../components/snackbar.php'; ?>
-            <h2 class="section-title section-title--primary">Contact Us</h2>
             <form method="post" action="/contact" class="form-stack">
                 <?php if ($error): ?>
                     <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>

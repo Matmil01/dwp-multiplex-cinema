@@ -88,13 +88,14 @@ h3 {
 }
 
 .hero {
+	--hero-image: url('../images/hero.jpg');
 	display: grid;
 	align-items: end;
 	min-height: 70vh;
 	/* Image stays clear on top; only the bottom darkens so the text is readable. */
 	background:
 		linear-gradient(to bottom, transparent 35%, rgba(18, 24, 31, 0.85) 80%, var(--color-page)),
-		url('../images/hero.jpg') center / cover;
+		var(--hero-image) center / cover;
 }
 
 /* Same width and padding as .site-main so the text lines up with the page content. */
@@ -124,6 +125,26 @@ h3 {
 .hero .cta-button-row {
 	justify-content: flex-start;
 	margin-top: var(--space-2);
+}
+
+.hero--page {
+	min-height: 50vh;
+}
+
+.hero--movies {
+	--hero-image: url('../images/movies-hero.jpeg');
+}
+
+.hero--screens {
+	--hero-image: url('../images/screens-hero.jpeg');
+}
+
+.hero--news {
+	--hero-image: url('../images/news-hero.jpeg');
+}
+
+.hero--contact {
+	--hero-image: url('../images/contact-hero.jpeg');
 }
 
 .about {

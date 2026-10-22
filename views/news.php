@@ -13,10 +13,14 @@
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
+    <section class="hero hero--page hero--news">
+        <div class="hero__content">
+            <h1 class="hero__title">News</h1>
+        </div>
+    </section>
+
     <main class="site-main">
         <section>
-            <h2 class="section-title section-title--primary">News</h2>
-
             <div class="news-list">
                 <?php if (empty($articles)): ?>
                     <p class="empty-message">No news yet &mdash; check back soon.</p>

@@ -13,10 +13,14 @@
         <?php require __DIR__ . '/../components/public-navbar.php'; ?>
     </header>
 
+    <section class="hero hero--page hero--movies">
+        <div class="hero__content">
+            <h1 class="hero__title">Movies</h1>
+        </div>
+    </section>
+
     <main class="site-main">
         <section>
-            <h2 class="section-title section-title--primary">All Movies</h2>
-
             <div class="filter-tabs">
                 <a href="?status=all" class="filter-tab <?= $status === 'all' ? 'filter-tab--active' : '' ?>">All Movies</a>
                 <a href="?status=now_showing" class="filter-tab <?= $status === 'now_showing' ? 'filter-tab--active' : '' ?>">Now Showing</a>
