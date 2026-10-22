@@ -17,6 +17,9 @@
         <section>
             <h2 class="section-title">Log In</h2>
             <form method="post" class="form-stack">
+                <?php if ($notice): ?>
+                    <p class="form-notice"><?= htmlspecialchars($notice, ENT_QUOTES) ?></p>
+                <?php endif; ?>
                 <?php if ($error): ?>
                     <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
                 <?php endif; ?>

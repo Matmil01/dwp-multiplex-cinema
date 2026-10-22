@@ -10,6 +10,8 @@
         <a href="/admin/settings">Settings</a>
     </div>
     <div class="admin-nav__links admin-nav__account-links">
-        <a href="/logout">Log out</a>
+        <form method="post" action="/logout">
+            <button type="submit" class="logout-button">Log out</button>
+        </form>
     </div>
 </nav>

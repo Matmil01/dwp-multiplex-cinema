@@ -29,7 +29,7 @@ class AdminMovieController
         if ($action === 'save') {
             $this->save($post, $query);
         } elseif ($action === 'delete') {
-            $this->delete((int) $post['id']);
+            $this->delete((int) ($post['id'] ?? 0));
         } else {
             $this->index($query);
         }
@@ -39,13 +39,13 @@ class AdminMovieController
     {
         try {
             Movie::save([
-                'id' => $input['id'] !== '' ? (int) $input['id'] : null,
-                'tmdb_id' => $input['tmdb_id'] !== '' ? (int) $input['tmdb_id'] : null,
+                'id' => ($input['id'] ?? '') !== '' ? (int) $input['id'] : null,
+                'tmdb_id' => ($input['tmdb_id'] ?? '') !== '' ? (int) $input['tmdb_id'] : null,
                 'title' => trim($input['title'] ?? ''),
                 'description' => trim($input['description'] ?? ''),
-                'duration_minutes' => $input['duration_minutes'] !== '' ? (int) $input['duration_minutes'] : null,
+                'duration_minutes' => ($input['duration_minutes'] ?? '') !== '' ? (int) $input['duration_minutes'] : null,
                 'poster_url' => trim($input['poster_url'] ?? ''),
-                'release_year' => $input['release_year'] !== '' ? (int) $input['release_year'] : null,
+                'release_year' => ($input['release_year'] ?? '') !== '' ? (int) $input['release_year'] : null,
                 'genres' => $input['genres'] ?? '',
                 'director' => $input['director'] ?? '',
                 'writers' => $input['writers'] ?? '',

@@ -18,12 +18,12 @@ class AdminSettingsController
 
         try {
             CompanyInfo::save([
-                'tagline' => $input['tagline'],
-                'description' => $input['description'],
-                'opening_time' => $input['opening_time'],
-                'closing_time' => $input['closing_time'],
-                'address' => $input['address'],
-                'phone' => $input['phone'],
+                'tagline' => $input['tagline'] ?? '',
+                'description' => $input['description'] ?? '',
+                'opening_time' => $input['opening_time'] ?? '',
+                'closing_time' => $input['closing_time'] ?? '',
+                'address' => $input['address'] ?? '',
+                'phone' => $input['phone'] ?? '',
             ]);
             $saved = true;
         } catch (Throwable $e) {

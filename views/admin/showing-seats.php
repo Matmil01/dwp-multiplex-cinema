@@ -16,6 +16,7 @@
     </header>
 
     <main class="site-main">
+        <?php require __DIR__ . '/../../components/snackbar.php'; ?>
         <section>
             <h2 class="section-title">Seats</h2>
             <p class="muted-text">

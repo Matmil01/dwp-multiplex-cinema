@@ -21,7 +21,9 @@ class MovieController
 
         if (!$movie) {
             http_response_code(404);
-            echo 'Movie not found.';
+            $title = 'Movie not found';
+            $message = 'That movie is not in our catalog.';
+            require __DIR__ . '/../views/error.php';
             return;
         }
 

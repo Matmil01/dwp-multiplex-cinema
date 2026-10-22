@@ -31,9 +31,15 @@ class ContactController
             $error = 'Please enter a message.';
         } else {
             $owner = (require __DIR__ . '/../config/config.php')['mail']['owner'];
-            $body = "From: $name <$email>\n\n$message";
+            $html = Mailer::render('contact-message', [
+                'name' => $name,
+                'email' => $email,
+                'subject' => $subject,
+                'message' => $message,
+            ]);
 
-            if (Mailer::send($owner, "Contact form: $subject", $body, $email)) {
+            // Reply-To is the visitor's address, so the owner can answer directly from their inbox.
+            if (Mailer::send($owner, "Contact form: $subject", $html, $email, true)) {
                 $snackbarType = 'success';
                 $snackbarMessage = 'Your message has been sent.';
                 $name = $email = $subject = $message = '';

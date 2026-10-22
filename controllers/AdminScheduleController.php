@@ -23,7 +23,7 @@ class AdminScheduleController
         if ($action === 'save') {
             $this->save($date, $post);
         } elseif ($action === 'delete') {
-            $this->delete($date, (int) $post['id']);
+            $this->delete($date, (int) ($post['id'] ?? 0));
         } elseif ($action === 'move') {
             $this->move($post);
         } elseif ($action === 'duplicate') {
@@ -37,15 +37,15 @@ class AdminScheduleController
     {
         $saveError = null;
 
-        if ((int) $input['movie_id'] === 0) {
+        if ((int) ($input['movie_id'] ?? 0) === 0) {
             $saveError = 'Pick a movie from the search results before saving.';
         } else {
             try {
                 Showing::save([
-                    'id' => $input['id'] !== '' ? (int) $input['id'] : null,
+                    'id' => ($input['id'] ?? '') !== '' ? (int) $input['id'] : null,
                     'movie_id' => (int) $input['movie_id'],
-                    'screen_id' => (int) $input['screen_id'],
-                    'show_datetime' => $date . ' ' . $input['show_time'] . ':00',
+                    'screen_id' => (int) ($input['screen_id'] ?? 0),
+                    'show_datetime' => $date . ' ' . ($input['show_time'] ?? '') . ':00',
                 ]);
                 header('Location: /admin/schedule?date=' . urlencode($date) . '&saved=1');
                 exit;
@@ -85,10 +85,10 @@ class AdminScheduleController
         header('Content-Type: application/json');
         try {
             Showing::save([
-                'id' => (int) $input['id'],
-                'movie_id' => (int) $input['movie_id'],
-                'screen_id' => (int) $input['screen_id'],
-                'show_datetime' => $input['show_datetime'],
+                'id' => (int) ($input['id'] ?? 0),
+                'movie_id' => (int) ($input['movie_id'] ?? 0),
+                'screen_id' => (int) ($input['screen_id'] ?? 0),
+                'show_datetime' => $input['show_datetime'] ?? '',
             ]);
             echo json_encode(['ok' => true]);
         } catch (Throwable $e) {
@@ -105,9 +105,9 @@ class AdminScheduleController
         try {
             $newId = Showing::save([
                 'id' => null,
-                'movie_id' => (int) $input['movie_id'],
-                'screen_id' => (int) $input['screen_id'],
-                'show_datetime' => $input['show_datetime'],
+                'movie_id' => (int) ($input['movie_id'] ?? 0),
+                'screen_id' => (int) ($input['screen_id'] ?? 0),
+                'show_datetime' => $input['show_datetime'] ?? '',
             ]);
             echo json_encode(['ok' => true, 'id' => $newId]);
         } catch (Throwable $e) {

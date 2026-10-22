@@ -29,17 +29,32 @@ class AccountController
             $error = 'An account with that email already exists.';
         } else {
             User::create($name, $email, $password);
-            header('Location: /login');
+
+            // The account exists either way, so a failed welcome email is ignored.
+            $siteUrl = (require __DIR__ . '/../config/config.php')['site_url'];
+            $html = Mailer::render('welcome', ['name' => $name, 'email' => $email, 'siteUrl' => $siteUrl]);
+            Mailer::send($email, 'Welcome to Untitled Cinema', $html, null, true);
+
+            header('Location: /login?reason=registered');
             exit;
         }
 
         require __DIR__ . '/../views/account/register.php';
     }
 
-    public function showLoginForm(): void
+    // Pages that need a login redirect here with ?reason=, so the form can say why you were sent to it.
+    private const LOGIN_REASONS = [
+        'booking' => 'Log in to book seats.',
+        'profile' => 'Log in to see your profile.',
+        'admin' => 'Log in with an admin account to open the admin area.',
+        'registered' => 'Account created. Log in to continue.',
+    ];
+
+    public function showLoginForm(string $reason): void
     {
         $email = '';
         $error = null;
+        $notice = self::LOGIN_REASONS[$reason] ?? null;
 
         require __DIR__ . '/../views/account/login.php';
     }
@@ -59,20 +74,29 @@ class AccountController
         }
 
         $error = 'Incorrect email or password.';
+        $notice = null;
 
         require __DIR__ . '/../views/account/login.php';
     }
 
-    public function profile(?int $userId): void
+    public function profile(?int $userId, array $query): void
     {
         $user = $userId !== null ? User::find($userId) : null;
 
         if (!$user) {
-            header('Location: /login');
+            header('Location: /login?reason=profile');
             exit;
         }
 
         $bookings = Booking::forUser($user['id']);
+
+        if (isset($query['cancelled'])) {
+            $snackbarType = 'success';
+            $snackbarMessage = 'Booking cancelled.';
+        } elseif (isset($query['cancel_failed'])) {
+            $snackbarType = 'error';
+            $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
+        }
 
         require __DIR__ . '/../views/account/profile.php';
     }
@@ -80,13 +104,13 @@ class AccountController
     public function cancelBooking(?int $userId, int $bookingId): void
     {
         if ($userId === null) {
-            header('Location: /login');
+            header('Location: /login?reason=profile');
             exit;
         }
 
-        Booking::cancel($bookingId, $userId);
+        $cancelled = Booking::cancel($bookingId, $userId);
 
-        header('Location: /profile');
+        header('Location: /profile?' . ($cancelled ? 'cancelled=1' : 'cancel_failed=1'));
         exit;
     }
 

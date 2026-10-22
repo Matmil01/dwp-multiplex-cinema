@@ -12,7 +12,9 @@
                 <a href="/admin">Admin</a>
             <?php endif; ?>
             <a href="/profile">Profile</a>
-            <a href="/logout">Log out</a>
+            <form method="post" action="/logout">
+                <button type="submit" class="logout-button">Log out</button>
+            </form>
         <?php else: ?>
             <a href="/login">Login</a>
             <a href="/register">Register</a>

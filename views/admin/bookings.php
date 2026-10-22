@@ -15,6 +15,7 @@
     </header>
 
     <main class="site-main">
+        <?php require __DIR__ . '/../../components/snackbar.php'; ?>
         <section>
             <h2 class="section-title">Bookings</h2>
             <?php if (empty($bookings)): ?>

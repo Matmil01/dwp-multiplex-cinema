@@ -5,6 +5,8 @@ return [
     // enable/disable automatic scheduling, duplicating current week two weeks ahead.
     // While false, run DELETE FROM showings; to clear the schedule before manually populating it.
     'auto_schedule_enabled' => true,
+    // Public address of the site, for links in emails. Read from config rather than the request's Host header, which a sender can fake.
+    'site_url' => rtrim(getenv('SITE_URL') ?: 'http://localhost:8080', '/'),
     'tmdb' => [
         'read_token' => getenv('TMDB_READ_TOKEN') ?: '',
     ],

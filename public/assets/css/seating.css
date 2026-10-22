@@ -141,6 +141,12 @@
 	background: var(--color-surface);
 }
 
+/* Same card on its own page (checkout), centred instead of beside the seat map. */
+.booking-summary--standalone {
+	max-width: 28rem;
+	margin: var(--space-6) auto 0;
+}
+
 .booking-summary__title {
 	margin: 0 0 var(--space-4);
 	font-size: 1.5rem;
@@ -175,7 +181,9 @@
 }
 
 .booking-summary__continue {
+	box-sizing: border-box;
 	width: 100%;
+	text-align: center;
 }
 
 .booking-summary .form-error {

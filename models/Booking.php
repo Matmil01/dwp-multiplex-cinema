@@ -11,8 +11,8 @@ class Booking
         return strtotime($showing['show_datetime']) >= time();
     }
 
-    // Saves a booking and its seats together, or nothing at all. $seats are ids like "B4".
-    public static function create(int $userId, array $showing, array $seats): int
+    // Checks the chosen seats against every booking rule. Returns [row, number] pairs, or throws with the reason.
+    public static function validateSeats(array $showing, array $seats): array
     {
         if (!self::isOpen($showing)) {
             throw new RuntimeException('This showing has already started.');
@@ -39,6 +39,14 @@ class Booking
         if (self::leavesLoneSeat($positions, self::takenSeats((int) $showing['id']))) {
             throw new RuntimeException('Please don\'t leave a single empty seat between your seats and another booking.');
         }
+
+        return $positions;
+    }
+
+    // Saves a booking and its seats together, or nothing at all. $seats are ids like "B4".
+    public static function create(int $userId, array $showing, array $seats): int
+    {
+        $positions = self::validateSeats($showing, $seats);
 
         $db = Db::connection();
         $db->beginTransaction();
@@ -166,7 +174,7 @@ class Booking
         $db = Db::connection();
 
         $stmt = $db->prepare(
-            'SELECT b.id, b.status, b.price_per_seat, b.created_at, u.name AS customer_name, u.email AS customer_email,
+            'SELECT b.id, b.user_id, b.status, b.price_per_seat, b.created_at, u.name AS customer_name, u.email AS customer_email,
                     s.show_datetime, m.title AS movie_title, sc.type AS screen_type
              FROM bookings b
              JOIN users u ON u.id = b.user_id

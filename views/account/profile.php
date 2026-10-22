@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/assets/css/base.css">
     <link rel="stylesheet" href="/assets/css/nav-footer.css">
     <link rel="stylesheet" href="/assets/css/profile-booking.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="site-body">
     <header class="site-header">
@@ -15,6 +16,7 @@
     </header>
 
     <main class="site-main">
+        <?php require __DIR__ . '/../../components/snackbar.php'; ?>
         <section>
             <h1 class="section-title section-title--primary">Your Profile</h1>
             <h2 class="profile-name"><?= htmlspecialchars($user['name'], ENT_QUOTES) ?></h2>

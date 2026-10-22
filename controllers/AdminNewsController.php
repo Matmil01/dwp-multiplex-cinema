@@ -23,7 +23,7 @@ class AdminNewsController
         if ($action === 'save') {
             $this->save($post, $files);
         } elseif ($action === 'delete') {
-            $this->delete((int) $post['id']);
+            $this->delete((int) ($post['id'] ?? 0));
         } else {
             $this->index($query);
         }

@@ -2,9 +2,17 @@
 
 class AdminBookingController
 {
-    public function index(): void
+    public function index(array $query): void
     {
         $bookings = Booking::all();
+
+        if (isset($query['cancelled'])) {
+            $snackbarType = 'success';
+            $snackbarMessage = 'Booking cancelled.';
+        } elseif (isset($query['cancel_failed'])) {
+            $snackbarType = 'error';
+            $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
+        }
 
         require __DIR__ . '/../views/admin/bookings.php';
     }
@@ -12,20 +20,31 @@ class AdminBookingController
     // $showingId is only set by the showing-seats page, so the admin lands back there instead of on the bookings list.
     public function cancel(int $id, int $showingId = 0): void
     {
-        Booking::cancel($id, null);
+        $cancelled = Booking::cancel($id, null);
+        $flag = $cancelled ? 'cancelled=1' : 'cancel_failed=1';
 
-        header('Location: ' . ($showingId > 0 ? '/admin/showing-seats?showing=' . $showingId : '/admin/bookings'));
+        header('Location: ' . ($showingId > 0 ? "/admin/showing-seats?showing=$showingId&$flag" : "/admin/bookings?$flag"));
         exit;
     }
 
-    public function showingSeats(int $showingId): void
+    public function showingSeats(int $showingId, array $query): void
     {
         $showing = Showing::findForBooking($showingId);
 
         if (!$showing) {
             http_response_code(404);
-            echo 'Showing not found.';
+            $title = 'Showing not found';
+            $message = 'No showing has that id.';
+            require __DIR__ . '/../views/error.php';
             return;
+        }
+
+        if (isset($query['cancelled'])) {
+            $snackbarType = 'success';
+            $snackbarMessage = 'Booking cancelled.';
+        } elseif (isset($query['cancel_failed'])) {
+            $snackbarType = 'error';
+            $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
         }
 
         $seatOwners = [];

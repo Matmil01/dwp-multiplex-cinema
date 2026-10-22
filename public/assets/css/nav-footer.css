@@ -39,12 +39,22 @@
 }
 
 .site-nav a,
-.admin-nav a {
+.admin-nav a,
+.logout-button {
 	color: inherit;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	font-size: 1rem;
 	text-decoration: none;
+}
+
+/* A form button, so logging out is a POST; styled to sit in line with the nav links. */
+.logout-button {
+	padding: 0;
+	border: 0;
+	background: none;
+	font: inherit;
+	cursor: pointer;
 }
 
 .site-nav .site-title__link {
@@ -64,7 +74,7 @@
 	color: var(--color-text);
 }
 
-a[href$="/logout"]:hover {
+.logout-button:hover {
 	color: #AA2734;
 }
 
