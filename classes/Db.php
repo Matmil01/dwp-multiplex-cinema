@@ -15,7 +15,7 @@ class Db
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 // Puts NOW() and CURDATE() on PHP's clock; an offset like +02:00 works without the database's timezone tables.
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '" . date('P') . "'",
+                Pdo\Mysql::ATTR_INIT_COMMAND => "SET time_zone = '" . date('P') . "'",
             ]);
         }
 

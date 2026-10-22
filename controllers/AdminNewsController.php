@@ -151,7 +151,6 @@ class AdminNewsController
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
 
         if (!isset(self::IMAGE_ALLOWED_TYPES[$mime])) {
             throw new RuntimeException('Image must be a JPEG, PNG, or WEBP.');

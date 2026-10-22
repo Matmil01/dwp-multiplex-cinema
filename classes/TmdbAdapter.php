@@ -98,7 +98,6 @@ class TmdbAdapter
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-        curl_close($ch);
 
         if ($response === false) {
             throw new RuntimeException('TMDB request failed: ' . $error);

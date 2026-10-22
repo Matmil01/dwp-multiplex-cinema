@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.5-apache
 
 # Composer installs PHP libraries (PHPMailer, Stripe) into vendor/; unzip lets it unpack downloads.
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
