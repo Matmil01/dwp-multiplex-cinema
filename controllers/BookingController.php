@@ -73,7 +73,7 @@ class BookingController
         require __DIR__ . '/../views/checkout.php';
     }
 
-    // Step 3: creates the booking from the session. This is where a payment step will go later.
+    // Step 3: with a Stripe key configured, sends the user to Stripe's payment page; without one, saves the booking directly.
     public function confirm(?int $userId): void
     {
         $checkout = $_SESSION['checkout'] ?? null;
@@ -89,14 +89,94 @@ class BookingController
             return;
         }
 
+        $config = require __DIR__ . '/../config/config.php';
+
+        if ($config['stripe']['secret_key'] === '') {
+            $this->finishBooking($userId, $showing, $checkout['seats']);
+        }
+
+        $stripe = new \Stripe\StripeClient($config['stripe']['secret_key']);
+
+        // Already paid on an earlier attempt but never came back from Stripe: finish that payment instead of charging again.
+        if (!empty($checkout['stripe_session_id'])) {
+            $earlier = $stripe->checkout->sessions->retrieve($checkout['stripe_session_id']);
+
+            if ($earlier->payment_status === 'paid') {
+                $this->finishBooking($userId, $showing, $checkout['seats'], $earlier->payment_intent);
+            }
+        }
+
+        $session = $stripe->checkout->sessions->create([
+            'mode' => 'payment',
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'dkk',
+                    // Stripe counts in the smallest unit, so 95.00 kr. is sent as 9500 øre.
+                    'unit_amount' => (int) round((float) $showing['ticket_price'] * 100),
+                    'product_data' => ['name' => $showing['movie_title'] . ' - ' . implode(', ', $checkout['seats'])],
+                ],
+                'quantity' => count($checkout['seats']),
+            ]],
+            'success_url' => $config['site_url'] . '/checkout/success',
+            'cancel_url' => $config['site_url'] . '/checkout',
+        ]);
+
+        // Remembered server-side so the return page can ask Stripe about this exact payment, not one named in the URL.
+        $_SESSION['checkout']['stripe_session_id'] = $session->id;
+
+        header('Location: ' . $session->url);
+        exit;
+    }
+
+    // Step 4: back from Stripe. Asks Stripe whether the payment went through before anything is saved.
+    public function complete(?int $userId): void
+    {
+        $checkout = $_SESSION['checkout'] ?? null;
+
+        if (!$checkout || empty($checkout['stripe_session_id'])) {
+            header('Location: /movies');
+            exit;
+        }
+
+        $showing = $this->bookableShowing($checkout['showing_id'], $userId);
+
+        if (!$showing) {
+            return;
+        }
+
+        $config = require __DIR__ . '/../config/config.php';
+        $stripe = new \Stripe\StripeClient($config['stripe']['secret_key']);
+        $session = $stripe->checkout->sessions->retrieve($checkout['stripe_session_id']);
+
+        // Reaching this URL proves nothing on its own; only Stripe's answer does.
+        if ($session->payment_status !== 'paid') {
+            header('Location: /checkout');
+            exit;
+        }
+
+        $this->finishBooking($userId, $showing, $checkout['seats'], $session->payment_intent);
+    }
+
+    // Creates the booking from the session, emails the invoice, and ends on the success page.
+    // $paymentIntent is Stripe's id for money already taken; it is refunded if the booking can't be saved.
+    private function finishBooking(int $userId, array $showing, array $seats, ?string $paymentIntent = null): void
+    {
         unset($_SESSION['checkout']);
 
         try {
-            $bookingId = Booking::create($userId, $showing, $checkout['seats']);
+            $bookingId = Booking::create($userId, $showing, $seats);
         } catch (RuntimeException $e) {
-            // A seat was taken while reviewing: back to the picker with the reason, seats still ticked.
-            $this->renderSeatPicker($showing, $e->getMessage(), $checkout['seats']);
-            return;
+            $reason = $e->getMessage();
+
+            if ($paymentIntent !== null) {
+                $config = require __DIR__ . '/../config/config.php';
+                (new \Stripe\StripeClient($config['stripe']['secret_key']))->refunds->create(['payment_intent' => $paymentIntent]);
+                $reason .= ' Your payment has been refunded.';
+            }
+
+            // A seat was taken while paying: back to the picker with the reason, seats still ticked.
+            $this->renderSeatPicker($showing, $reason, $seats);
+            exit;
         }
 
         $this->sendConfirmation($bookingId);

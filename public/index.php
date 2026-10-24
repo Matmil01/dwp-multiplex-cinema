@@ -43,6 +43,7 @@ $routes = [
     ),
     'GET /checkout'     => fn() => (new BookingController())->checkout(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
     'POST /checkout'    => fn() => (new BookingController())->confirm(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
+    'GET /checkout/success' => fn() => (new BookingController())->complete(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
     'GET /booking/success' => fn() => (new BookingController())->success(
         (int) ($_GET['booking'] ?? 0),
         isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null
