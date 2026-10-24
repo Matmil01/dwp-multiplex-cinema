@@ -2,10 +2,12 @@
 
 Fake movie theater for school.
 
-## Planned stack
+## Stack
 - Vanilla PHP (OOP, no framework)
 - MariaDB
+- PHPMailer (SMTP)
+- TMDB API for film metadata
+- Docker for local development, hosted on Simply.com
+
+## TODO
 - Stripe (test mode)
-- Film metadata from external API (TMDB)
-- Docker (developement)
-- Final hosting on Simply.com

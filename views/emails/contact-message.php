@@ -12,5 +12,5 @@ require __DIR__ . '/header.php';
 
                 <p style="margin: 0; padding: 16px; background: #f4f4f4; white-space: pre-wrap;"><?= htmlspecialchars($message, ENT_QUOTES) ?></p>
 
-                <p style="margin: 24px 0 0; color: #666; font-size: 13px;">Replying to this email goes straight to the sender.</p>
+                <p style="margin: 24px 0 0; color: #666; font-size: 13px;">Replying to this email goes to the sender.</p>
 <?php require __DIR__ . '/footer.php'; ?>
