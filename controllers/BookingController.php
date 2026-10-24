@@ -89,42 +89,33 @@ class BookingController
             return;
         }
 
-        $config = require __DIR__ . '/../config/config.php';
+        $payment = new StripePayment();
 
-        if ($config['stripe']['secret_key'] === '') {
+        if (!$payment->isEnabled()) {
             $this->finishBooking($userId, $showing, $checkout['seats']);
         }
 
-        $stripe = new \Stripe\StripeClient($config['stripe']['secret_key']);
-
         // Already paid on an earlier attempt but never came back from Stripe: finish that payment instead of charging again.
         if (!empty($checkout['stripe_session_id'])) {
-            $earlier = $stripe->checkout->sessions->retrieve($checkout['stripe_session_id']);
+            $earlierPayment = $payment->paidIntent($checkout['stripe_session_id']);
 
-            if ($earlier->payment_status === 'paid') {
-                $this->finishBooking($userId, $showing, $checkout['seats'], $earlier->payment_intent);
+            if ($earlierPayment !== null) {
+                $this->finishBooking($userId, $showing, $checkout['seats'], $earlierPayment);
             }
         }
 
-        $session = $stripe->checkout->sessions->create([
-            'mode' => 'payment',
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'dkk',
-                    // Stripe counts in the smallest unit, so 95.00 kr. is sent as 9500 øre.
-                    'unit_amount' => (int) round((float) $showing['ticket_price'] * 100),
-                    'product_data' => ['name' => $showing['movie_title'] . ' - ' . implode(', ', $checkout['seats'])],
-                ],
-                'quantity' => count($checkout['seats']),
-            ]],
-            'success_url' => $config['site_url'] . '/checkout/success',
-            'cancel_url' => $config['site_url'] . '/checkout',
-        ]);
+        $session = $payment->createCheckout(
+            $showing['movie_title'] . ' - ' . implode(', ', $checkout['seats']),
+            (float) $showing['ticket_price'],
+            count($checkout['seats']),
+            '/checkout/success',
+            '/checkout'
+        );
 
         // Remembered server-side so the return page can ask Stripe about this exact payment, not one named in the URL.
-        $_SESSION['checkout']['stripe_session_id'] = $session->id;
+        $_SESSION['checkout']['stripe_session_id'] = $session['id'];
 
-        header('Location: ' . $session->url);
+        header('Location: ' . $session['url']);
         exit;
     }
 
@@ -144,17 +135,15 @@ class BookingController
             return;
         }
 
-        $config = require __DIR__ . '/../config/config.php';
-        $stripe = new \Stripe\StripeClient($config['stripe']['secret_key']);
-        $session = $stripe->checkout->sessions->retrieve($checkout['stripe_session_id']);
-
         // Reaching this URL proves nothing on its own; only Stripe's answer does.
-        if ($session->payment_status !== 'paid') {
+        $paymentIntent = (new StripePayment())->paidIntent($checkout['stripe_session_id']);
+
+        if ($paymentIntent === null) {
             header('Location: /checkout');
             exit;
         }
 
-        $this->finishBooking($userId, $showing, $checkout['seats'], $session->payment_intent);
+        $this->finishBooking($userId, $showing, $checkout['seats'], $paymentIntent);
     }
 
     // Creates the booking from the session, emails the invoice, and ends on the success page.
@@ -169,8 +158,7 @@ class BookingController
             $reason = $e->getMessage();
 
             if ($paymentIntent !== null) {
-                $config = require __DIR__ . '/../config/config.php';
-                (new \Stripe\StripeClient($config['stripe']['secret_key']))->refunds->create(['payment_intent' => $paymentIntent]);
+                (new StripePayment())->refund($paymentIntent);
                 $reason .= ' Your payment has been refunded.';
             }
 
