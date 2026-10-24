@@ -69,6 +69,7 @@ class BookingController
 
         $seats = $checkout['seats'];
         $total = (float) $showing['ticket_price'] * count($seats);
+        $paymentEnabled = (new StripePayment())->isEnabled();
 
         require __DIR__ . '/../views/checkout.php';
     }

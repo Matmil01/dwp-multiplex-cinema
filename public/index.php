@@ -78,6 +78,7 @@ $routes = [
     'POST /admin/schedule' => fn() => (new AdminScheduleController())->handlePost((string) ($_GET['date'] ?? date('Y-m-d')), $_POST, $_GET),
     'GET /admin/settings'  => fn() => (new AdminSettingsController())->showForm(),
     'POST /admin/settings' => fn() => (new AdminSettingsController())->save($_POST),
+    'POST /admin/settings/prices' => fn() => (new AdminSettingsController())->savePrices($_POST),
 ];
 
 $method = $_SERVER['REQUEST_METHOD'];
