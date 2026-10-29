@@ -10,6 +10,10 @@ return [
     'tmdb' => [
         'read_token' => getenv('TMDB_READ_TOKEN') ?: '',
     ],
+    // Empty secret key means checkout skips payment and saves the booking directly.
+    'stripe' => [
+        'secret_key' => getenv('STRIPE_SECRET_KEY') ?: '',
+    ],
     'db' => [
         'host' => getenv('DB_HOST') ?: 'db',
         'name' => getenv('DB_NAME') ?: '',

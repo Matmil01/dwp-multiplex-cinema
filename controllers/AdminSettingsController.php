@@ -7,6 +7,7 @@ class AdminSettingsController
         $saveError = null;
         $saved = false;
         $company = CompanyInfo::find();
+        $screens = Screen::prices();
 
         require __DIR__ . '/../views/admin/settings.php';
     }
@@ -42,6 +43,38 @@ class AdminSettingsController
             ];
         } else {
             $company = CompanyInfo::find();
+        }
+
+        $screens = Screen::prices();
+
+        require __DIR__ . '/../views/admin/settings.php';
+    }
+
+    public function savePrices(array $input): void
+    {
+        $saveError = null;
+        $saved = false;
+        // (array) guards against ?prices=x, which would otherwise crash the loop in Screen::savePrices().
+        $prices = (array) ($input['prices'] ?? []);
+
+        try {
+            Screen::savePrices($prices);
+            $saved = true;
+        } catch (RuntimeException $e) {
+            $saveError = $e->getMessage();
+        }
+
+        $company = CompanyInfo::find();
+        $screens = Screen::prices();
+
+        if ($saveError !== null) {
+            // Saving failed: keep the typed prices in the form so you can correct them and retry.
+            foreach ($screens as &$screen) {
+                if (isset($prices[$screen['id']]) && is_string($prices[$screen['id']])) {
+                    $screen['ticket_price'] = $prices[$screen['id']];
+                }
+            }
+            unset($screen);
         }
 
         require __DIR__ . '/../views/admin/settings.php';

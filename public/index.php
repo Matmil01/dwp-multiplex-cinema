@@ -43,6 +43,7 @@ $routes = [
     ),
     'GET /checkout'     => fn() => (new BookingController())->checkout(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
     'POST /checkout'    => fn() => (new BookingController())->confirm(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
+    'GET /checkout/success' => fn() => (new BookingController())->complete(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
     'GET /booking/success' => fn() => (new BookingController())->success(
         (int) ($_GET['booking'] ?? 0),
         isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null
@@ -77,6 +78,7 @@ $routes = [
     'POST /admin/schedule' => fn() => (new AdminScheduleController())->handlePost((string) ($_GET['date'] ?? date('Y-m-d')), $_POST, $_GET),
     'GET /admin/settings'  => fn() => (new AdminSettingsController())->showForm(),
     'POST /admin/settings' => fn() => (new AdminSettingsController())->save($_POST),
+    'POST /admin/settings/prices' => fn() => (new AdminSettingsController())->savePrices($_POST),
 ];
 
 $method = $_SERVER['REQUEST_METHOD'];

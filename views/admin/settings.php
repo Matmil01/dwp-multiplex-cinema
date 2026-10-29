@@ -1,3 +1,4 @@
+<?php require __DIR__ . '/../../components/screen-format.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,6 +59,17 @@
         </section>
 
         <section>
+            <h2 class="section-title">Ticket Prices</h2>
+            <form method="post" action="/admin/settings/prices" class="form-stack">
+                <?php foreach ($screens as $screen): ?>
+                    <div class="form-field">
+                        <label for="price-<?= (int) $screen['id'] ?>" class="form-label"><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?> (kr. per seat)</label>
+                        <input type="number" id="price-<?= (int) $screen['id'] ?>" name="prices[<?= (int) $screen['id'] ?>]" min="<?= Screen::MIN_PRICE ?>" max="<?= Screen::MAX_PRICE ?>" step="1" value="<?= htmlspecialchars((string) $screen['ticket_price'], ENT_QUOTES) ?>" required class="form-input">
+                    </div>
+                <?php endforeach; ?>
+                <button type="submit" class="base-button">Save Prices</button>
+            </form>
+        </section>
     </main>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>

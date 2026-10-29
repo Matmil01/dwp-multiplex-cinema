@@ -27,7 +27,7 @@ $whenLabel = showingDayLabel($booking['show_datetime']) . ', ' . date('H:i', str
 
             <div class="booking-summary booking-summary--standalone">
                 <h3 class="booking-summary__title"><?= htmlspecialchars($booking['movie_title'], ENT_QUOTES) ?></h3>
-                <p class="booking-summary__showing"><?= htmlspecialchars($whenLabel, ENT_QUOTES) ?><br><?= htmlspecialchars($screenName, ENT_QUOTES) ?><br>Booking #<?= (int) $booking['id'] ?></p>
+                <p class="booking-summary__showing"><?= htmlspecialchars($whenLabel, ENT_QUOTES) ?><br><?= htmlspecialchars($screenName, ENT_QUOTES) ?></p>
                 <ul class="booking-summary__seats">
                     <?php foreach ($booking['seats'] as $seat): ?>
                         <li><span>Seat <?= htmlspecialchars($seat['seat_row'] . $seat['seat_number'], ENT_QUOTES) ?></span><span><?= number_format((float) $booking['price_per_seat'], 0) ?> kr.</span></li>
