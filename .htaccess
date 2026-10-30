@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# On Simply the whole project sits in the web root, so every request is sent into public/; the other folders are never served.
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]

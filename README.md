@@ -7,7 +7,5 @@ Fake movie theater for school.
 - MariaDB
 - PHPMailer (SMTP)
 - TMDB API for film metadata
-- Docker for local development, hosted on Simply.com
-
-## TODO
 - Stripe (test mode)
+- Docker for local development, hosted on Simply.com

@@ -54,6 +54,8 @@ class Mailer
 
             return true;
         } catch (Exception $e) {
+            error_log('Mailer: ' . $phpMailer->ErrorInfo);
+
             return false;
         }
     }

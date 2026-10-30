@@ -63,14 +63,28 @@ class AccountController
     {
         $user = User::findByEmail($email);
 
+        // A locked account is refused before the password is even checked, so guessing gains nothing.
+        if ($user && $user['locked_until'] !== null && strtotime($user['locked_until']) > time()) {
+            $error = 'Too many failed attempts. Please try again in a few minutes.';
+            $notice = null;
+
+            require __DIR__ . '/../views/account/login.php';
+            return;
+        }
+
         // One generic message for both cases, so the form doesn't reveal which emails are registered.
         if ($user && password_verify($password, $user['password_hash'])) {
+            User::clearFailedLogins((int) $user['id']);
             session_regenerate_id(true);
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['role'] = $user['role'];
 
             header('Location: ' . ($user['role'] === 'admin' ? '/admin' : '/profile'));
             exit;
+        }
+
+        if ($user) {
+            User::recordFailedLogin((int) $user['id']);
         }
 
         $error = 'Incorrect email or password.';

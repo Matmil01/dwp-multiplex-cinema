@@ -54,4 +54,4 @@ INSERT INTO showings (movie_id, screen_id, show_datetime) VALUES
     (1, 4, TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '19:30:00'));
 
 INSERT INTO news (title, body, image_path, published_at) VALUES
-    ('The Matrix Is Showing Now', 'The Matrix plays on all four screens today and tomorrow. Check the Movies page for showing times.', NULL, CURDATE());
+    ('The Matrix on eternal repeat', 'The Matrix plays on all available screens today and tomorrow and probably forever.', NULL, CURDATE());

@@ -40,4 +40,22 @@ class User
             'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)'
         )->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
     }
+
+    // locked_until is listed first on purpose: MariaDB applies SET left to right, so it must read the count before it is raised.
+    public static function recordFailedLogin(int $id): void
+    {
+        Db::connection()->prepare(
+            'UPDATE users
+             SET locked_until = IF(failed_logins + 1 >= 5, NOW() + INTERVAL 15 MINUTE, locked_until),
+                 failed_logins = failed_logins + 1
+             WHERE id = ?'
+        )->execute([$id]);
+    }
+
+    public static function clearFailedLogins(int $id): void
+    {
+        Db::connection()->prepare(
+            'UPDATE users SET failed_logins = 0, locked_until = NULL WHERE id = ?'
+        )->execute([$id]);
+    }
 }

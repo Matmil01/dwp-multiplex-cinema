@@ -82,12 +82,15 @@ CREATE TABLE company_info (
 );
 
 -- password_hash holds the output of PHP password_hash(), never the plain password
+-- failed_logins counts wrong passwords in a row; locked_until blocks login until that time
 CREATE TABLE users (
    id INT AUTO_INCREMENT PRIMARY KEY,
    name VARCHAR(100) NOT NULL,
    email VARCHAR(150) NOT NULL UNIQUE,
    password_hash VARCHAR(255) NOT NULL,
-   role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer'
+   role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer',
+   failed_logins TINYINT NOT NULL DEFAULT 0,
+   locked_until DATETIME NULL
 );
 
 -- price_per_seat is copied from the screen at booking time so old invoices don't change when prices do

@@ -4,11 +4,11 @@
 # Dependencies
 /vendor/
 
-# Environment
-.env
-
 # Admin-uploaded images
 /public/assets/uploads/
 
-/documentation
+# Environment
+.env
+/config/config.production.php
 
+/documentation
