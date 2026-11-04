@@ -1,5 +1,4 @@
 <?php
-// Booking confirmation that doubles as the invoice. Expects $booking from Booking::find().
 require __DIR__ . '/../../components/screen-format.php';
 
 $total = (float) $booking['price_per_seat'] * count($booking['seats']);

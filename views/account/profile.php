@@ -1,4 +1,7 @@
-<?php require __DIR__ . '/../../components/screen-format.php'; ?>
+<?php
+require __DIR__ . '/../../components/screen-format.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

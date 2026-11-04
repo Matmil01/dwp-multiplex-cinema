@@ -1,4 +1,3 @@
-<?php // Shared 403/404/500 page. Expects $title and $message. No footer: it queries the database, which may be the thing that failed. ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

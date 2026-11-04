@@ -5,6 +5,7 @@ require __DIR__ . '/../components/day-label.php';
 $screenName = screenDisplayName($showing['screen_type']);
 $whenLabel = showingDayLabel($showing['show_datetime']) . ', ' . date('H:i', strtotime($showing['show_datetime']));
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

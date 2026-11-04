@@ -17,9 +17,6 @@
         <section>
             <h2 class="section-title">Register</h2>
             <form method="post" class="form-stack">
-                <?php if ($error): ?>
-                    <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
-                <?php endif; ?>
                 <div class="form-field">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" id="name" name="name" class="form-input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>" required>
@@ -36,6 +33,9 @@
                     <label for="password_confirm" class="form-label">Confirm Password</label>
                     <input type="password" id="password_confirm" name="password_confirm" class="form-input" required>
                 </div>
+                <?php if ($error): ?>
+                    <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
+                <?php endif; ?>
                 <button type="submit" class="base-button">Register</button>
             </form>
             <p class="form-helper-text">Already have an account? <a href="/login" class="inline-link">Log in</a></p>

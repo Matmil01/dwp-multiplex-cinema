@@ -1,7 +1,7 @@
 <?php
-// Contact form message forwarded to the owner. Expects $name, $email, $subject and $message from the form.
 require __DIR__ . '/header.php';
 ?>
+
                 <h2 style="margin: 0 0 16px; font-size: 18px;">New message from the contact form</h2>
 
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px; color: #666;">

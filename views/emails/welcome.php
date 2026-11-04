@@ -1,5 +1,4 @@
 <?php
-// Sent once after registration. Expects $name, $email and $siteUrl.
 require __DIR__ . '/header.php';
 ?>
                 <h2 style="margin: 0 0 16px; font-size: 18px;">Welcome, <?= htmlspecialchars($name, ENT_QUOTES) ?></h2>

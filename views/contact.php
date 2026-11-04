@@ -24,9 +24,6 @@
         <section>
             <?php require __DIR__ . '/../components/snackbar.php'; ?>
             <form method="post" action="/contact" class="form-stack">
-                <?php if ($error): ?>
-                    <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
-                <?php endif; ?>
                 <div class="form-field">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" id="name" name="name" maxlength="100" class="form-input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>" required>
@@ -43,6 +40,9 @@
                     <label for="message" class="form-label">Message</label>
                     <textarea id="message" name="message" rows="5" maxlength="5000" class="form-input" required><?= htmlspecialchars($message, ENT_QUOTES) ?></textarea>
                 </div>
+                <?php if ($error): ?>
+                    <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
+                <?php endif; ?>
                 <button type="submit" class="base-button">Send Message</button>
             </form>
         </section>

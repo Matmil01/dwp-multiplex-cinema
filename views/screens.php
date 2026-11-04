@@ -2,6 +2,7 @@
 require __DIR__ . '/../components/screen-format.php';
 require __DIR__ . '/../components/day-label.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

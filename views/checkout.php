@@ -5,6 +5,7 @@ require __DIR__ . '/../components/day-label.php';
 $screenName = screenDisplayName($showing['screen_type']);
 $whenLabel = showingDayLabel($showing['show_datetime']) . ', ' . date('H:i', strtotime($showing['show_datetime']));
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,9 +39,7 @@ $whenLabel = showingDayLabel($showing['show_datetime']) . ', ' . date('H:i', str
                     <span><?= number_format($total, 0) ?> kr.</span>
                 </p>
                 <button type="submit" class="base-button booking-summary__continue">Confirm and pay</button>
-                <?php if ($paymentEnabled): ?>
-                    <p class="muted-text booking-summary__note">You will be sent to Stripe for secure payment.</p>
-                <?php endif; ?>
+                <p class="muted-text booking-summary__note">You will be sent to Stripe for secure payment.</p>
                 <p class="muted-text booking-summary__note"><a href="/book?showing=<?= (int) $showing['id'] ?>" class="inline-link">Change seats</a></p>
             </form>
         </section>

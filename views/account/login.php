@@ -20,9 +20,6 @@
                 <?php if ($notice): ?>
                     <p class="form-notice"><?= htmlspecialchars($notice, ENT_QUOTES) ?></p>
                 <?php endif; ?>
-                <?php if ($error): ?>
-                    <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
-                <?php endif; ?>
                 <div class="form-field">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" id="email" name="email" class="form-input" value="<?= htmlspecialchars($email, ENT_QUOTES) ?>" required>
@@ -31,6 +28,9 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" id="password" name="password" class="form-input" required>
                 </div>
+                <?php if ($error): ?>
+                    <p class="form-error"><?= htmlspecialchars($error, ENT_QUOTES) ?></p>
+                <?php endif; ?>
                 <button type="submit" class="base-button">Log In</button>
             </form>
             <p class="form-helper-text">Don't have an account? <a href="/register" class="inline-link">Register</a></p>
