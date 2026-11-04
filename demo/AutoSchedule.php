@@ -1,7 +1,5 @@
 <?php
 
-// Keeps the schedule from ever running dry if enabled in config.php
-// Repeats the most recent week in the showings table.
 class AutoSchedule
 {
     private const BUFFER_DAYS = 14;
@@ -27,7 +25,6 @@ class AutoSchedule
     {
         $weekStart = (new DateTime($furthestDatetime))->modify('-7 days')->format('Y-m-d H:i:s');
 
-        // Only repeat movies with a positive runtime, so automatic showings can be checked for overlaps too.
         $stmt = $db->prepare(
             'SELECT s.movie_id, s.screen_id, s.show_datetime FROM showings s
              JOIN movies m ON m.id = s.movie_id
@@ -45,8 +42,6 @@ class AutoSchedule
             try {
                 $insert->execute([$row['movie_id'], $row['screen_id'], $newDatetime]);
             } catch (PDOException $e) {
-                // Slot already taken by a manually-added showing — the overlap trigger
-                // rejected it, which is fine, just skip that one and keep going.
                 if ($e->getCode() !== '45000') {
                     throw $e;
                 }

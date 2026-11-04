@@ -17,6 +17,7 @@ class AdminSettingsController
         $saveError = null;
         $saved = false;
 
+        // CompanyInfo::save() throws if the new hours would cut off existing showings.
         try {
             CompanyInfo::save([
                 'tagline' => $input['tagline'] ?? '',
@@ -32,7 +33,6 @@ class AdminSettingsController
         }
 
         if ($saveError !== null) {
-            // Saving failed: keep your changes in the form so you can correct the problem and retry.
             $company = [
                 'tagline' => $input['tagline'] ?? '',
                 'description' => $input['description'] ?? '',
@@ -54,7 +54,6 @@ class AdminSettingsController
     {
         $saveError = null;
         $saved = false;
-        // (array) guards against ?prices=x, which would otherwise crash the loop in Screen::savePrices().
         $prices = (array) ($input['prices'] ?? []);
 
         try {
@@ -69,6 +68,8 @@ class AdminSettingsController
 
         if ($saveError !== null) {
             // Saving failed: keep the typed prices in the form so you can correct them and retry.
+            // &$screen edits the real rows; unset($screen) afterwards breaks that link so the
+            // variable can't accidentally overwrite the last row later.
             foreach ($screens as &$screen) {
                 if (isset($prices[$screen['id']]) && is_string($prices[$screen['id']])) {
                     $screen['ticket_price'] = $prices[$screen['id']];

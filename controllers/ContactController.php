@@ -15,6 +15,7 @@ class ContactController
         require __DIR__ . '/../views/contact.php';
     }
 
+    // The four values were trimmed and forced to text by public/index.php.
     public function send(string $name, string $email, string $subject, string $message): void
     {
         $error = null;
@@ -38,7 +39,6 @@ class ContactController
                 'message' => $message,
             ]);
 
-            // Reply-To is the visitor's address, so the owner can answer directly from their inbox.
             if (Mailer::send($owner, "Contact form: $subject", $html, $email, true)) {
                 $snackbarType = 'success';
                 $snackbarMessage = 'Your message has been sent.';

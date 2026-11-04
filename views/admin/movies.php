@@ -37,6 +37,8 @@
                                 <p class="empty-message">No results for "<?= htmlspecialchars($searchQuery, ENT_QUOTES) ?>".</p>
                             <?php endif; ?>
                             <?php foreach ($searchResults as $result): ?>
+                                <!-- Clicking a result reloads the page with ?tmdb_id=..., and the controller
+                                     fills the editor below from TMDB. -->
                                 <a href="?tmdb_id=<?= (int) $result['id'] ?>" class="movie-result">
                                     <?php if ($result['posterUrl']): ?>
                                         <img src="<?= htmlspecialchars($result['posterUrl'], ENT_QUOTES) ?>" alt="" class="movie-result__poster">
@@ -48,10 +50,14 @@
                     <?php endif; ?>
 
                     <form method="post" class="movie-editor">
+                        <!-- Hidden inputs travel with the form but aren't shown. 'action' tells handlePost()
+                             what to do; 'id' is empty for a new movie and set when editing, which is how
+                             Movie::save() knows whether to INSERT or UPDATE. -->
                         <input type="hidden" name="action" value="save">
                         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $editor['id'], ENT_QUOTES) ?>">
                         <input type="hidden" name="tmdb_id" value="<?= htmlspecialchars((string) $editor['tmdb_id'], ENT_QUOTES) ?>">
 
+                        <!-- The poster isn't editable by hand; it's shown and carried along as a hidden value. -->
                         <?php if ($editor['poster_url']): ?>
                             <img src="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
                             <input type="hidden" name="poster_url" value="<?= htmlspecialchars($editor['poster_url'], ENT_QUOTES) ?>">
@@ -107,6 +113,7 @@
                             <p class="empty-message">No movies yet &mdash; search TMDB to add one.</p>
                         <?php endif; ?>
                         <?php foreach ($catalog as $movie): ?>
+                            <!-- data-title holds a lowercase copy of the title for the filter script at the bottom. -->
                             <div data-title="<?= htmlspecialchars(strtolower($movie['title']), ENT_QUOTES) ?>" class="catalog-item">
                                 <?php if ($movie['poster_url']): ?>
                                     <img src="<?= htmlspecialchars($movie['poster_url'], ENT_QUOTES) ?>" alt="" class="movie-result__poster">
@@ -126,6 +133,8 @@
                                 </div>
                                 <div class="catalog-item__actions">
                                     <a href="?edit_id=<?= (int) $movie['id'] ?>" class="inline-link">Edit</a>
+                                    <!-- Each Delete is its own tiny POST form. data-confirm makes confirm-dialog.js
+                                         ask "Are you sure?" before it is actually sent. -->
                                     <form method="post" data-confirm="Delete this movie?" data-confirm-label="Delete">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $movie['id'] ?>">
@@ -140,14 +149,7 @@
         </section>
     </main>
 
-    <script>
-        document.getElementById('catalogFilter').addEventListener('input', function () {
-            var term = this.value.toLowerCase();
-            document.querySelectorAll('#catalogList [data-title]').forEach(function (row) {
-                row.style.display = row.dataset.title.includes(term) ? '' : 'none';
-            });
-        });
-    </script>
+    <script src="/assets/js/catalog-filter.js"></script>
 
     <?php require __DIR__ . '/../../components/footer.php'; ?>
     <script src="/assets/js/confirm-dialog.js"></script>

@@ -6,6 +6,7 @@ class AdminBookingController
     {
         $bookings = Booking::all();
 
+        // cancel() redirects back here with a flag in the address; turn it into a snackbar.
         if (isset($query['cancelled'])) {
             $snackbarType = 'success';
             $snackbarMessage = 'Booking cancelled.';
@@ -17,7 +18,6 @@ class AdminBookingController
         require __DIR__ . '/../views/admin/bookings.php';
     }
 
-    // $showingId is only set by the showing-seats page, so the admin lands back there instead of on the bookings list.
     public function cancel(int $id, int $showingId = 0): void
     {
         $cancelled = Booking::cancel($id, null);

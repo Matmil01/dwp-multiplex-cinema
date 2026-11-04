@@ -35,11 +35,14 @@
                             <label class="form-label">Published At</label>
                             <input type="date" name="published_at" value="<?= htmlspecialchars($editor['published_at'], ENT_QUOTES) ?>" required class="form-input">
                         </div>
+                        <!-- When editing, show the current image. A file input can't be pre-filled by the
+                             page, so leaving the picker empty simply keeps this image. -->
                         <?php if ($editor['image_path']): ?>
                             <img src="/<?= htmlspecialchars($editor['image_path'], ENT_QUOTES) ?>" alt="" class="movie-editor__poster">
                         <?php endif; ?>
                         <div class="form-field">
                             <label class="form-label">Image (JPEG/PNG/WEBP, max 2MB)</label>
+                            <!-- accept= only filters the browser's file picker; the real type check is in PHP. -->
                             <input type="file" name="image" accept="image/jpeg,image/png,image/webp" class="form-input">
                         </div>
                         <div class="form-field">
@@ -62,6 +65,7 @@
                                     <p class="admin-list-item__title"><?= htmlspecialchars($post['title'], ENT_QUOTES) ?></p>
                                     <p class="admin-list-item__details">
                                         <?= date('F j, Y', strtotime($post['published_at'])) ?>
+                                        <!-- Future date = not yet visible to the public (hidden by the visible_news view). -->
                                         <?= strtotime($post['published_at']) > strtotime('today') ? ' (scheduled)' : '' ?>
                                     </p>
                                 </div>

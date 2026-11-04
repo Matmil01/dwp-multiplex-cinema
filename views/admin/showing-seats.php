@@ -1,4 +1,7 @@
-<?php require __DIR__ . '/../../components/screen-format.php'; ?>
+<?php
+require __DIR__ . '/../../components/screen-format.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +37,7 @@
                         <div class="seat-row">
                             <span class="seat-row__label"><?= $row ?></span>
                             <?php for ($number = 1; $number <= $showing['seats_per_row']; $number++): ?>
+                                <!-- Look this seat up in $seatOwners; null means nobody has booked it. -->
                                 <?php $owner = $seatOwners[$row . $number] ?? null; ?>
                                 <?php if ($owner): ?>
                                     <span class="seat seat--booked" role="img" aria-label="Seat <?= $row . $number ?>, booked by <?= htmlspecialchars($owner['customer_name'], ENT_QUOTES) ?>" data-tooltip="<?= htmlspecialchars($owner['customer_name'] . "\n" . $owner['customer_email'], ENT_QUOTES) ?>"><?= $number ?></span>

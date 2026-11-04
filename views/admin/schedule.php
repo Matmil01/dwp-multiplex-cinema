@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../components/screen-format.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,10 +27,8 @@ require __DIR__ . '/../../components/screen-format.php';
 
             <div class="schedule-board-wrap">
                 <?php
-                // Count the hours shown on the timeline, using the company's opening and closing hours.
                 $hourCount = $closingHour - $openingHour;
                 ?>
-                <!-- Pass the hour count to CSS so the columns match the hour labels below. -->
                 <div class="schedule-board" style="--schedule-hour-count: <?= $hourCount ?>;">
                     <div class="schedule-board__hours">
                         <div></div>
@@ -100,8 +99,7 @@ require __DIR__ . '/../../components/screen-format.php';
 
                     <div class="schedule-picker">
                         <label class="form-label">Movie</label>
-                        <!-- Submit the search text too, so it can be restored after a failed save. -->
-                        <input type="text" id="movieSearch" name="movie_title" autocomplete="off" placeholder="Search by title&hellip;" value="<?= htmlspecialchars($editor['movie_title'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                        <input type="text" id="movieSearch" name="movie_title" autocomplete="off" placeholder="Search by title&hellip;" value="<?= htmlspecialchars($editor['movie_title'] ?? '', ENT_QUOTES) ?>" data-movies="<?= htmlspecialchars(json_encode(array_map(fn($m) => ['id' => (int) $m['id'], 'title' => $m['title']], $movies)), ENT_QUOTES) ?>" class="form-input">
                         <div id="movieResults" class="schedule-picker__results is-hidden"></div>
                     </div>
 
@@ -136,75 +134,11 @@ require __DIR__ . '/../../components/screen-format.php';
         </section>
     </main>
 
-    <script>
-        // Type-to-search movie picker: filters the catalog client-side (same trick as the
-        // catalog filter on the Movies admin page) instead of a <select> with hundreds of options.
-        // json_encode turns the PHP movie list into data JavaScript can read.
-        // These flags safely encode <, >, &, and quotes, so a title cannot break out of this script.
-        const movies = <?= json_encode(array_map(fn($m) => ['id' => (int) $m['id'], 'title' => $m['title']], $movies), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-        const searchInput = document.getElementById('movieSearch');
-        const resultsBox = document.getElementById('movieResults');
-        const movieIdInput = document.getElementById('movieId');
-
-        searchInput.addEventListener('input', function () {
-            movieIdInput.value = '';
-            const term = this.value.trim().toLowerCase();
-
-            if (term === '') {
-                resultsBox.classList.add('is-hidden');
-                // Remove all old results when the search field is empty.
-                resultsBox.replaceChildren();
-                return;
-            }
-
-            const matches = movies.filter(m => m.title.toLowerCase().includes(term)).slice(0, 8);
-
-            // Clear the previous results before adding the new matches.
-            resultsBox.replaceChildren();
-            // Create one search-result button for each matching movie.
-            for (const movie of matches) {
-                // Create a real button instead of building an HTML string from the movie title.
-                const button = document.createElement('button');
-                // Clicking a result should select a movie, not submit the form.
-                button.type = 'button';
-                // Store the movie ID and title on the button so the click handler below can read them.
-                button.dataset.id = movie.id;
-                button.dataset.title = movie.title;
-                // Use the existing CSS class to keep the same appearance.
-                button.className = 'schedule-picker__result';
-                // Display the title as plain text. Even a title containing HTML will not run as code.
-                button.textContent = movie.title;
-                // Add the finished button to the visible list of results.
-                resultsBox.append(button);
-            }
-
-            // If nothing matched, show a message instead of an empty results box.
-            if (matches.length === 0) {
-                const message = document.createElement('p');
-                message.className = 'schedule-picker__empty';
-                message.textContent = 'No matches';
-                resultsBox.append(message);
-            }
-
-            resultsBox.classList.remove('is-hidden');
-        });
-
-        resultsBox.addEventListener('click', function (event) {
-            const button = event.target.closest('button[data-id]');
-            if (!button) {
-                return;
-            }
-
-            movieIdInput.value = button.dataset.id;
-            searchInput.value = button.dataset.title;
-            resultsBox.classList.add('is-hidden');
-            // The movie has been selected, so remove the search-result buttons.
-            resultsBox.replaceChildren();
-        });
-    </script>
-
+    <script src="/assets/js/movie-picker.js"></script>
     <script src="/assets/js/schedule-drag.js"></script>
     <script>
+        // Start the drag behaviour, handing it the three numbers it needs from PHP: the grid's
+        // date, the opening hour, and the total span in minutes (e.g. 10:00-24:00 = 840).
         initScheduleDrag(<?= json_encode($date) ?>, <?= $openingHour ?>, <?= ($closingHour - $openingHour) * 60 ?>);
     </script>
 

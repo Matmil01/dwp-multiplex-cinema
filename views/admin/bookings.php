@@ -1,4 +1,7 @@
-<?php require __DIR__ . '/../../components/screen-format.php'; ?>
+<?php
+require __DIR__ . '/../../components/screen-format.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,6 +45,7 @@
                                 <td><?= htmlspecialchars($booking['movie_title'], ENT_QUOTES) ?></td>
                                 <td><?= htmlspecialchars(formatBadgeLabel($booking['screen_type']), ENT_QUOTES) ?></td>
                                 <td><?= htmlspecialchars($booking['seat_names'] ?? '-', ENT_QUOTES) ?></td>
+                                <!-- Total isn't stored; it's price per seat (copied at booking time) x number of seats. -->
                                 <td><?= number_format((float) $booking['price_per_seat'] * (int) $booking['seat_count'], 0) ?> kr.</td>
                                 <td><?= htmlspecialchars(ucfirst($booking['status']), ENT_QUOTES) ?></td>
                                 <td>
