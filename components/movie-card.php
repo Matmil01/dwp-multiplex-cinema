@@ -1,8 +1,3 @@
-<?php
-// Expects $movie in scope; shows a row of showtime pills if $movie['times'] is set (each with showing_id, label),
-// otherwise a single "Next: ..." line if $movie['next_show_datetime'] is set.
-// $movie['show_format_badge'] (default true) lets a page that already names the format elsewhere skip it.
-?>
 <article class="movie-card">
     <div class="movie-card__content">
         <?php if ($movie['poster_url']): ?>

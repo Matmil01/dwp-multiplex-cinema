@@ -1,5 +1,5 @@
 <?php
-// "Today"/"Tomorrow" instead of the raw date, otherwise weekday + date.
+
 function showingDayLabel(string $showDatetime): string
 {
     $day = date('Y-m-d', strtotime($showDatetime));
@@ -11,3 +11,4 @@ function showingDayLabel(string $showDatetime): string
     }
     return date('D, M j', strtotime($showDatetime));
 }
+?>

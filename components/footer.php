@@ -1,4 +1,7 @@
-<?php $company = CompanyInfo::find(); ?>
+<?php
+$company = CompanyInfo::find();
+?>
+
 <footer class="site-footer">
     <div class="site-footer__details">
         <span><?= htmlspecialchars($company['address'], ENT_QUOTES) ?></span>

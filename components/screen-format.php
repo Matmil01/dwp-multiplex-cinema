@@ -26,6 +26,8 @@ function screenFormatMeta(string $type): array
     ];
     static $default = ['badge' => 'format-badge--unknown', 'label' => 'Unknown', 'blurb' => 'Format information unavailable.'];
 
+    // Look the type up in the list; if it isn't there, fall back to the "unknown" entry so a
+    // page never crashes on an unexpected type.
     return $meta[$type] ?? $default;
 }
 

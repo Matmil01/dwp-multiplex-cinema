@@ -1,9 +1,8 @@
 <?php
 
-// All contact with Stripe lives here, so the rest of the app never touches the Stripe library or its key.
 class StripePayment
 {
-    private ?\Stripe\StripeClient $client = null;
+    private \Stripe\StripeClient $client;
     private string $siteUrl;
 
     public function __construct()
@@ -11,18 +10,13 @@ class StripePayment
         $config = require __DIR__ . '/../config/config.php';
         $this->siteUrl = $config['site_url'];
 
-        if ($config['stripe']['secret_key'] !== '') {
-            $this->client = new \Stripe\StripeClient($config['stripe']['secret_key']);
+        if ($config['stripe']['secret_key'] === '') {
+            throw new RuntimeException('STRIPE_SECRET_KEY is not set.');
         }
+
+        $this->client = new \Stripe\StripeClient($config['stripe']['secret_key']);
     }
 
-    // False when no key is configured: checkout then skips payment (demo mode).
-    public function isEnabled(): bool
-    {
-        return $this->client !== null;
-    }
-
-    // Starts a payment page for $quantity tickets and returns its id and the URL to send the customer to.
     public function createCheckout(string $productName, float $ticketPrice, int $quantity, string $successPath, string $cancelPath): array
     {
         $session = $this->client->checkout->sessions->create([
@@ -44,6 +38,7 @@ class StripePayment
     }
 
     // Asks Stripe about a payment page: returns the payment id if it was paid, or null if not.
+    // The "payment intent" is Stripe's id for the actual money movement; it is what a refund needs.
     public function paidIntent(string $sessionId): ?string
     {
         $session = $this->client->checkout->sessions->retrieve($sessionId);
@@ -51,6 +46,7 @@ class StripePayment
         return $session->payment_status === 'paid' ? (string) $session->payment_intent : null;
     }
 
+    // Returns the full amount for a payment. Called only when a booking fails after payment.
     public function refund(string $paymentIntent): void
     {
         $this->client->refunds->create(['payment_intent' => $paymentIntent]);
