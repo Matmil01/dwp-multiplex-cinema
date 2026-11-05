@@ -18,11 +18,13 @@ class News
         $this->published_at = $row['published_at'];
     }
 
+    // "2026-10-31" -> "October 31, 2026" for display.
     public function publishedLabel(): string
     {
         return date('F j, Y', strtotime($this->published_at));
     }
 
+    // Public list page. DESC = newest first.
     public static function all(): array
     {
         return Db::connection()->query(
@@ -30,6 +32,8 @@ class News
         )->fetchAll();
     }
 
+    // Public article page. Because this reads the view, a future article gives null (-> 404)
+    // even though its row exists in the news table.
     public static function find(int $id): ?News
     {
         $stmt = Db::connection()->prepare('SELECT * FROM visible_news WHERE id = ?');
@@ -56,13 +60,17 @@ class News
     }
 
     // Short teaser derived from the body, cut at a word boundary instead of mid-word.
+    // `int $length = 150` = $length is optional and is 150 unless the caller says otherwise.
     public static function excerpt(string $body, int $length = 150): string
     {
         $body = trim($body);
+        // Short enough already: use it as is.
         if (strlen($body) <= $length) {
             return $body;
         }
 
+        // Cut at 150 characters, then back up to the last space so a word isn't chopped in half.
+        // substr(text, start, length) takes a slice; strrpos() finds the LAST space in it.
         $truncated = substr($body, 0, $length);
         $lastSpace = strrpos($truncated, ' ');
         if ($lastSpace !== false) {
@@ -72,10 +80,13 @@ class News
         return $truncated . '…';
     }
 
+    // Called by the admin news editor. image_path has already been handled by the controller
+    // (file saved to disk, or kept/removed); this just stores the path text.
     public static function save(array $input): int
     {
         $db = Db::connection();
 
+        // No id in the form = new article: INSERT. Otherwise UPDATE the existing row.
         if (empty($input['id'])) {
             $stmt = $db->prepare(
                 'INSERT INTO news (title, body, image_path, published_at) VALUES (?, ?, ?, ?)'
@@ -103,6 +114,7 @@ class News
         return (int) $input['id'];
     }
 
+    // Only the row is deleted here; the controller removes the image file from disk itself.
     public static function delete(int $id): void
     {
         Db::connection()->prepare('DELETE FROM news WHERE id = ?')->execute([$id]);

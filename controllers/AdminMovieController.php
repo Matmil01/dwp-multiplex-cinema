@@ -38,6 +38,9 @@ class AdminMovieController
     public function save(array $input, array $query): void
     {
         try {
+            // Clean each form field before handing it to the model. Pattern used on each line:
+            // `($input['x'] ?? '') !== '' ? (int) $input['x'] : null` = "if the field was filled
+            // in, make it a number; if left blank, store NULL". Blank text fields are trimmed.
             Movie::save([
                 'id' => ($input['id'] ?? '') !== '' ? (int) $input['id'] : null,
                 'tmdb_id' => ($input['tmdb_id'] ?? '') !== '' ? (int) $input['tmdb_id'] : null,
@@ -51,13 +54,17 @@ class AdminMovieController
                 'writers' => $input['writers'] ?? '',
                 'cast' => $input['cast'] ?? '',
             ]);
+            // urlencode() makes the title safe to put in an address (spaces -> %20 etc.).
             header('Location: /admin/movies?saved=' . urlencode(trim($input['title'] ?? '')));
             exit;
         } catch (Throwable $e) {
+            // Movie::save() threw (e.g. "runtime would make showings overlap"): keep its message.
             $saveError = $e->getMessage();
         }
 
         // Saving failed: refill the editor with what you submitted, including any unsaved changes.
+        // array_intersect_key() keeps only the $input keys that exist in EMPTY_EDITOR, so stray
+        // form fields (like 'action') don't leak into the editor.
         $editor = array_merge(self::EMPTY_EDITOR, array_intersect_key($input, self::EMPTY_EDITOR));
 
         $this->showPage($query, $saveError, $editor);
@@ -65,6 +72,8 @@ class AdminMovieController
 
     public function delete(int $id): void
     {
+        // Movie::delete() throws when bookings exist for the movie's showings; the redirect
+        // flag turns that into a red snackbar on the page.
         try {
             Movie::delete($id);
         } catch (RuntimeException $e) {
@@ -76,6 +85,8 @@ class AdminMovieController
         exit;
     }
 
+    // Gathers everything the view needs and loads it. $saveError and $editor are only set when
+    // coming from a failed save; otherwise the editor is filled from the address (?tmdb_id / ?edit_id).
     private function showPage(array $query, ?string $saveError, ?array $editor): void
     {
         $searchQuery = trim($query['q'] ?? '');
@@ -84,6 +95,8 @@ class AdminMovieController
 
         // Only load database or TMDB values when there are no failed-save edits to preserve.
         if ($editor === null && isset($query['tmdb_id'])) {
+            // Import: ask TMDB for the movie's full details and reshape them into form fields.
+            // TMDB gives lists of people; implode()/array_column() flatten them into "Name, Name" text.
             try {
                 $details = (new TmdbAdapter())->getMovieDetails((int) $query['tmdb_id']);
                 $editor = array_merge(self::EMPTY_EDITOR, array_intersect_key($details, self::EMPTY_EDITOR), [
@@ -96,6 +109,8 @@ class AdminMovieController
                 $searchError = $e->getMessage();
             }
         } elseif ($editor === null && isset($query['edit_id'])) {
+            // Edit: load one of our own movies. get_object_vars() turns the Movie object back
+            // into a plain list (property name => value) so it can be merged like the others.
             $movie = Movie::find((int) $query['edit_id']);
             if ($movie) {
                 $editor = array_merge(self::EMPTY_EDITOR, array_intersect_key(get_object_vars($movie), self::EMPTY_EDITOR), [
@@ -107,6 +122,7 @@ class AdminMovieController
             }
         }
 
+        // A search box submission (?q=...): ask TMDB. Network problems become a message, not a crash.
         if ($searchQuery !== '') {
             try {
                 $searchResults = (new TmdbAdapter())->searchMovies($searchQuery);
@@ -121,6 +137,7 @@ class AdminMovieController
 
         $catalog = Movie::all();
 
+        // Pick the one snackbar message to show (see components/snackbar.php), if any.
         if ($saveError) {
             $snackbarType = 'error';
             $snackbarMessage = 'Save failed: ' . $saveError;

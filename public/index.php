@@ -1,6 +1,7 @@
 <?php
 
-// Showing times are stored as local wall-clock times, so "now" has to be local too.
+// Front door. Every request goes through this file first.
+
 date_default_timezone_set('Europe/Copenhagen');
 
 // Errors go to Apache's log, never to the page, so visitors can't see file paths or SQL.
@@ -26,12 +27,16 @@ $routes = [
     'GET /screens'      => fn() => (new ScreenController())->index(),
     'GET /contact'      => fn() => (new ContactController())->showForm(),
     // (string) casts guard against array input like ?email[]=x, which would otherwise crash trim()/typed parameters.
+    // trim() strips spaces from both ends of the text, so " din@mor.dk " becomes "din@mor.dk".
     'POST /contact'     => fn() => (new ContactController())->send(
         trim((string) ($_POST['name'] ?? '')),
         trim((string) ($_POST['email'] ?? '')),
         trim((string) ($_POST['subject'] ?? '')),
         trim((string) ($_POST['message'] ?? ''))
     ),
+    // Booking pages receive the logged-in user's id, or null if nobody is logged in.
+    // `isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null` reads as:
+    // "is there a user_id in the session? if yes use it as a number, if no use null".
     'GET /book'         => fn() => (new BookingController())->showSeats(
         (int) ($_GET['showing'] ?? 0),
         isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null
@@ -39,6 +44,8 @@ $routes = [
     'POST /book'        => fn() => (new BookingController())->book(
         (int) ($_POST['showing_id'] ?? 0),
         isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null,
+        // The seat picker sends a list of seat labels. (array) makes sure it IS a list, and
+        // array_filter(..., 'is_string') throws out anything in it that isn't plain text.
         array_filter((array) ($_POST['seats'] ?? []), 'is_string')
     ),
     'GET /checkout'     => fn() => (new BookingController())->checkout(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
@@ -65,6 +72,9 @@ $routes = [
         (int) ($_POST['booking_id'] ?? 0)
     ),
 
+    // Admin pages. The whole $_GET / $_POST array is passed where a page has many optional
+    // parameters (filters, edit ids, snackbar messages); the controller picks out what it needs.
+    // $_FILES holds uploaded files (the news editor's image upload).
     'GET /admin'           => fn() => (new AdminDashboardController())->index(),
     'GET /admin/bookings'  => fn() => (new AdminBookingController())->index($_GET),
     'GET /admin/showing-seats' => fn() => (new AdminBookingController())->showingSeats((int) ($_GET['showing'] ?? 0), $_GET),
@@ -81,13 +91,20 @@ $routes = [
     'POST /admin/settings/prices' => fn() => (new AdminSettingsController())->savePrices($_POST),
 ];
 
+// $_SERVER holds facts about the current request that the web server fills in.
+// REQUEST_METHOD is "GET" or "POST".
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Blocks cross-site form posts: browsers send Origin (or Referer) on every POST, and it must name this site's own host.
+// Why: without this, a malicious page elsewhere could contain a hidden form that submits to
+// e.g. our /profile/cancel while you're logged in, and your browser would send your session
+// cookie along. (This attack is called CSRF.) Checking that the submission came from our own
+// address shuts that down. parse_url() splits an address into parts; we keep only host + port.
 if ($method === 'POST') {
     $source = parse_url($_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '') ?: [];
     $sourceHost = strtolower(($source['host'] ?? '') . (isset($source['port']) ? ':' . $source['port'] : ''));
 
+    // No origin at all, or an origin that isn't us: refuse with 403 ("forbidden").
     if ($sourceHost === '' || $sourceHost !== strtolower($_SERVER['HTTP_HOST'] ?? '')) {
         http_response_code(403);
         $title = 'Request blocked';
@@ -97,13 +114,19 @@ if ($method === 'POST') {
     }
 }
 
+// Pull just the path out of the full address ("/movie?id=5" -> "/movie"), remove a
+// trailing slash, and treat an empty result as the front page "/".
 $path = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
 
+// Gatekeeper for the admin area: any address starting with /admin needs role = admin in the
+// session. Anyone else is sent to the login page. One check here covers every admin page,
+// so no individual admin controller can forget it.
 if (($path === '/admin' || str_starts_with($path, '/admin/')) && ($_SESSION['role'] ?? '') !== 'admin') {
     header('Location: /login?reason=admin');
     exit;
 }
 
+// Look up e.g. "GET /movies" in the route table. null if there is no such entry.
 $handler = $routes["$method $path"] ?? null;
 
 if ($handler === null) {
@@ -114,4 +137,6 @@ if ($handler === null) {
     exit;
 }
 
+// Finally run the matching route's function. This is the moment the controller is created,
+// the model is asked for data, and the view prints the page.
 $handler();

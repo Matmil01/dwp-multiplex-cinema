@@ -2,9 +2,11 @@
 
 class AdminNewsController
 {
+    // Where files go on disk, and the matching path prefix stored in the database / used in <img src>.
     private const UPLOAD_DIR = __DIR__ . '/../public/assets/uploads/news';
     private const UPLOAD_URL_PREFIX = 'assets/uploads/news';
     private const IMAGE_MAX_BYTES = 2 * 1024 * 1024; // matches PHP's default upload_max_filesize (2M)
+    // Detected content type => extension WE assign. Anything not in this list is refused.
     private const IMAGE_ALLOWED_TYPES = [
         'image/jpeg' => 'jpg',
         'image/png' => 'png',
@@ -16,6 +18,8 @@ class AdminNewsController
         $this->showPage($query, null, null);
     }
 
+    // $files is $_FILES: PHP's list of uploaded files. Only present because the form has
+    // enctype="multipart/form-data", which is what lets a form carry a file.
     public function handlePost(array $post, array $files, array $query): void
     {
         $action = $post['action'] ?? '';
@@ -42,6 +46,8 @@ class AdminNewsController
                 throw new RuntimeException('News post not found.');
             }
             $currentImagePath = $existing['image_path'] ?? '';
+            // $files['image'] is the uploaded file's info (name, size, tmp_name, error...). If no
+            // file was chosen, pass a stand-in that says so, and the old image path is kept.
             $imagePath = $this->handleImageUpload($files['image'] ?? ['error' => UPLOAD_ERR_NO_FILE], $currentImagePath);
 
             // Keep the old image on disk while saving. If this fails, the article still has its image.
@@ -78,6 +84,7 @@ class AdminNewsController
 
     public function delete(int $id): void
     {
+        // Look the article up first so we still know its image path after the row is gone.
         $existing = News::findForAdmin($id);
         News::delete($id);
         if ($existing) {
@@ -131,8 +138,11 @@ class AdminNewsController
 
     // Ignores a missing file (keeps $currentPath), rejects anything that isn't actually an image
     // (checked by content, not by the client-supplied name/type), and never trusts the original filename.
+    // Returns the path text to store in the database.
     private function handleImageUpload(array $file, string $currentPath): string
     {
+        // PHP reports what happened with the upload in $file['error']. UPLOAD_ERR_OK = fine,
+        // UPLOAD_ERR_NO_FILE = the picker was left empty, the *_SIZE ones = too big.
         if ($file['error'] === UPLOAD_ERR_NO_FILE) {
             return $currentPath;
         }
@@ -149,6 +159,9 @@ class AdminNewsController
             throw new RuntimeException('Image is too large (max 2MB).');
         }
 
+        // finfo reads the first bytes of the file itself to work out what it really is
+        // ("image/jpeg" etc.). The browser also sends a type in $file['type'], but that is
+        // just a claim the uploader controls, so it is ignored here.
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $file['tmp_name']);
 
@@ -156,10 +169,14 @@ class AdminNewsController
             throw new RuntimeException('Image must be a JPEG, PNG, or WEBP.');
         }
 
+        // Create the upload folder if it doesn't exist yet (true = create parent folders too).
         if (!is_dir(self::UPLOAD_DIR)) {
             mkdir(self::UPLOAD_DIR, 0755, true);
         }
 
+        // random_bytes(16) -> 16 random bytes; bin2hex -> 32 random hex characters. The
+        // extension comes from the detected type, so "evil.php" can only ever be saved as
+        // "<random>.jpg". move_uploaded_file() moves it from PHP's temp folder into ours.
         $filename = bin2hex(random_bytes(16)) . '.' . self::IMAGE_ALLOWED_TYPES[$mime];
         if (!move_uploaded_file($file['tmp_name'], self::UPLOAD_DIR . '/' . $filename)) {
             throw new RuntimeException('Could not save the uploaded image.');
@@ -169,6 +186,8 @@ class AdminNewsController
     }
 
     // Only deletes files inside our own managed upload folder, never an arbitrary path.
+    // (Without the str_starts_with check, a tampered path like "../../config/config.php"
+    // could make this delete something important.) unlink() = delete a file.
     private function deleteImageIfManaged(?string $imagePath): void
     {
         if ($imagePath && str_starts_with($imagePath, self::UPLOAD_URL_PREFIX . '/')) {

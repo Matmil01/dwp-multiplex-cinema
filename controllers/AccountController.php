@@ -4,6 +4,7 @@ class AccountController
 {
     private const PASSWORD_MIN_LENGTH = 8;
 
+    // GET /register: show an empty form. The view expects these three variables to exist.
     public function showRegisterForm(): void
     {
         $name = '';
@@ -13,6 +14,7 @@ class AccountController
         require __DIR__ . '/../views/account/register.php';
     }
 
+    // POST /register. The four values were already trimmed / forced to text by public/index.php.
     public function register(string $name, string $email, string $password, string $passwordConfirm): void
     {
         $error = null;
@@ -28,6 +30,7 @@ class AccountController
         } elseif (User::emailExists($email)) {
             $error = 'An account with that email already exists.';
         } else {
+            // All checks passed. User::create() hashes the password before saving.
             User::create($name, $email, $password);
 
             // The account exists either way, so a failed welcome email is ignored.
@@ -64,6 +67,8 @@ class AccountController
         $user = User::findByEmail($email);
 
         // A locked account is refused before the password is even checked, so guessing gains nothing.
+        // (After 5 wrong passwords User::recordFailedLogin sets locked_until 15 minutes ahead.
+        // This slows down "brute force" attacks that try thousands of passwords in a row.)
         if ($user && $user['locked_until'] !== null && strtotime($user['locked_until']) > time()) {
             $error = 'Too many failed attempts. Please try again in a few minutes.';
             $notice = null;
@@ -79,10 +84,12 @@ class AccountController
             $_SESSION['user_id'] = (int) $user['id'];
             $_SESSION['role'] = $user['role'];
 
+            // Admins land on the dashboard, customers on their profile.
             header('Location: ' . ($user['role'] === 'admin' ? '/admin' : '/profile'));
             exit;
         }
 
+        // Wrong password for a real account: count it towards the lockout.
         if ($user) {
             User::recordFailedLogin((int) $user['id']);
         }
@@ -95,6 +102,7 @@ class AccountController
 
     public function profile(?int $userId, array $query): void
     {
+
         $user = $userId !== null ? User::find($userId) : null;
 
         if (!$user) {

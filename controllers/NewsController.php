@@ -4,6 +4,7 @@ class NewsController
 {
     public function index(): void
     {
+        // A list of rows (plain lists), newest first.
         $articles = News::all();
 
         require __DIR__ . '/../views/news.php';
@@ -11,6 +12,7 @@ class NewsController
 
     public function show(int $id): void
     {
+        // A News object (so the view writes $article->title), or null if hidden/not found.
         $article = News::find($id);
 
         if (!$article) {

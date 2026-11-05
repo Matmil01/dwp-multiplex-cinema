@@ -7,6 +7,8 @@ class Screen
     public const MIN_PRICE = 3;
     public const MAX_PRICE = 9999;
 
+    // For the Settings form. CAST(... AS UNSIGNED) turns the stored 90.00 into 90, so the form
+    // field shows a clean whole number.
     public static function prices(): array
     {
         return Db::connection()->query(
@@ -17,6 +19,9 @@ class Screen
     // $prices maps screen id => price as typed. Checks every price first, so one bad value saves nothing.
     public static function savePrices(array $prices): void
     {
+        // First loop: validate only. ctype_digit() = "is this text made of digits only?", which
+        // rejects "90.50", "-5", "abc" and "". The text must be checked BEFORE converting with
+        // (int), because (int) "abc" would quietly become 0.
         foreach ($prices as $price) {
             if (!is_string($price) || !ctype_digit($price)) {
                 throw new RuntimeException('Every price must be a whole number of kroner.');
@@ -26,6 +31,7 @@ class Screen
             }
         }
 
+        // Second loop: all values passed, so now actually save them.
         $update = Db::connection()->prepare('UPDATE screens SET ticket_price = ? WHERE id = ?');
 
         foreach ($prices as $screenId => $price) {
