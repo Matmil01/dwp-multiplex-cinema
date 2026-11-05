@@ -15,7 +15,13 @@ set_exception_handler(function (Throwable $e): void {
     require __DIR__ . '/../templates/error.php';
 });
 
-session_start(['cookie_samesite' => 'Lax', 'cookie_httponly' => true]);
+session_start([
+    'cookie_samesite' => 'Lax',
+    'cookie_httponly' => true,
+    // Only over HTTPS, so local http://localhost can still log in.
+    'cookie_secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'use_strict_mode' => true,
+]);
 require __DIR__ . '/../config/autoload.php';
 
 $routes = [
@@ -133,6 +139,43 @@ if ($handler === null) {
     http_response_code(404);
     $title = 'Page not found';
     $message = 'Nothing to see here.';
+    require __DIR__ . '/../templates/error.php';
+    exit;
+}
+
+// Per-IP limits on the forms that can be spammed or guessed: [name, max attempts, window in seconds].
+$rateLimits = [
+    'POST /register' => ['register', 5, 3600],
+    'POST /contact'  => ['contact', 5, 3600],
+    'POST /login'    => ['login', 20, 900],
+];
+
+// Refuses once this IP has made $max attempts at $action within the window; otherwise records this attempt.
+// Refused attempts are not recorded, so the table stays small and the block ends when old attempts age out.
+function withinRateLimit(string $action, int $max, int $windowSeconds): bool
+{
+    $db = Db::connection();
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    $since = date('Y-m-d H:i:s', time() - $windowSeconds);
+
+    $stmt = $db->prepare('SELECT COUNT(*) FROM rate_limits WHERE action = ? AND ip = ? AND attempted_at > ?');
+    $stmt->execute([$action, $ip, $since]);
+
+    if ((int) $stmt->fetchColumn() >= $max) {
+        return false;
+    }
+
+    $db->prepare('INSERT INTO rate_limits (ip, action) VALUES (?, ?)')->execute([$ip, $action]);
+    // Housekeeping: nothing older than a day is ever needed.
+    $db->prepare('DELETE FROM rate_limits WHERE attempted_at < ?')->execute([date('Y-m-d H:i:s', time() - 86400)]);
+
+    return true;
+}
+
+if (isset($rateLimits["$method $path"]) && !withinRateLimit(...$rateLimits["$method $path"])) {
+    http_response_code(429);
+    $title = 'Too many requests';
+    $message = 'Please wait a while and try again.';
     require __DIR__ . '/../templates/error.php';
     exit;
 }

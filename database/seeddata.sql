@@ -11,11 +11,8 @@ INSERT INTO company_info (id, tagline, description, opening_time, closing_time, 
     '308 Negra Arroyo Lane, Albuquerque, New Mexico 87104', 
     '(505) 503-4455');
 
-INSERT INTO users (name, email, password_hash, role) VALUES
-    ('Owner',
-    'admin@cinema.com',
-    '$2y$10$3D0JJnZWat48jF5BKfi.wuKLYRcsk036AuOmC9JAWcLzFfd3XLH5C',
-    'admin');
+-- No users are seeded, so no password hash lives in the repo. To make the first admin, register on the
+-- site, then run: UPDATE users SET role = 'admin' WHERE email = 'the-email-you-registered';
 
 -- Single demo film. The poster is a TMDB URL, same as films added through the admin.
 INSERT INTO genres (name) VALUES

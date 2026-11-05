@@ -99,7 +99,7 @@ CREATE TABLE company_info (
 -- password_hash holds the output of PHP password_hash(), never the plain password
 -- failed_logins counts wrong passwords in a row; locked_until blocks login until that time
 -- email is UNIQUE so two accounts can't share one address. role defaults to 'customer';
--- the single admin is created by seeddata.sql, never through the register form.
+-- the first admin is made by promoting a registered account (see seeddata.sql), never through the register form.
 CREATE TABLE users (
    id INT AUTO_INCREMENT PRIMARY KEY,
    name VARCHAR(100) NOT NULL,
@@ -140,6 +140,17 @@ CREATE TABLE booking_seats (
    UNIQUE (showing_id, seat_row, seat_number),
    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
    FOREIGN KEY (showing_id) REFERENCES showings(id)
+);
+
+-- One row per recent attempt at a spam-prone form (register, contact, login), per visitor IP.
+-- public/index.php counts the rows in a time window and refuses the request once a limit is reached.
+-- Standalone: no relation to other tables. Rows older than a day are deleted by the same code.
+CREATE TABLE rate_limits (
+   id INT AUTO_INCREMENT PRIMARY KEY,
+   ip VARCHAR(45) NOT NULL,
+   action VARCHAR(20) NOT NULL,
+   attempted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   INDEX idx_rate_limits_lookup (action, ip, attempted_at)
 );
 
 -- INDEXES: an index is a sorted lookup list the database keeps for a column, like the index

@@ -36,7 +36,7 @@ class User
         return $stmt->fetch() ?: null;
     }
 
-    // New accounts are always customers; the admin account is seeded, never self-registered.
+    // New accounts are always customers; an admin is made by changing role in the database, never by self-registering.
     // (role is left out of the INSERT, so the column's default 'customer' from schema.sql applies.)
     // password_hash() scrambles the password one-way with a random "salt" mixed in, so two
     // users with the same password still get different hashes. PASSWORD_DEFAULT = let PHP

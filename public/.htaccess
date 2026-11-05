@@ -1,5 +1,13 @@
 RewriteEngine On
 
+# Ignored if the host has no mod_headers. frame-ancestors/X-Frame-Options stop other sites from framing pages (clickjacking).
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set Content-Security-Policy "frame-ancestors 'none'"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
 # Real files and folders (CSS, images, existing pages) are served as-is; everything else goes to index.php.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
