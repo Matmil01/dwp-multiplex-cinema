@@ -1,4 +1,3 @@
--- Baseline data needed for a usable cinema setup.
 INSERT INTO screens (type, seat_rows, seats_per_row, aisle_after, ticket_price) VALUES
     ('16mm', 5, 8, 4, 75.00),
     ('35mm', 8, 12, 6, 95.00),
@@ -12,7 +11,6 @@ INSERT INTO company_info (id, tagline, description, opening_time, closing_time, 
     '308 Negra Arroyo Lane, Albuquerque, New Mexico 87104', 
     '(505) 503-4455');
 
--- Demo admin login: admin@cinema.com / admin (password stored as a bcrypt hash from password_hash()).
 INSERT INTO users (name, email, password_hash, role) VALUES
     ('Owner',
     'admin@cinema.com',
@@ -27,6 +25,8 @@ INSERT INTO genres (name) VALUES
 INSERT INTO movies (title, release_year, description, duration_minutes, poster_url) VALUES
     ('The Matrix', 1999, 'A computer programmer learns that his world is a simulation and joins a rebellion against the machines that run it.', 136, 'https://image.tmdb.org/t/p/w200/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg');
 
+-- The ids used below (movie 1, genres 1-2, people 1-4) are the AUTO_INCREMENT numbers these
+-- inserts get on an empty database, which is why this file must run on a fresh install only.
 INSERT INTO movie_genres (movie_id, genre_id) VALUES
     (1, 1), (1, 2);
 
@@ -42,16 +42,17 @@ INSERT INTO movie_credits (movie_id, person_id, role, billing_order) VALUES
     (1, 3, 'cast', 1),
     (1, 4, 'cast', 2);
 
--- Times are relative to the build date so the demo always has tonight and tomorrow.
-INSERT INTO showings (movie_id, screen_id, show_datetime) VALUES
-    (1, 1, TIMESTAMP(CURDATE(), '19:30:00')),
-    (1, 2, TIMESTAMP(CURDATE(), '19:30:00')),
-    (1, 3, TIMESTAMP(CURDATE(), '19:30:00')),
-    (1, 4, TIMESTAMP(CURDATE(), '19:30:00')),
-    (1, 1, TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '19:30:00')),
-    (1, 2, TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '19:30:00')),
-    (1, 3, TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '19:30:00')),
-    (1, 4, TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '19:30:00'));
+-- Times are relative to the build date: every screen shows the movie at 19:30 on each of the next
+-- 7 days (today + 0..6). AutoSchedule repeats the latest week, so a full week here means every
+-- day keeps a screening. TIMESTAMP(date, time) glues a date and a time together; CURDATE() is today.
+-- These inserts go through the overlap trigger too — one showing per screen per day, so none collide.
+INSERT INTO showings (movie_id, screen_id, show_datetime)
+SELECT 1, s.id, TIMESTAMP(CURDATE() + INTERVAL d.n DAY, '19:30:00')
+FROM screens s
+CROSS JOIN (
+    SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3
+    UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
+) d;
 
 INSERT INTO news (title, body, image_path, published_at) VALUES
     ('The Matrix on eternal repeat', 'The Matrix plays on all available screens today and tomorrow and probably forever.', NULL, CURDATE());

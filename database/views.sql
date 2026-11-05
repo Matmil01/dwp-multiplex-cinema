@@ -1,9 +1,6 @@
--- A view is a saved SELECT that can be queried like a table.
--- Public pages use this view so future-dated news stays hidden until its publication date.
 CREATE VIEW visible_news AS
 SELECT * FROM news WHERE published_at <= CURDATE() ORDER BY published_at DESC;
 
--- The front page's daily program, with movie, screen format, and genre details.
 CREATE VIEW today_showings AS
 SELECT s.id, s.show_datetime, m.id AS movie_id, m.title, m.release_year, m.duration_minutes, m.poster_url,
 	   sc.type AS screen_type,
