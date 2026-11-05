@@ -1,9 +1,8 @@
-#!/bin/sh
-# Uploads the whole project to the server over FTPS. Usage: ./deploy.sh [--dry-run]
+# Use: ./deploy.sh
 set -eu
 cd "$(dirname "$0")"
 
-# Kept one folder above the project so it can never be committed or uploaded.
+# One folder above project.
 ENV_FILE=../.env.deploy
 
 if [ ! -f "$ENV_FILE" ]; then
@@ -26,14 +25,26 @@ fi
 DRY_RUN=""
 [ "${1:-}" = "--dry-run" ] && DRY_RUN="--dry-run"
 
-# Excluded paths are neither uploaded nor deleted on the server, so the live-only files survive.
+# Excluded paths, neither uploaded nor deleted on server.
 lftp <<EOF
 set ftp:ssl-force true
 set ssl:verify-certificate yes
+set net:timeout 15
+set net:max-retries 3
+set net:reconnect-interval-base 3
 open -u "$USER","$PASS" "$HOST"
-mirror -R --delete --verbose --parallel=4 $DRY_RUN \
+mirror -R --delete --verbose --parallel=1 $DRY_RUN \
   -x '^\.git/' \
   -x '^\.env$' \
+  -x '^\.env\.example$' \
+  -x '^\.gitignore$' \
+  -x '^Dockerfile$' \
+  -x '^docker-compose\.yml$' \
+  -x '^deploy\.sh$' \
+  -x '^README\.md$' \
+  -x '^composer\.(json|lock)$' \
+  -x '^documentation/' \
+  -x '^database/' \
   -x '(^|/)\.DS_Store$' \
   -x '^vendor/' \
   -x '^config/config\.production\.php$' \
