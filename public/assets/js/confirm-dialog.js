@@ -1,4 +1,3 @@
-// Replaces the browser's confirm() for any form marked data-confirm="message" (button text: data-confirm-label).
 const dialog = document.createElement('dialog');
 dialog.className = 'confirm-dialog';
 dialog.innerHTML = `
@@ -14,6 +13,8 @@ const keepButton = dialog.querySelector('.base-button');
 const confirmButton = dialog.querySelector('.danger-button');
 let pendingForm = null;
 
+// One listener on the whole document catches the submit of EVERY form on the page
+// (events "bubble up" from the form to the document). Forms without data-confirm are let through.
 document.addEventListener('submit', (event) => {
 	const form = event.target;
 

@@ -103,11 +103,29 @@
 	background: var(--color-link);
 }
 
+/* Red plus an X, so "taken" isn't shown by colour alone (WCAG 1.4.1). */
 .seat--taken {
-	border-color: var(--color-border-soft);
-	background: var(--color-surface-alt);
+	position: relative;
+	border-color: #b91c1c;
+	background: #b91c1c;
 	color: transparent;
 	cursor: not-allowed;
+}
+
+/* Covers the whole box including the thick bottom border, so the X is centred in the red square. */
+.seat--taken::after {
+	content: '';
+	position: absolute;
+	top: -1px;
+	right: -1px;
+	bottom: -4px;
+	left: -1px;
+	background:
+		linear-gradient(to top right, transparent calc(50% - 1px), #fff calc(50% - 1px), #fff calc(50% + 1px), transparent calc(50% + 1px)),
+		linear-gradient(to bottom right, transparent calc(50% - 1px), #fff calc(50% - 1px), #fff calc(50% + 1px), transparent calc(50% + 1px));
+	background-size: 0.75rem 0.75rem;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .seat-legend {
