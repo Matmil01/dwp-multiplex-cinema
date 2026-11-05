@@ -152,6 +152,6 @@ class AdminMovieController
             $snackbarMessage = 'This movie has showings with bookings and can\'t be deleted.';
         }
 
-        require __DIR__ . '/../views/admin/movies.php';
+        require __DIR__ . '/../templates/admin/movies.php';
     }
 }

@@ -12,7 +12,7 @@ class ContactController
         $snackbarType = null;
         $snackbarMessage = null;
 
-        require __DIR__ . '/../views/contact.php';
+        require __DIR__ . '/../templates/contact.php';
     }
 
     // The four values were trimmed and forced to text by public/index.php.
@@ -49,6 +49,6 @@ class ContactController
             }
         }
 
-        require __DIR__ . '/../views/contact.php';
+        require __DIR__ . '/../templates/contact.php';
     }
 }

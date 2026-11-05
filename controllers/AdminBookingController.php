@@ -15,7 +15,7 @@ class AdminBookingController
             $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
         }
 
-        require __DIR__ . '/../views/admin/bookings.php';
+        require __DIR__ . '/../templates/admin/bookings.php';
     }
 
     public function cancel(int $id, int $showingId = 0): void
@@ -35,7 +35,7 @@ class AdminBookingController
             http_response_code(404);
             $title = 'Showing not found';
             $message = 'No showing has that id.';
-            require __DIR__ . '/../views/error.php';
+            require __DIR__ . '/../templates/error.php';
             return;
         }
 
@@ -63,6 +63,6 @@ class AdminBookingController
             $bookings[$seat['booking_id']]['seats'][] = $seatId;
         }
 
-        require __DIR__ . '/../views/admin/showing-seats.php';
+        require __DIR__ . '/../templates/admin/showing-seats.php';
     }
 }

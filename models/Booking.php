@@ -3,7 +3,7 @@
 // All reads/writes for bookings and their reserved seats.
 class Booking
 {
-    // A named fixed value. public, so views can print Booking::MAX_SEATS in the help text.
+    // A named fixed value. public, so templates can print Booking::MAX_SEATS in the help text.
     public const MAX_SEATS = 5;
 
     // A showing can be booked until it starts; takes any row that has show_datetime.

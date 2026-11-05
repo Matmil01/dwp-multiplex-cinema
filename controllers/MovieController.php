@@ -21,7 +21,7 @@ class MovieController
         }
 
         // Load the view. It uses $movies and $status, which exist right here.
-        require __DIR__ . '/../views/movies.php';
+        require __DIR__ . '/../templates/movies.php';
     }
 
     // $id is the number after ?id= in the address, already forced to a whole number by index.php.
@@ -36,7 +36,7 @@ class MovieController
             http_response_code(404);
             $title = 'Movie not found';
             $message = 'That movie is not in our catalog.';
-            require __DIR__ . '/../views/error.php';
+            require __DIR__ . '/../templates/error.php';
             return;
         }
 
@@ -44,6 +44,6 @@ class MovieController
         // "Book" buttons. $movie->id uses -> because Movie::find() returned an object.
         $showings = Showing::upcomingForMovie($movie->id);
 
-        require __DIR__ . '/../views/movie-details.php';
+        require __DIR__ . '/../templates/movie-details.php';
     }
 }

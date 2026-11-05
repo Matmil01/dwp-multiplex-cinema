@@ -11,7 +11,7 @@ class AccountController
         $email = '';
         $error = null;
 
-        require __DIR__ . '/../views/account/register.php';
+        require __DIR__ . '/../templates/account/register.php';
     }
 
     // POST /register. The four values were already trimmed / forced to text by public/index.php.
@@ -42,7 +42,7 @@ class AccountController
             exit;
         }
 
-        require __DIR__ . '/../views/account/register.php';
+        require __DIR__ . '/../templates/account/register.php';
     }
 
     // Pages that need a login redirect here with ?reason=, so the form can say why you were sent to it.
@@ -59,7 +59,7 @@ class AccountController
         $error = null;
         $notice = self::LOGIN_REASONS[$reason] ?? null;
 
-        require __DIR__ . '/../views/account/login.php';
+        require __DIR__ . '/../templates/account/login.php';
     }
 
     public function login(string $email, string $password): void
@@ -73,7 +73,7 @@ class AccountController
             $error = 'Too many failed attempts. Please try again in a few minutes.';
             $notice = null;
 
-            require __DIR__ . '/../views/account/login.php';
+            require __DIR__ . '/../templates/account/login.php';
             return;
         }
 
@@ -97,7 +97,7 @@ class AccountController
         $error = 'Incorrect email or password.';
         $notice = null;
 
-        require __DIR__ . '/../views/account/login.php';
+        require __DIR__ . '/../templates/account/login.php';
     }
 
     public function profile(?int $userId, array $query): void
@@ -120,7 +120,7 @@ class AccountController
             $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
         }
 
-        require __DIR__ . '/../views/account/profile.php';
+        require __DIR__ . '/../templates/account/profile.php';
     }
 
     public function cancelBooking(?int $userId, int $bookingId): void

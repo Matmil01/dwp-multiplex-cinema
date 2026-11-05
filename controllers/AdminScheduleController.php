@@ -178,7 +178,7 @@ class AdminScheduleController
         $justSaved = isset($query['saved']);
         $justDeleted = isset($query['deleted']);
 
-        require __DIR__ . '/../views/admin/schedule.php';
+        require __DIR__ . '/../templates/admin/schedule.php';
     }
 
     // Grid covers the company's opening-closing window; returns a block's left/width as % of that span.

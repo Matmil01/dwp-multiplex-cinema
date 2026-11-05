@@ -6,6 +6,6 @@ class AdminUserController
     {
         $users = User::all();
 
-        require __DIR__ . '/../views/admin/users.php';
+        require __DIR__ . '/../templates/admin/users.php';
     }
 }

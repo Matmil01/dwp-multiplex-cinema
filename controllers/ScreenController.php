@@ -31,6 +31,6 @@ class ScreenController
             ];
         }
 
-        require __DIR__ . '/../views/screens.php';
+        require __DIR__ . '/../templates/screens.php';
     }
 }

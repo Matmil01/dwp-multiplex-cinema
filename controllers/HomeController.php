@@ -37,6 +37,6 @@ class HomeController
         $laterThisWeek = Showing::laterThisWeekPreview(6);
         $latestNews = array_slice(News::all(), 0, 6);
 
-        require __DIR__ . '/../views/index.php';
+        require __DIR__ . '/../templates/index.php';
     }
 }

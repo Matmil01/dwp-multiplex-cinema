@@ -133,7 +133,7 @@ class AdminNewsController
             $snackbarMessage = 'News post deleted.';
         }
 
-        require __DIR__ . '/../views/admin/news.php';
+        require __DIR__ . '/../templates/admin/news.php';
     }
 
     // Ignores a missing file (keeps $currentPath), rejects anything that isn't actually an image

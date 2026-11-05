@@ -12,7 +12,7 @@ set_exception_handler(function (Throwable $e): void {
     http_response_code(500);
     $title = 'Something went wrong';
     $message = 'Please try again in a moment.';
-    require __DIR__ . '/../views/error.php';
+    require __DIR__ . '/../templates/error.php';
 });
 
 session_start(['cookie_samesite' => 'Lax', 'cookie_httponly' => true]);
@@ -109,7 +109,7 @@ if ($method === 'POST') {
         http_response_code(403);
         $title = 'Request blocked';
         $message = 'This form was not submitted from our own site.';
-        require __DIR__ . '/../views/error.php';
+        require __DIR__ . '/../templates/error.php';
         exit;
     }
 }
@@ -133,7 +133,7 @@ if ($handler === null) {
     http_response_code(404);
     $title = 'Page not found';
     $message = 'Nothing to see here.';
-    require __DIR__ . '/../views/error.php';
+    require __DIR__ . '/../templates/error.php';
     exit;
 }
 

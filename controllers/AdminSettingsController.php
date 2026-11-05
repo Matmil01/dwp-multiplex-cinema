@@ -9,7 +9,7 @@ class AdminSettingsController
         $company = CompanyInfo::find();
         $screens = Screen::prices();
 
-        require __DIR__ . '/../views/admin/settings.php';
+        require __DIR__ . '/../templates/admin/settings.php';
     }
 
     public function save(array $input): void
@@ -47,7 +47,7 @@ class AdminSettingsController
 
         $screens = Screen::prices();
 
-        require __DIR__ . '/../views/admin/settings.php';
+        require __DIR__ . '/../templates/admin/settings.php';
     }
 
     public function savePrices(array $input): void
@@ -78,6 +78,6 @@ class AdminSettingsController
             unset($screen);
         }
 
-        require __DIR__ . '/../views/admin/settings.php';
+        require __DIR__ . '/../templates/admin/settings.php';
     }
 }

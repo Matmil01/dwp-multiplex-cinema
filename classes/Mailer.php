@@ -10,7 +10,7 @@ class Mailer
         extract($vars);
 
         ob_start();
-        require __DIR__ . "/../views/emails/$template.php";
+        require __DIR__ . "/../templates/emails/$template.php";
 
         return ob_get_clean();
     }

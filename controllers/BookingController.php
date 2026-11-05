@@ -31,7 +31,7 @@ class BookingController
             http_response_code(403);
             $title = 'Admins can\'t book seats';
             $message = 'Log in with a customer account to make a booking.';
-            require __DIR__ . '/../views/error.php';
+            require __DIR__ . '/../templates/error.php';
             return;
         }
 
@@ -79,7 +79,7 @@ class BookingController
         // (float) = a number that can have decimals. count() = how many items in the list.
         $total = (float) $showing['ticket_price'] * count($seats);
 
-        require __DIR__ . '/../views/checkout.php';
+        require __DIR__ . '/../templates/checkout.php';
     }
 
     // Step 3: sends the user to Stripe's payment page.
@@ -200,17 +200,17 @@ class BookingController
             http_response_code(404);
             $title = 'Booking not found';
             $message = 'We could not find that booking on your account.';
-            require __DIR__ . '/../views/error.php';
+            require __DIR__ . '/../templates/error.php';
             return;
         }
 
         $total = (float) $booking['price_per_seat'] * count($booking['seats']);
 
-        require __DIR__ . '/../views/booking-success.php';
+        require __DIR__ . '/../templates/booking-success.php';
     }
 
     // The booking is already saved, so a failed email is ignored rather than shown as a booking error.
-    // The email is the "invoice": views/emails/booking-invoice.php filled with the booking's details.
+    // The email is the "invoice": templates/emails/booking-invoice.php filled with the booking's details.
     private function sendConfirmation(int $bookingId): void
     {
         $booking = Booking::find($bookingId);
@@ -234,7 +234,7 @@ class BookingController
             http_response_code(404);
             $title = 'Showing not found';
             $message = 'That showing does not exist or has already started.';
-            require __DIR__ . '/../views/error.php';
+            require __DIR__ . '/../templates/error.php';
             return null;
         }
 
@@ -247,6 +247,6 @@ class BookingController
     {
         $takenSeats = Booking::takenSeats($showing['id']);
 
-        require __DIR__ . '/../views/book.php';
+        require __DIR__ . '/../templates/book.php';
     }
 }

@@ -8,6 +8,6 @@ class AdminDashboardController
         $bookingsToday = Booking::countForToday();
         $totalUsers = count(User::all());
 
-        require __DIR__ . '/../views/admin/index.php';
+        require __DIR__ . '/../templates/admin/index.php';
     }
 }
