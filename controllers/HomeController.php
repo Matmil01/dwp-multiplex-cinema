@@ -5,10 +5,7 @@ class HomeController
     public function index(): void
     {
         // Demo helper
-        $config = require __DIR__ . '/../config/config.php';
-        if ($config['auto_schedule_enabled']) {
-            AutoSchedule::ensureBuffer();
-        }
+        AutoSchedule::ensureBuffer();
 
         $company = CompanyInfo::find();
         $todayByMovieAndFormat = [];

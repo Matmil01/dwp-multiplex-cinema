@@ -45,6 +45,9 @@ class BookingController
         // with a readable reason; we catch it and redraw the seat map with that message.
         try {
             Booking::validateSeats($showing, $seats);
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not onto this page.
+            throw $e;
         } catch (RuntimeException $e) {
             $this->renderSeatPicker($showing, $e->getMessage(), $seats);
             return;
@@ -171,6 +174,12 @@ class BookingController
             $bookingId = Booking::create($userId, $showing, $seats);
         } catch (RuntimeException $e) {
             $reason = $e->getMessage();
+
+            // A database error is logged; the customer gets a plain sentence, not the raw error text.
+            if ($e instanceof PDOException) {
+                error_log($e);
+                $reason = 'Your booking could not be saved.';
+            }
 
             // Money was taken but no booking could be made: give it back automatically.
             if ($paymentIntent !== null) {

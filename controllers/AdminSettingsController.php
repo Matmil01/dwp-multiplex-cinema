@@ -36,21 +36,18 @@ class AdminSettingsController
             throw new RuntimeException('Closing time must be after opening time.');
         }
 
-        // Limits follow the column sizes in schema.sql.
-        if (mb_strlen(trim($input['street'] ?? '')) > 30) {
-            throw new RuntimeException('Street is too long (max 30 characters).');
-        }
-        if (mb_strlen(trim($input['house_number'] ?? '')) > 10) {
-            throw new RuntimeException('House number is too long (max 10 characters).');
-        }
-        if (mb_strlen(trim($input['postal_code'] ?? '')) > 10) {
-            throw new RuntimeException('Postal code is too long (max 10 characters).');
-        }
-        if (mb_strlen(trim($input['city'] ?? '')) > 20) {
-            throw new RuntimeException('City is too long (max 20 characters).');
-        }
-        if (mb_strlen(trim($input['country'] ?? '')) > 20) {
-            throw new RuntimeException('Country is too long (max 20 characters).');
+        // Each entry: form field, its name in the error message, max length.
+        $addressFields = [
+            ['street', 'Street', 30],
+            ['house_number', 'House number', 10],
+            ['postal_code', 'Postal code', 10],
+            ['city', 'City', 20],
+            ['country', 'Country', 20],
+        ];
+        foreach ($addressFields as [$field, $label, $max]) {
+            if (mb_strlen(trim($input[$field] ?? '')) > $max) {
+                throw new RuntimeException("$label is too long (max $max characters).");
+            }
         }
 
         $phone = trim($input['phone'] ?? '');
@@ -61,8 +58,6 @@ class AdminSettingsController
 
     public function save(array $input): void
     {
-        // Anything that isn't text (e.g. tagline[]=x) would crash trim(); treat it as empty.
-        $input = array_map(fn($value) => is_string($value) ? $value : '', $input);
         $saveError = null;
         $saved = false;
 
@@ -82,7 +77,10 @@ class AdminSettingsController
                 'phone' => trim($input['phone'] ?? ''),
             ]);
             $saved = true;
-        } catch (Throwable $e) {
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not onto this page.
+            throw $e;
+        } catch (RuntimeException $e) {
             $saveError = $e->getMessage();
         }
 
@@ -117,6 +115,9 @@ class AdminSettingsController
         try {
             Screen::savePrices($prices);
             $saved = true;
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not onto this page.
+            throw $e;
         } catch (RuntimeException $e) {
             $saveError = $e->getMessage();
         }

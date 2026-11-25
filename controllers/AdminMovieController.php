@@ -89,9 +89,6 @@ class AdminMovieController
 
     public function save(array $input, array $query): void
     {
-        // Anything that isn't text (e.g. title[]=x) would crash trim(); treat it as empty.
-        $input = array_map(fn($value) => is_string($value) ? $value : '', $input);
-
         try {
             $this->validate($input);
 
@@ -114,7 +111,10 @@ class AdminMovieController
             // urlencode() makes the title safe to put in an address (spaces -> %20 etc.).
             header('Location: /admin/movies?saved=' . urlencode(trim($input['title'] ?? '')));
             exit;
-        } catch (Throwable $e) {
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not onto this page.
+            throw $e;
+        } catch (RuntimeException $e) {
             // Movie::save() threw (e.g. "runtime would make showings overlap"): keep its message.
             $saveError = $e->getMessage();
         }

@@ -7,10 +7,7 @@ class AdminScheduleController
     // public/index.php, which happens before any of the functions below is called.)
     public function __construct()
     {
-        $config = require __DIR__ . '/../config/config.php';
-        if ($config['auto_schedule_enabled']) {
-            AutoSchedule::ensureBuffer();
-        }
+        AutoSchedule::ensureBuffer();
     }
 
     public function index(string $date, array $query): void
@@ -26,12 +23,26 @@ class AdminScheduleController
         return $parsed && $parsed->format('Y-m-d') === $date ? $date : date('Y-m-d');
     }
 
+    // Same rule Settings enforces from the other side: a showing starts at/after opening and before closing.
+    // $time is "HH:MM"; the database gives "10:00:00", so substr(..., 0, 5) cuts it down to "10:00".
+    private function withinOpeningHours(string $time): bool
+    {
+        $company = CompanyInfo::find();
+
+        // Same-length HH:MM strings compare correctly as text.
+        return $time >= substr($company['opening_time'], 0, 5) && $time < substr($company['closing_time'], 0, 5);
+    }
+
     // Throws unless $input describes a showing the drag-and-drop endpoints can save.
     private function validateGridInput(array $input): void
     {
         $parsed = DateTime::createFromFormat('Y-m-d H:i:s', $input['show_datetime'] ?? '');
         if (!$parsed || $parsed->format('Y-m-d H:i:s') !== $input['show_datetime']) {
             throw new RuntimeException('Invalid showing time.');
+        }
+        // Characters 11-15 of "2026-10-31 20:05:00" are the "20:05" part.
+        if (!$this->withinOpeningHours(substr($input['show_datetime'], 11, 5))) {
+            throw new RuntimeException('Showings must start within opening hours.');
         }
         if ((int) ($input['movie_id'] ?? 0) === 0 || (int) ($input['screen_id'] ?? 0) === 0) {
             throw new RuntimeException('Invalid movie or screen.');
@@ -41,8 +52,6 @@ class AdminScheduleController
     public function handlePost(string $date, array $post, array $query): void
     {
         $date = $this->validDate($date);
-        // Anything that isn't text (e.g. show_time[]=x) would break string handling; treat it as empty.
-        $post = array_map(fn($value) => is_string($value) ? $value : '', $post);
         $action = $post['action'] ?? '';
 
         if ($action === 'save') {
@@ -69,6 +78,8 @@ class AdminScheduleController
             $saveError = 'Pick a screen.';
         } elseif (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $input['show_time'] ?? '')) {
             $saveError = 'Pick a valid showing time.';
+        } elseif (!$this->withinOpeningHours($input['show_time'])) {
+            $saveError = 'Showings must start within opening hours.';
         } else {
             try {
                 // The form only has a time ("20:00"); glue the page's date in front to make the
@@ -81,7 +92,10 @@ class AdminScheduleController
                 ]);
                 header('Location: /admin/schedule?date=' . urlencode($date) . '&saved=1');
                 exit;
-            } catch (Throwable $e) {
+            } catch (PDOException $e) {
+                // Database errors go to the log and the generic error page, not onto this page.
+                throw $e;
+            } catch (RuntimeException $e) {
                 $saveError = $e->getMessage();
             }
         }
@@ -102,6 +116,9 @@ class AdminScheduleController
     {
         try {
             Showing::delete($id);
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not onto this page.
+            throw $e;
         } catch (RuntimeException $e) {
             $this->showPage($date, $e->getMessage(), null, []);
             return;
@@ -132,7 +149,10 @@ class AdminScheduleController
                 'show_datetime' => $input['show_datetime'] ?? '',
             ]);
             echo json_encode(['ok' => true]);
-        } catch (Throwable $e) {
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not into the alert.
+            throw $e;
+        } catch (RuntimeException $e) {
             http_response_code(422);
             echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
         }
@@ -152,7 +172,10 @@ class AdminScheduleController
                 'show_datetime' => $input['show_datetime'] ?? '',
             ]);
             echo json_encode(['ok' => true, 'id' => $newId]);
-        } catch (Throwable $e) {
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not into the alert.
+            throw $e;
+        } catch (RuntimeException $e) {
             http_response_code(422);
             echo json_encode(['ok' => false, 'error' => $e->getMessage()]);
         }

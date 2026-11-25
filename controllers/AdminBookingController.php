@@ -5,15 +5,7 @@ class AdminBookingController
     public function index(array $query): void
     {
         $bookings = Booking::all();
-
-        // cancel() redirects back here with a flag in the address; turn it into a snackbar.
-        if (isset($query['cancelled'])) {
-            $snackbarType = 'success';
-            $snackbarMessage = 'Booking cancelled.';
-        } elseif (isset($query['cancel_failed'])) {
-            $snackbarType = 'error';
-            $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
-        }
+        [$snackbarType, $snackbarMessage] = $this->cancelSnackbar($query);
 
         require __DIR__ . '/../templates/admin/bookings.php';
     }
@@ -39,13 +31,7 @@ class AdminBookingController
             return;
         }
 
-        if (isset($query['cancelled'])) {
-            $snackbarType = 'success';
-            $snackbarMessage = 'Booking cancelled.';
-        } elseif (isset($query['cancel_failed'])) {
-            $snackbarType = 'error';
-            $snackbarMessage = 'That booking could not be cancelled. It may have already started.';
-        }
+        [$snackbarType, $snackbarMessage] = $this->cancelSnackbar($query);
 
         $seatOwners = [];
         $bookings = [];
@@ -64,5 +50,19 @@ class AdminBookingController
         }
 
         require __DIR__ . '/../templates/admin/showing-seats.php';
+    }
+
+    // cancel() redirects back with a flag in the address; this turns it into the snackbar's [type, message].
+    private function cancelSnackbar(array $query): array
+    {
+        if (isset($query['cancelled'])) {
+            return ['success', 'Booking cancelled.'];
+        }
+        if (isset($query['cancel_failed'])) {
+            return ['error', 'That booking could not be cancelled. It may have already started.'];
+        }
+
+        // No flag: no snackbar.
+        return [null, null];
     }
 }

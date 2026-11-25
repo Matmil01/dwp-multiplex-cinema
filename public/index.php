@@ -36,6 +36,14 @@ function csrfField(): string
     return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES) . '">';
 }
 
+// The logged-in user's id, or null if nobody is logged in. Reads as: "is there a user_id in the
+// session? if yes use it as a number, if no use null". The routes below pass it to the pages that need it.
+$userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+
+// The submitted form with every field as plain text: anything that isn't text (e.g. title[]=x)
+// becomes '', so trim() and similar can't crash in the admin controllers that receive it.
+$textPost = array_map(fn($value) => is_string($value) ? $value : '', $_POST);
+
 $routes = [
     'GET /'             => fn() => (new HomeController())->index(),
     'GET /movies'       => fn() => (new MovieController())->index((string) ($_GET['status'] ?? '')),
@@ -52,27 +60,18 @@ $routes = [
         trim((string) ($_POST['subject'] ?? '')),
         trim((string) ($_POST['message'] ?? ''))
     ),
-    // Booking pages receive the logged-in user's id, or null if nobody is logged in.
-    // `isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null` reads as:
-    // "is there a user_id in the session? if yes use it as a number, if no use null".
-    'GET /book'         => fn() => (new BookingController())->showSeats(
-        (int) ($_GET['showing'] ?? 0),
-        isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null
-    ),
+    'GET /book'         => fn() => (new BookingController())->showSeats((int) ($_GET['showing'] ?? 0), $userId),
     'POST /book'        => fn() => (new BookingController())->book(
         (int) ($_POST['showing_id'] ?? 0),
-        isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null,
+        $userId,
         // The seat picker sends a list of seat labels. (array) makes sure it IS a list, and
         // array_filter(..., 'is_string') throws out anything in it that isn't plain text.
         array_filter((array) ($_POST['seats'] ?? []), 'is_string')
     ),
-    'GET /checkout'     => fn() => (new BookingController())->checkout(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
-    'POST /checkout'    => fn() => (new BookingController())->confirm(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
-    'GET /checkout/success' => fn() => (new BookingController())->complete(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null),
-    'GET /booking/success' => fn() => (new BookingController())->success(
-        (int) ($_GET['booking'] ?? 0),
-        isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null
-    ),
+    'GET /checkout'     => fn() => (new BookingController())->checkout($userId),
+    'POST /checkout'    => fn() => (new BookingController())->confirm($userId),
+    'GET /checkout/success' => fn() => (new BookingController())->complete($userId),
+    'GET /booking/success' => fn() => (new BookingController())->success((int) ($_GET['booking'] ?? 0), $userId),
 
     'GET /login'        => fn() => (new AccountController())->showLoginForm((string) ($_GET['reason'] ?? '')),
     'POST /login'       => fn() => (new AccountController())->login(trim((string) ($_POST['email'] ?? '')), (string) ($_POST['password'] ?? '')),
@@ -83,12 +82,9 @@ $routes = [
         (string) ($_POST['password'] ?? ''),
         (string) ($_POST['password_confirm'] ?? '')
     ),
-    'GET /profile'      => fn() => (new AccountController())->profile(isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null, $_GET),
+    'GET /profile'      => fn() => (new AccountController())->profile($userId, $_GET),
     'POST /logout'      => fn() => (new AccountController())->logout(),
-    'POST /profile/cancel' => fn() => (new AccountController())->cancelBooking(
-        isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null,
-        (int) ($_POST['booking_id'] ?? 0)
-    ),
+    'POST /profile/cancel' => fn() => (new AccountController())->cancelBooking($userId, (int) ($_POST['booking_id'] ?? 0)),
 
     // Admin pages. The whole $_GET / $_POST array is passed where a page has many optional
     // parameters (filters, edit ids, snackbar messages); the controller picks out what it needs.
@@ -99,13 +95,14 @@ $routes = [
     'GET /admin/users'     => fn() => (new AdminUserController())->index(),
     'POST /admin/bookings/cancel' => fn() => (new AdminBookingController())->cancel((int) ($_POST['booking_id'] ?? 0), (int) ($_POST['showing_id'] ?? 0)),
     'GET /admin/movies'    => fn() => (new AdminMovieController())->index($_GET),
-    'POST /admin/movies'   => fn() => (new AdminMovieController())->handlePost($_POST, $_GET),
+    'POST /admin/movies'   => fn() => (new AdminMovieController())->handlePost($textPost, $_GET),
     'GET /admin/news'      => fn() => (new AdminNewsController())->index($_GET),
-    'POST /admin/news'     => fn() => (new AdminNewsController())->handlePost($_POST, $_FILES, $_GET),
+    'POST /admin/news'     => fn() => (new AdminNewsController())->handlePost($textPost, $_FILES, $_GET),
     'GET /admin/schedule'  => fn() => (new AdminScheduleController())->index((string) ($_GET['date'] ?? date('Y-m-d')), $_GET),
-    'POST /admin/schedule' => fn() => (new AdminScheduleController())->handlePost((string) ($_GET['date'] ?? date('Y-m-d')), $_POST, $_GET),
+    'POST /admin/schedule' => fn() => (new AdminScheduleController())->handlePost((string) ($_GET['date'] ?? date('Y-m-d')), $textPost, $_GET),
     'GET /admin/settings'  => fn() => (new AdminSettingsController())->showForm(),
-    'POST /admin/settings' => fn() => (new AdminSettingsController())->save($_POST),
+    'POST /admin/settings' => fn() => (new AdminSettingsController())->save($textPost),
+    // The prices form sends a list (prices[screen id]), so it gets the raw $_POST.
     'POST /admin/settings/prices' => fn() => (new AdminSettingsController())->savePrices($_POST),
 ];
 
@@ -139,6 +136,12 @@ if ($method === 'POST') {
 // trailing slash, and treat an empty result as the front page "/".
 $path = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
 
+// The role is re-read from the database on every request, so changing someone's role there
+// takes effect at once instead of at their next login. `?? ''` covers an account that no longer exists.
+if ($userId !== null) {
+    $_SESSION['role'] = User::find($userId)['role'] ?? '';
+}
+
 // Gatekeeper for the admin area: any address starting with /admin needs role = admin in the
 // session. Anyone else is sent to the login page. One check here covers every admin page,
 // so no individual admin controller can forget it.
@@ -165,29 +168,8 @@ $rateLimits = [
     'POST /login'    => ['login', 20, 900],
 ];
 
-// Refuses once this IP has made $max attempts at $action within the window; otherwise records this attempt.
-// Refused attempts are not recorded, so the table stays small and the block ends when old attempts age out.
-function withinRateLimit(string $action, int $max, int $windowSeconds): bool
-{
-    $db = Db::connection();
-    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
-    $since = date('Y-m-d H:i:s', time() - $windowSeconds);
-
-    $stmt = $db->prepare('SELECT COUNT(*) FROM rate_limits WHERE action = ? AND ip = ? AND attempted_at > ?');
-    $stmt->execute([$action, $ip, $since]);
-
-    if ((int) $stmt->fetchColumn() >= $max) {
-        return false;
-    }
-
-    $db->prepare('INSERT INTO rate_limits (ip, action) VALUES (?, ?)')->execute([$ip, $action]);
-    // Housekeeping: nothing older than a day is ever needed.
-    $db->prepare('DELETE FROM rate_limits WHERE attempted_at < ?')->execute([date('Y-m-d H:i:s', time() - 86400)]);
-
-    return true;
-}
-
-if (isset($rateLimits["$method $path"]) && !withinRateLimit(...$rateLimits["$method $path"])) {
+// The counting itself is in classes/RateLimit.php. `...` unpacks the three values as its three arguments.
+if (isset($rateLimits["$method $path"]) && !RateLimit::allows(...$rateLimits["$method $path"])) {
     http_response_code(429);
     $title = 'Too many requests';
     $message = 'Please wait a while and try again.';

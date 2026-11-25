@@ -59,8 +59,6 @@ class AdminNewsController
 
     public function save(array $input, array $files): void
     {
-        // Anything that isn't text (e.g. title[]=x) would crash trim(); treat it as empty.
-        $input = array_map(fn($value) => is_string($value) ? $value : '', $input);
         $postId = null;
         $currentImagePath = '';
 
@@ -93,7 +91,10 @@ class AdminNewsController
             }
             header('Location: /admin/news?saved=' . urlencode(trim($input['title'] ?? '')));
             exit;
-        } catch (Throwable $e) {
+        } catch (PDOException $e) {
+            // Database errors go to the log and the generic error page, not onto this page.
+            throw $e;
+        } catch (RuntimeException $e) {
             $saveError = $e->getMessage();
         }
 

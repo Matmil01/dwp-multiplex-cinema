@@ -7,6 +7,11 @@ class AutoSchedule
 
     public static function ensureBuffer(): void
     {
+        // Switched on/off with auto_schedule_enabled in the config file; when off, nothing happens.
+        if (!(require __DIR__ . '/../config/config.php')['auto_schedule_enabled']) {
+            return;
+        }
+
         $db = Db::connection();
         $threshold = (new DateTime())->modify('+' . self::BUFFER_DAYS . ' days');
 
