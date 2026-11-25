@@ -1,5 +1,8 @@
 RewriteEngine On
 
+# Folders without an index file give a 403 instead of a list of their files (e.g. uploads/).
+Options -Indexes
+
 # Ignored if the host has no mod_headers. frame-ancestors/X-Frame-Options stop other sites from framing pages (clickjacking).
 <IfModule mod_headers.c>
     Header always set X-Frame-Options "DENY"

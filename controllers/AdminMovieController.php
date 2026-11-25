@@ -35,9 +35,66 @@ class AdminMovieController
         }
     }
 
+    // Throws a RuntimeException with a readable reason for the first rule the input breaks.
+    private function validate(array $input): void
+    {
+        $title = trim($input['title'] ?? '');
+        if ($title === '' || mb_strlen($title) > 100) {
+            throw new RuntimeException('Title is required (max 100 characters).');
+        }
+
+        $year = trim($input['release_year'] ?? '');
+        if (!ctype_digit($year) || (int) $year < 1888 || (int) $year > 2100) {
+            throw new RuntimeException('Release year must be between 1888 and 2100.');
+        }
+
+        // Blank runtime is allowed; a movie without one just can't be scheduled yet.
+        $duration = trim($input['duration_minutes'] ?? '');
+        if ($duration !== '' && (!ctype_digit($duration) || (int) $duration < 1 || (int) $duration > 1000)) {
+            throw new RuntimeException('Runtime must be a whole number of minutes between 1 and 1000.');
+        }
+
+        foreach (['id', 'tmdb_id'] as $field) {
+            $value = trim($input[$field] ?? '');
+            if ($value !== '' && !ctype_digit($value)) {
+                throw new RuntimeException('Invalid movie id.');
+            }
+        }
+
+        $poster = trim($input['poster_url'] ?? '');
+        $posterScheme = strtolower((string) parse_url($poster, PHP_URL_SCHEME));
+        if ($poster !== '' && (mb_strlen($poster) > 150 || !filter_var($poster, FILTER_VALIDATE_URL) || !in_array($posterScheme, ['http', 'https'], true))) {
+            throw new RuntimeException('Poster must be a web address (max 150 characters).');
+        }
+
+        if (mb_strlen($input['description'] ?? '') > 5000) {
+            throw new RuntimeException('Description is too long (max 5000 characters).');
+        }
+
+        // Limits follow the column sizes in schema.sql (genres.name 20, people.name 100).
+        $lists = [
+            ['Genre', $input['genres'] ?? '', 20],
+            ['Director', $input['director'] ?? '', 100],
+            ['Writer', $input['writers'] ?? '', 100],
+            ['Cast member', $input['cast'] ?? '', 100],
+        ];
+        foreach ($lists as [$label, $value, $max]) {
+            foreach (explode(',', $value) as $name) {
+                if (mb_strlen(trim($name)) > $max) {
+                    throw new RuntimeException("$label names can be at most $max characters.");
+                }
+            }
+        }
+    }
+
     public function save(array $input, array $query): void
     {
+        // Anything that isn't text (e.g. title[]=x) would crash trim(); treat it as empty.
+        $input = array_map(fn($value) => is_string($value) ? $value : '', $input);
+
         try {
+            $this->validate($input);
+
             // Clean each form field before handing it to the model. Pattern used on each line:
             // `($input['x'] ?? '') !== '' ? (int) $input['x'] : null` = "if the field was filled
             // in, make it a number; if left blank, store NULL". Blank text fields are trimmed.

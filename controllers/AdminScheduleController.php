@@ -15,11 +15,34 @@ class AdminScheduleController
 
     public function index(string $date, array $query): void
     {
-        $this->showPage($date, null, null, $query);
+        $this->showPage($this->validDate($date), null, null, $query);
+    }
+
+    // The date comes from the address bar; anything that isn't a real Y-m-d date falls back to today.
+    private function validDate(string $date): string
+    {
+        $parsed = DateTime::createFromFormat('Y-m-d', $date);
+
+        return $parsed && $parsed->format('Y-m-d') === $date ? $date : date('Y-m-d');
+    }
+
+    // Throws unless $input describes a showing the drag-and-drop endpoints can save.
+    private function validateGridInput(array $input): void
+    {
+        $parsed = DateTime::createFromFormat('Y-m-d H:i:s', $input['show_datetime'] ?? '');
+        if (!$parsed || $parsed->format('Y-m-d H:i:s') !== $input['show_datetime']) {
+            throw new RuntimeException('Invalid showing time.');
+        }
+        if ((int) ($input['movie_id'] ?? 0) === 0 || (int) ($input['screen_id'] ?? 0) === 0) {
+            throw new RuntimeException('Invalid movie or screen.');
+        }
     }
 
     public function handlePost(string $date, array $post, array $query): void
     {
+        $date = $this->validDate($date);
+        // Anything that isn't text (e.g. show_time[]=x) would break string handling; treat it as empty.
+        $post = array_map(fn($value) => is_string($value) ? $value : '', $post);
         $action = $post['action'] ?? '';
 
         if ($action === 'save') {
@@ -42,6 +65,10 @@ class AdminScheduleController
 
         if ((int) ($input['movie_id'] ?? 0) === 0) {
             $saveError = 'Pick a movie from the search results before saving.';
+        } elseif ((int) ($input['screen_id'] ?? 0) === 0) {
+            $saveError = 'Pick a screen.';
+        } elseif (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $input['show_time'] ?? '')) {
+            $saveError = 'Pick a valid showing time.';
         } else {
             try {
                 // The form only has a time ("20:00"); glue the page's date in front to make the
@@ -93,6 +120,11 @@ class AdminScheduleController
     {
         header('Content-Type: application/json');
         try {
+            $this->validateGridInput($input);
+            // id 0 would make Showing::save() insert a new showing instead of moving one.
+            if ((int) ($input['id'] ?? 0) === 0) {
+                throw new RuntimeException('Invalid showing.');
+            }
             Showing::save([
                 'id' => (int) ($input['id'] ?? 0),
                 'movie_id' => (int) ($input['movie_id'] ?? 0),
@@ -112,6 +144,7 @@ class AdminScheduleController
     {
         header('Content-Type: application/json');
         try {
+            $this->validateGridInput($input);
             $newId = Showing::save([
                 'id' => null,
                 'movie_id' => (int) ($input['movie_id'] ?? 0),

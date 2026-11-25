@@ -33,12 +33,40 @@ class AdminNewsController
         }
     }
 
+    // Throws a RuntimeException with a readable reason for the first rule the input breaks.
+    private function validate(array $input): void
+    {
+        $title = trim($input['title'] ?? '');
+        if ($title === '' || mb_strlen($title) > 100) {
+            throw new RuntimeException('Title is required (max 100 characters).');
+        }
+
+        $body = trim($input['body'] ?? '');
+        if ($body === '' || mb_strlen($body) > 20000) {
+            throw new RuntimeException('Text is required (max 20000 characters).');
+        }
+
+        // createFromFormat accepts 2026-02-31 and rolls it over, so compare the formatted result back.
+        $date = DateTime::createFromFormat('Y-m-d', $input['published_at'] ?? '');
+        if (!$date || $date->format('Y-m-d') !== $input['published_at']) {
+            throw new RuntimeException('Publish date must be a valid date.');
+        }
+
+        if (($input['id'] ?? '') !== '' && !ctype_digit($input['id'])) {
+            throw new RuntimeException('Invalid news id.');
+        }
+    }
+
     public function save(array $input, array $files): void
     {
+        // Anything that isn't text (e.g. title[]=x) would crash trim(); treat it as empty.
+        $input = array_map(fn($value) => is_string($value) ? $value : '', $input);
         $postId = null;
         $currentImagePath = '';
 
         try {
+            $this->validate($input);
+
             // Read the old image path from the saved article, not from a form field that can be changed.
             $postId = ($input['id'] ?? '') !== '' ? (int) $input['id'] : null;
             $existing = $postId !== null ? News::findForAdmin($postId) : null;
