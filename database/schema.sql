@@ -91,11 +91,11 @@ CREATE TABLE company_info (
    description TEXT,
    opening_time TIME NOT NULL,
    closing_time TIME NOT NULL,
-   street VARCHAR(100),
+   street VARCHAR(30),
    house_number VARCHAR(10),
    postal_code VARCHAR(10),
-   city VARCHAR(50),
-   country VARCHAR(50),
+   city VARCHAR(20),
+   country VARCHAR(20),
    phone VARCHAR(30),
    CHECK (opening_time < closing_time)
 );

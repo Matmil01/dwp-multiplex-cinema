@@ -52,7 +52,7 @@ require __DIR__ . '/../../components/screen-format.php';
                 </div>
                 <div class="form-field">
                     <label for="street" class="form-label">Street</label>
-                    <input type="text" id="street" name="street" maxlength="100" value="<?= htmlspecialchars($company['street'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                    <input type="text" id="street" name="street" maxlength="30" value="<?= htmlspecialchars($company['street'] ?? '', ENT_QUOTES) ?>" class="form-input">
                 </div>
                 <div class="form-field">
                     <label for="house_number" class="form-label">House Number</label>
@@ -64,11 +64,11 @@ require __DIR__ . '/../../components/screen-format.php';
                 </div>
                 <div class="form-field">
                     <label for="city" class="form-label">City</label>
-                    <input type="text" id="city" name="city" maxlength="50" value="<?= htmlspecialchars($company['city'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                    <input type="text" id="city" name="city" maxlength="20" value="<?= htmlspecialchars($company['city'] ?? '', ENT_QUOTES) ?>" class="form-input">
                 </div>
                 <div class="form-field">
                     <label for="country" class="form-label">Country</label>
-                    <input type="text" id="country" name="country" maxlength="50" value="<?= htmlspecialchars($company['country'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                    <input type="text" id="country" name="country" maxlength="20" value="<?= htmlspecialchars($company['country'] ?? '', ENT_QUOTES) ?>" class="form-input">
                 </div>
                 <div class="form-field">
                     <label for="phone" class="form-label">Phone</label>

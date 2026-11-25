@@ -37,8 +37,8 @@ class AdminSettingsController
         }
 
         // Limits follow the column sizes in schema.sql.
-        if (mb_strlen(trim($input['street'] ?? '')) > 100) {
-            throw new RuntimeException('Street is too long (max 100 characters).');
+        if (mb_strlen(trim($input['street'] ?? '')) > 30) {
+            throw new RuntimeException('Street is too long (max 30 characters).');
         }
         if (mb_strlen(trim($input['house_number'] ?? '')) > 10) {
             throw new RuntimeException('House number is too long (max 10 characters).');
@@ -46,11 +46,11 @@ class AdminSettingsController
         if (mb_strlen(trim($input['postal_code'] ?? '')) > 10) {
             throw new RuntimeException('Postal code is too long (max 10 characters).');
         }
-        if (mb_strlen(trim($input['city'] ?? '')) > 50) {
-            throw new RuntimeException('City is too long (max 50 characters).');
+        if (mb_strlen(trim($input['city'] ?? '')) > 20) {
+            throw new RuntimeException('City is too long (max 20 characters).');
         }
-        if (mb_strlen(trim($input['country'] ?? '')) > 50) {
-            throw new RuntimeException('Country is too long (max 50 characters).');
+        if (mb_strlen(trim($input['country'] ?? '')) > 20) {
+            throw new RuntimeException('Country is too long (max 20 characters).');
         }
 
         $phone = trim($input['phone'] ?? '');
