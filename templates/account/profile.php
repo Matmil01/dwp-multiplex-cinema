@@ -39,6 +39,7 @@ require __DIR__ . '/../../components/screen-format.php';
                             <p class="booking-card__details"><?= htmlspecialchars(date('M j, Y, H:i', strtotime($booking['show_datetime'])), ENT_QUOTES) ?> &middot; <?= htmlspecialchars(formatBadgeLabel($booking['screen_type']), ENT_QUOTES) ?> &middot; <?= (int) $booking['seat_count'] ?> <?= (int) $booking['seat_count'] === 1 ? 'seat' : 'seats' ?></p>
                             <?php if (Booking::canCancel($booking)): ?>
                                 <form method="post" action="/profile/cancel" data-confirm="Cancel this booking?" data-confirm-label="Cancel booking">
+                                    <?= csrfField() ?>
                                     <input type="hidden" name="booking_id" value="<?= (int) $booking['id'] ?>">
                                     <button type="submit" class="danger-button">Cancel booking</button>
                                 </form>

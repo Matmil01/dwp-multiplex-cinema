@@ -93,6 +93,7 @@ require __DIR__ . '/../../components/screen-format.php';
                 </div>
 
                 <form method="post" class="schedule-form">
+                    <?= csrfField() ?>
                     <input type="hidden" name="action" value="save">
                     <input type="hidden" name="id" value="<?= htmlspecialchars((string) ($editor['id'] ?? ''), ENT_QUOTES) ?>">
                     <input type="hidden" name="movie_id" id="movieId" value="<?= htmlspecialchars((string) ($editor['movie_id'] ?? ''), ENT_QUOTES) ?>">
@@ -125,6 +126,7 @@ require __DIR__ . '/../../components/screen-format.php';
 
                 <?php if (!empty($editor['id'])): ?>
                     <form method="post" data-confirm="Delete this showing?" data-confirm-label="Delete">
+                        <?= csrfField() ?>
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="id" value="<?= (int) $editor['id'] ?>">
                         <button type="submit" class="danger-button">Delete this showing</button>

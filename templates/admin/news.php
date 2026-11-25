@@ -24,6 +24,7 @@
                 <div>
                     <h3 class="admin-subheading">Add / Edit</h3>
                     <form method="post" enctype="multipart/form-data" class="movie-editor">
+                        <?= csrfField() ?>
                         <input type="hidden" name="action" value="save">
                         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $editor['id'], ENT_QUOTES) ?>">
 
@@ -72,6 +73,7 @@
                                 <div class="admin-list-item__actions">
                                     <a href="?edit_id=<?= (int) $post['id'] ?>" class="inline-link">Edit</a>
                                     <form method="post" data-confirm="Delete this news post?" data-confirm-label="Delete">
+                                        <?= csrfField() ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $post['id'] ?>">
                                         <button type="submit" class="danger-button">Delete</button>

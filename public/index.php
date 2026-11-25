@@ -24,6 +24,18 @@ session_start([
 ]);
 require __DIR__ . '/../config/autoload.php';
 
+// One secret per visitor session. Every POST form carries it back (see csrfField()); another
+// site can't read it, so it can't forge a valid form submission.
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Hidden input that templates place inside every <form method="post">.
+function csrfField(): string
+{
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES) . '">';
+}
+
 $routes = [
     'GET /'             => fn() => (new HomeController())->index(),
     'GET /movies'       => fn() => (new MovieController())->index((string) ($_GET['status'] ?? '')),
@@ -110,11 +122,14 @@ if ($method === 'POST') {
     $source = parse_url($_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '') ?: [];
     $sourceHost = strtolower(($source['host'] ?? '') . (isset($source['port']) ? ':' . $source['port'] : ''));
 
-    // No origin at all, or an origin that isn't us: refuse with 403 ("forbidden").
-    if ($sourceHost === '' || $sourceHost !== strtolower($_SERVER['HTTP_HOST'] ?? '')) {
+    // Second layer: the submission must also carry this session's secret token. (string) guards against array input.
+    $tokenValid = hash_equals($_SESSION['csrf_token'], (string) ($_POST['csrf_token'] ?? ''));
+
+    // No origin at all, an origin that isn't us, or a missing/wrong token: refuse with 403 ("forbidden").
+    if ($sourceHost === '' || $sourceHost !== strtolower($_SERVER['HTTP_HOST'] ?? '') || !$tokenValid) {
         http_response_code(403);
         $title = 'Request blocked';
-        $message = 'This form was not submitted from our own site.';
+        $message = 'This form was not submitted from our own site, or the page has expired. Reload the page and try again.';
         require __DIR__ . '/../templates/error.php';
         exit;
     }

@@ -27,6 +27,7 @@ $whenLabel = showingDayLabel($showing['show_datetime']) . ', ' . date('H:i', str
             <h2 class="section-title section-title--primary">Review Your Booking</h2>
 
             <form method="post" action="/checkout" class="booking-summary booking-summary--standalone">
+                <?= csrfField() ?>
                 <h3 class="booking-summary__title"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?></h3>
                 <p class="booking-summary__showing"><?= htmlspecialchars($whenLabel, ENT_QUOTES) ?><br><?= htmlspecialchars($screenName, ENT_QUOTES) ?></p>
                 <ul class="booking-summary__seats">

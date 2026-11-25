@@ -11,6 +11,7 @@
     </div>
     <div class="admin-nav__links admin-nav__account-links">
         <form method="post" action="/logout">
+            <?= csrfField() ?>
             <button type="submit" class="logout-button">Log out</button>
         </form>
     </div>

@@ -28,6 +28,7 @@ $whenLabel = showingDayLabel($showing['show_datetime']) . ', ' . date('H:i', str
             <p class="muted-text"><?= htmlspecialchars($showing['movie_title'], ENT_QUOTES) ?> &middot; <?= htmlspecialchars($whenLabel, ENT_QUOTES) ?> &middot; <?= htmlspecialchars($screenName, ENT_QUOTES) ?></p>
 
             <form method="post" action="/book" data-price="<?= (float) $showing['ticket_price'] ?>">
+            <?= csrfField() ?>
             <input type="hidden" name="showing_id" value="<?= (int) $showing['id'] ?>">
             <div class="seating">
                 <div class="seat-map">

@@ -1,4 +1,6 @@
 function initScheduleDrag(gridDate, openingHour, spanMinutes) {
+    // The page's save form already carries the CSRF token; the fetch calls below send it too.
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
     const SPAN_MINUTES = spanMinutes;
     const SNAP_MINUTES = 5;
     const MAGNET_MINUTES = 10; // snap flush against a neighbor's edge when within this many minutes
@@ -132,6 +134,7 @@ function initScheduleDrag(gridDate, openingHour, spanMinutes) {
             // form submission uses, so PHP reads it from $_POST exactly like a form.
             const body = new URLSearchParams({
                 action: 'duplicate',
+                csrf_token: csrfToken,
                 movie_id: block.dataset.movieId,
                 screen_id: timeline.dataset.screenId,
                 show_datetime: minutesToDatetime(minutes),
@@ -224,6 +227,7 @@ function initScheduleDrag(gridDate, openingHour, spanMinutes) {
         // Valid new time: tell the server (see file header for how this round-trip works).
         const body = new URLSearchParams({
             action: 'move',
+            csrf_token: csrfToken,
             id: block.dataset.id,
             movie_id: block.dataset.movieId,
             screen_id: timeline.dataset.screenId,

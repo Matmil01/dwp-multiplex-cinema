@@ -17,6 +17,7 @@
         <section>
             <h2 class="section-title">Log In</h2>
             <form method="post" class="form-stack account-form">
+                <?= csrfField() ?>
                 <?php if ($notice): ?>
                     <p class="form-notice"><?= htmlspecialchars($notice, ENT_QUOTES) ?></p>
                 <?php endif; ?>

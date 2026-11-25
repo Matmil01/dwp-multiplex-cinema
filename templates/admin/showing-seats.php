@@ -78,6 +78,7 @@ require __DIR__ . '/../../components/screen-format.php';
                                 <td>
                                     <?php if (Booking::isOpen($showing)): ?>
                                         <form method="post" action="/admin/bookings/cancel" data-confirm="Cancel this booking?" data-confirm-label="Cancel booking">
+                                            <?= csrfField() ?>
                                             <input type="hidden" name="booking_id" value="<?= (int) $booking['id'] ?>">
                                             <input type="hidden" name="showing_id" value="<?= (int) $showing['id'] ?>">
                                             <button type="submit" class="danger-button">Cancel</button>

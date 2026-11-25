@@ -17,6 +17,7 @@
         <section>
             <h2 class="section-title">Register</h2>
             <form method="post" class="form-stack account-form">
+                <?= csrfField() ?>
                 <div class="form-field">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" id="name" name="name" class="form-input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>" required>

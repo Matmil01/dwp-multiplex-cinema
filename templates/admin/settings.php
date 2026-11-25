@@ -33,6 +33,7 @@ require __DIR__ . '/../../components/screen-format.php';
         <section>
             <h2 class="section-title">Company Info</h2>
             <form method="post" action="" class="form-stack settings-form">
+                <?= csrfField() ?>
                 <div class="form-field">
                     <label for="tagline" class="form-label">Tagline</label>
                     <input type="text" id="tagline" name="tagline" maxlength="150" value="<?= htmlspecialchars($company['tagline'] ?? '', ENT_QUOTES) ?>" required class="form-input">
@@ -64,6 +65,7 @@ require __DIR__ . '/../../components/screen-format.php';
         <section>
             <h2 class="section-title">Ticket Prices</h2>
             <form method="post" action="/admin/settings/prices" class="form-stack settings-form">
+                <?= csrfField() ?>
                 <?php foreach ($screens as $screen): ?>
                     <div class="form-field">
                         <label for="price-<?= (int) $screen['id'] ?>" class="form-label"><?= htmlspecialchars(screenDisplayName($screen['type']), ENT_QUOTES) ?> (kr. per seat)</label>

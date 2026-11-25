@@ -50,6 +50,7 @@
                     <?php endif; ?>
 
                     <form method="post" class="movie-editor">
+                        <?= csrfField() ?>
                         <!-- Hidden inputs travel with the form but aren't shown. 'action' tells handlePost()
                              what to do; 'id' is empty for a new movie and set when editing, which is how
                              Movie::save() knows whether to INSERT or UPDATE. -->
@@ -136,6 +137,7 @@
                                     <!-- Each Delete is its own tiny POST form. data-confirm makes confirm-dialog.js
                                          ask "Are you sure?" before it is actually sent. -->
                                     <form method="post" data-confirm="Delete this movie?" data-confirm-label="Delete">
+                                        <?= csrfField() ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= (int) $movie['id'] ?>">
                                         <button type="submit" class="danger-button">Delete</button>

@@ -13,6 +13,7 @@
             <?php endif; ?>
             <a href="/profile">Profile</a>
             <form method="post" action="/logout">
+                <?= csrfField() ?>
                 <button type="submit" class="logout-button">Log out</button>
             </form>
         <?php else: ?>
