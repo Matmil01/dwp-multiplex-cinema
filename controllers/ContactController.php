@@ -22,7 +22,12 @@ class ContactController
         $snackbarType = null;
         $snackbarMessage = null;
 
-        if ($name === '' || strlen($name) > 100) {
+        // Checked first, so every attempt counts: 5 per hour per visitor (see classes/RateLimit.php).
+        if (!RateLimit::allows('contact', 5, 3600)) {
+            // 429 = "too many requests". The form is still shown, with what was typed.
+            http_response_code(429);
+            $error = 'You have sent several messages in a short time. Please wait up to an hour before sending another.';
+        } elseif ($name === '' || strlen($name) > 100) {
             $error = 'Please enter your name.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 150) {
             $error = 'Please enter a valid email address.';

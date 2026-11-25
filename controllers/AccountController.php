@@ -19,7 +19,12 @@ class AccountController
     {
         $error = null;
 
-        if ($name === '' || strlen($name) > 100) {
+        // Checked first, so every attempt counts: 5 per hour per visitor (see classes/RateLimit.php).
+        if (!RateLimit::allows('register', 5, 3600)) {
+            // 429 = "too many requests". The form is still shown, with what was typed.
+            http_response_code(429);
+            $error = 'Too many registration attempts. Please wait up to an hour and try again.';
+        } elseif ($name === '' || strlen($name) > 100) {
             $error = 'Please enter your name.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 150) {
             $error = 'Please enter a valid email address.';
@@ -64,13 +69,23 @@ class AccountController
 
     public function login(string $email, string $password): void
     {
+        // Checked first, so every attempt counts: 20 per 15 minutes per visitor (see classes/RateLimit.php).
+        if (!RateLimit::allows('login', 20, 900)) {
+            http_response_code(429);
+            $error = 'Too many login attempts. Please wait 15 minutes and try again.';
+            $notice = null;
+
+            require __DIR__ . '/../templates/account/login.php';
+            return;
+        }
+
         $user = User::findByEmail($email);
 
         // A locked account is refused before the password is even checked, so guessing gains nothing.
         // (After 5 wrong passwords User::recordFailedLogin sets locked_until 15 minutes ahead.
         // This slows down "brute force" attacks that try thousands of passwords in a row.)
         if ($user && $user['locked_until'] !== null && strtotime($user['locked_until']) > time()) {
-            $error = 'Too many failed attempts. Please try again in a few minutes.';
+            $error = 'Too many failed attempts. Please try again in 15 minutes.';
             $notice = null;
 
             require __DIR__ . '/../templates/account/login.php';

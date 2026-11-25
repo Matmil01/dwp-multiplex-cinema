@@ -153,7 +153,7 @@ function initScheduleDrag(gridDate, openingHour, spanMinutes) {
                     }
                     alert(data.error || 'No room right after this showing — drag it to a free slot instead.');
                 })
-                .catch(() => alert('Could not reach the server.'));
+                .catch(() => alert('Something went wrong. Reload the page and try again.'));
         });
     });
 
@@ -249,7 +249,7 @@ function initScheduleDrag(gridDate, openingHour, spanMinutes) {
                 applyPosition(block, timeline, startMinutes, duration);
             })
             .catch(() => {
-                alert('Could not reach the server.');
+                alert('Something went wrong. Reload the page and try again.');
                 applyPosition(block, timeline, startMinutes, duration);
             });
 

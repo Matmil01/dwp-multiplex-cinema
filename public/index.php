@@ -126,7 +126,7 @@ if ($method === 'POST') {
     if ($sourceHost === '' || $sourceHost !== strtolower($_SERVER['HTTP_HOST'] ?? '') || !$tokenValid) {
         http_response_code(403);
         $title = 'Request blocked';
-        $message = 'This form was not submitted from our own site, or the page has expired. Reload the page and try again.';
+        $message = 'This form was not submitted from our own site, or the page was open for too long. Go back to the form, reload that page and try again.';
         require __DIR__ . '/../templates/error.php';
         exit;
     }
@@ -157,22 +157,6 @@ if ($handler === null) {
     http_response_code(404);
     $title = 'Page not found';
     $message = 'Nothing to see here.';
-    require __DIR__ . '/../templates/error.php';
-    exit;
-}
-
-// Per-IP limits on the forms that can be spammed or guessed: [name, max attempts, window in seconds].
-$rateLimits = [
-    'POST /register' => ['register', 5, 3600],
-    'POST /contact'  => ['contact', 5, 3600],
-    'POST /login'    => ['login', 20, 900],
-];
-
-// The counting itself is in classes/RateLimit.php. `...` unpacks the three values as its three arguments.
-if (isset($rateLimits["$method $path"]) && !RateLimit::allows(...$rateLimits["$method $path"])) {
-    http_response_code(429);
-    $title = 'Too many requests';
-    $message = 'Please wait a while and try again.';
     require __DIR__ . '/../templates/error.php';
     exit;
 }

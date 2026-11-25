@@ -20,11 +20,11 @@
                 <?= csrfField() ?>
                 <div class="form-field">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" id="name" name="name" class="form-input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>" required>
+                    <input type="text" id="name" name="name" maxlength="100" class="form-input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>" required>
                 </div>
                 <div class="form-field">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-input" value="<?= htmlspecialchars($email, ENT_QUOTES) ?>" required>
+                    <input type="email" id="email" name="email" maxlength="150" class="form-input" value="<?= htmlspecialchars($email, ENT_QUOTES) ?>" required>
                 </div>
                 <div class="form-field">
                     <label for="password" class="form-label">Password</label>

@@ -23,14 +23,18 @@ class AdminScheduleController
         return $parsed && $parsed->format('Y-m-d') === $date ? $date : date('Y-m-d');
     }
 
-    // Same rule Settings enforces from the other side: a showing starts at/after opening and before closing.
-    // $time is "HH:MM"; the database gives "10:00:00", so substr(..., 0, 5) cuts it down to "10:00".
-    private function withinOpeningHours(string $time): bool
+    // Throws unless $time ("HH:MM") is at/after opening and before closing: the rule Settings enforces from the other side.
+    // The database gives "10:00:00", so substr(..., 0, 5) cuts it down to "10:00".
+    private function requireOpeningHours(string $time): void
     {
         $company = CompanyInfo::find();
+        $opening = substr($company['opening_time'], 0, 5);
+        $closing = substr($company['closing_time'], 0, 5);
 
         // Same-length HH:MM strings compare correctly as text.
-        return $time >= substr($company['opening_time'], 0, 5) && $time < substr($company['closing_time'], 0, 5);
+        if ($time < $opening || $time >= $closing) {
+            throw new RuntimeException("Showings must start within opening hours ($opening to $closing).");
+        }
     }
 
     // Throws unless $input describes a showing the drag-and-drop endpoints can save.
@@ -41,9 +45,7 @@ class AdminScheduleController
             throw new RuntimeException('Invalid showing time.');
         }
         // Characters 11-15 of "2026-10-31 20:05:00" are the "20:05" part.
-        if (!$this->withinOpeningHours(substr($input['show_datetime'], 11, 5))) {
-            throw new RuntimeException('Showings must start within opening hours.');
-        }
+        $this->requireOpeningHours(substr($input['show_datetime'], 11, 5));
         if ((int) ($input['movie_id'] ?? 0) === 0 || (int) ($input['screen_id'] ?? 0) === 0) {
             throw new RuntimeException('Invalid movie or screen.');
         }
@@ -78,10 +80,9 @@ class AdminScheduleController
             $saveError = 'Pick a screen.';
         } elseif (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $input['show_time'] ?? '')) {
             $saveError = 'Pick a valid showing time.';
-        } elseif (!$this->withinOpeningHours($input['show_time'])) {
-            $saveError = 'Showings must start within opening hours.';
         } else {
             try {
+                $this->requireOpeningHours($input['show_time']);
                 // The form only has a time ("20:00"); glue the page's date in front to make the
                 // full "2026-10-31 20:00:00" the database column expects.
                 Showing::save([

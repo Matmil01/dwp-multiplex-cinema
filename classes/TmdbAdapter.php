@@ -116,13 +116,15 @@ class TmdbAdapter
 
         // Three things can go wrong: no connection at all, a non-200 status (e.g. 401 bad token,
         // 404 unknown movie), or a body that isn't valid JSON. Each becomes a readable error
-        // that the admin page shows as a message.
+        // that the admin page shows as a message. The technical details go to the log instead.
         if ($response === false) {
-            throw new RuntimeException('TMDB request failed: ' . $error);
+            error_log('TMDB request failed: ' . $error);
+            throw new RuntimeException('Could not reach the movie database. Please try again.');
         }
 
         if ($status !== 200) {
-            throw new RuntimeException('TMDB request returned HTTP ' . $status . ': ' . $response);
+            error_log('TMDB request returned HTTP ' . $status . ': ' . $response);
+            throw new RuntimeException('Could not get results from the movie database. Please try again.');
         }
 
         // json_decode(..., true) turns JSON text into PHP lists (true = lists, not objects).
