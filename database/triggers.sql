@@ -1,6 +1,6 @@
 DELIMITER $$
 
--- Runs when a showing is added. Steps: find the new movie's runtime, work out when the new
+-- Trigger 1: runs when a showing is added. Steps: find the new movie's runtime, work out when the new
 -- showing would end, count other showings on the same screen whose time range overlaps,
 -- and refuse if there are any.
 CREATE TRIGGER trg_showings_no_overlap_insert
@@ -28,7 +28,7 @@ BEGIN
     END IF;
 END$$
 
--- Same check when a showing is changed (moved, or its movie swapped). The only difference is
+-- Trigger 2: same check as trigger 1, when a showing is changed (moved, or its movie swapped). The only difference is
 -- `s.id != NEW.id`: the showing must not be compared with its own old position.
 CREATE TRIGGER trg_showings_no_overlap_update
 BEFORE UPDATE ON showings
@@ -52,6 +52,17 @@ BEGIN
 
     IF conflict_count > 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'This screen is already booked for an overlapping time.';
+    END IF;
+END$$
+
+-- Trigger 3: a separate rule, in case triggers 1 and 2 are counted as one rule checked twice.
+-- Safety net for Booking::MAX_SEATS in PHP: refuses a 6th seat on one booking. Keep the two numbers in sync.
+CREATE TRIGGER trg_booking_seats_max
+BEFORE INSERT ON booking_seats
+FOR EACH ROW
+BEGIN
+    IF (SELECT COUNT(*) FROM booking_seats WHERE booking_id = NEW.booking_id) >= 5 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Max 5 seats per booking.';
     END IF;
 END$$
 
