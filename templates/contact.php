@@ -23,7 +23,7 @@
     <main class="site-main">
         <section>
             <?php require __DIR__ . '/../components/snackbar.php'; ?>
-            <form method="post" action="/contact" class="form-stack">
+            <form method="post" action="/contact" class="form-stack contact-form">
                 <div class="form-field">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" id="name" name="name" maxlength="100" class="form-input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>" required>
