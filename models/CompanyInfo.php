@@ -40,15 +40,19 @@ class CompanyInfo
             throw new RuntimeException("These upcoming showings fall outside the new hours: $list");
         }
 
-        // No conflicts: save all six fields in one UPDATE.
+        // No conflicts: save all the fields in one UPDATE.
         $db->prepare(
-            'UPDATE company_info SET tagline = ?, description = ?, opening_time = ?, closing_time = ?, address = ?, phone = ? WHERE id = 1'
+            'UPDATE company_info SET tagline = ?, description = ?, opening_time = ?, closing_time = ?, street = ?, house_number = ?, postal_code = ?, city = ?, country = ?, phone = ? WHERE id = 1'
         )->execute([
             $input['tagline'],
             $input['description'],
             $input['opening_time'],
             $input['closing_time'],
-            $input['address'],
+            $input['street'],
+            $input['house_number'],
+            $input['postal_code'],
+            $input['city'],
+            $input['country'],
             $input['phone'],
         ]);
     }

@@ -4,11 +4,11 @@ INSERT INTO screens (type, seat_rows, seats_per_row, aisle_after, ticket_price) 
     ('70mm', 10, 14, 7, 115.00),
     ('imax', 12, 16, 8, 145.00);
 
-INSERT INTO company_info (id, tagline, description, opening_time, closing_time, address, phone) VALUES
+INSERT INTO company_info (id, tagline, description, opening_time, closing_time, street, house_number, postal_code, city, country, phone) VALUES
     (1, 'The future sucks. Let''s go back to the 1990s.',
     'A return to the 1990s peak of the motion picture industry, Untitled Cinema is a revival house in suburban Albuquerque, New Mexico. We show only films from 1990 to 1999, each on its own projector: 16mm, 35mm, 70mm or IMAX. Whether you grew up on these films or are seeing them for the first time, come watch them the way they were meant to be seen.',
     '12:00:00', '23:59:00',
-    '308 Negra Arroyo Lane, Albuquerque, New Mexico 87104', 
+    'Spangsbjerg Kirkevej', '103', '6700', 'Esbjerg', 'Danmark',
     '(505) 503-4455');
 
 -- No users are seeded, so no password hash lives in the repo. To make the first admin, register on the

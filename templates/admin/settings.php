@@ -51,8 +51,24 @@ require __DIR__ . '/../../components/screen-format.php';
                     <input type="time" id="closing_time" name="closing_time" value="<?= htmlspecialchars(substr($company['closing_time'] ?? '', 0, 5), ENT_QUOTES) ?>" required class="form-input">
                 </div>
                 <div class="form-field">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" id="address" name="address" value="<?= htmlspecialchars($company['address'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                    <label for="street" class="form-label">Street</label>
+                    <input type="text" id="street" name="street" maxlength="100" value="<?= htmlspecialchars($company['street'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                </div>
+                <div class="form-field">
+                    <label for="house_number" class="form-label">House Number</label>
+                    <input type="text" id="house_number" name="house_number" maxlength="10" value="<?= htmlspecialchars($company['house_number'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                </div>
+                <div class="form-field">
+                    <label for="postal_code" class="form-label">Postal Code</label>
+                    <input type="text" id="postal_code" name="postal_code" maxlength="10" value="<?= htmlspecialchars($company['postal_code'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                </div>
+                <div class="form-field">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" id="city" name="city" maxlength="50" value="<?= htmlspecialchars($company['city'] ?? '', ENT_QUOTES) ?>" class="form-input">
+                </div>
+                <div class="form-field">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" id="country" name="country" maxlength="50" value="<?= htmlspecialchars($company['country'] ?? '', ENT_QUOTES) ?>" class="form-input">
                 </div>
                 <div class="form-field">
                     <label for="phone" class="form-label">Phone</label>

@@ -36,8 +36,21 @@ class AdminSettingsController
             throw new RuntimeException('Closing time must be after opening time.');
         }
 
-        if (mb_strlen(trim($input['address'] ?? '')) > 150) {
-            throw new RuntimeException('Address is too long (max 150 characters).');
+        // Limits follow the column sizes in schema.sql.
+        if (mb_strlen(trim($input['street'] ?? '')) > 100) {
+            throw new RuntimeException('Street is too long (max 100 characters).');
+        }
+        if (mb_strlen(trim($input['house_number'] ?? '')) > 10) {
+            throw new RuntimeException('House number is too long (max 10 characters).');
+        }
+        if (mb_strlen(trim($input['postal_code'] ?? '')) > 10) {
+            throw new RuntimeException('Postal code is too long (max 10 characters).');
+        }
+        if (mb_strlen(trim($input['city'] ?? '')) > 50) {
+            throw new RuntimeException('City is too long (max 50 characters).');
+        }
+        if (mb_strlen(trim($input['country'] ?? '')) > 50) {
+            throw new RuntimeException('Country is too long (max 50 characters).');
         }
 
         $phone = trim($input['phone'] ?? '');
@@ -61,7 +74,11 @@ class AdminSettingsController
                 'description' => trim($input['description'] ?? ''),
                 'opening_time' => $input['opening_time'] ?? '',
                 'closing_time' => $input['closing_time'] ?? '',
-                'address' => trim($input['address'] ?? ''),
+                'street' => trim($input['street'] ?? ''),
+                'house_number' => trim($input['house_number'] ?? ''),
+                'postal_code' => trim($input['postal_code'] ?? ''),
+                'city' => trim($input['city'] ?? ''),
+                'country' => trim($input['country'] ?? ''),
                 'phone' => trim($input['phone'] ?? ''),
             ]);
             $saved = true;
@@ -75,7 +92,11 @@ class AdminSettingsController
                 'description' => $input['description'] ?? '',
                 'opening_time' => $input['opening_time'] ?? '',
                 'closing_time' => $input['closing_time'] ?? '',
-                'address' => $input['address'] ?? '',
+                'street' => $input['street'] ?? '',
+                'house_number' => $input['house_number'] ?? '',
+                'postal_code' => $input['postal_code'] ?? '',
+                'city' => $input['city'] ?? '',
+                'country' => $input['country'] ?? '',
                 'phone' => $input['phone'] ?? '',
             ];
         } else {
